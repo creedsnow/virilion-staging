@@ -56,7 +56,10 @@ export default function EnterPage() {
         <h1 className="display-title text-[1.85rem] mb-1.5 tracking-[0.22em]">
           Virilion
         </h1>
-        <p className="display-italic text-[1.15rem] mb-9">Enter Virilion</p>
+        <p className="display-italic text-[1.15rem] mb-2">Enter Virilion</p>
+        <p className="text-[11px] tracking-[0.12em] uppercase text-fg-muted/90 text-center mb-8 leading-relaxed max-w-[18rem]">
+          Adult queer mythic fantasy · one vessel · in-app home
+        </p>
 
         <form onSubmit={enter} className="w-full space-y-4">
           <div>
@@ -125,7 +128,7 @@ export default function EnterPage() {
         </form>
 
         <p className="mt-9 text-[11px] text-fg-muted/80 text-center max-w-xs leading-relaxed">
-          In-app RP home. One vessel. Fields are cosmetic — this build is labeled Demo.
+          RP chat and voice live here. Fields are cosmetic — this build is labeled Demo.
         </p>
       </div>
     </div>

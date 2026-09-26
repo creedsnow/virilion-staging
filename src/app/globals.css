@@ -1162,3 +1162,152 @@ body {
   border: 1px dashed color-mix(in srgb, var(--border) 65%, var(--gold) 28%);
   background: color-mix(in srgb, var(--bg-elevated) 70%, transparent);
 }
+
+/* —— Realm / Self polish pass —— */
+.realm-hero-glow {
+  position: relative;
+  padding-bottom: 0.15rem;
+}
+.realm-hero-glow::before {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  left: -8%;
+  top: -40%;
+  width: 70%;
+  height: 160%;
+  background: radial-gradient(
+    ellipse at center,
+    color-mix(in srgb, var(--aura) 18%, transparent),
+    transparent 68%
+  );
+  z-index: -1;
+}
+
+.vessel-card-glow {
+  box-shadow:
+    var(--shadow-card),
+    0 0 36px color-mix(in srgb, var(--aura) 16%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.vessel-watermark {
+  position: absolute;
+  right: -0.15rem;
+  bottom: -0.55rem;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 7.5rem;
+  font-weight: 600;
+  line-height: 1;
+  color: color-mix(in srgb, var(--gold) 14%, transparent);
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  letter-spacing: -0.04em;
+}
+
+[data-theme="light"] .vessel-watermark {
+  color: color-mix(in srgb, var(--gold) 18%, transparent);
+}
+
+.feed-panel {
+  position: relative;
+  padding: 0.85rem 0 0.15rem;
+  border-radius: 1.15rem;
+}
+.feed-panel::before {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0 -0.35rem;
+  border-radius: 1.25rem;
+  background: radial-gradient(
+    ellipse 80% 70% at 20% 0%,
+    color-mix(in srgb, var(--aura) 10%, transparent),
+    transparent 65%
+  );
+  z-index: -1;
+  opacity: 0.9;
+}
+
+.event-card {
+  background:
+    linear-gradient(
+      165deg,
+      color-mix(in srgb, var(--bg-card) 92%, var(--parchment)),
+      var(--bg-card)
+    );
+}
+
+.self-hero {
+  position: relative;
+  padding: 1.15rem 1.2rem 1.25rem;
+  border-radius: 1.25rem;
+  border: 1px solid color-mix(in srgb, var(--border) 65%, var(--gold) 22%);
+  background:
+    radial-gradient(ellipse 90% 70% at 85% -20%, color-mix(in srgb, var(--aura) 28%, transparent), transparent 60%),
+    radial-gradient(ellipse 45% 40% at 5% 110%, color-mix(in srgb, var(--gold) 12%, transparent), transparent 55%),
+    var(--bg-card);
+  box-shadow: var(--shadow-card);
+}
+
+.self-tabs {
+  grid-template-columns: repeat(2, 1fr);
+  border-radius: 9999px;
+  padding: 0.35rem;
+}
+
+.self-vessel-card {
+  background: var(--vessel-wash);
+  border-color: color-mix(in srgb, var(--border) 65%, var(--gold) 28%);
+  box-shadow:
+    var(--shadow-card),
+    0 0 28px color-mix(in srgb, var(--aura) 14%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.self-portrait {
+  position: relative;
+  flex-shrink: 0;
+  width: 5.5rem;
+  height: 5.5rem;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid color-mix(in srgb, var(--gold) 28%, transparent);
+  overflow: hidden;
+  box-shadow: 0 0 22px color-mix(in srgb, var(--aura) 30%, transparent);
+}
+
+.self-portrait-sheen {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 25%, rgba(232, 200, 120, 0.38), transparent 55%);
+  pointer-events: none;
+}
+
+.self-stat-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.65rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+}
+
+@media (max-width: 360px) {
+  .self-stat-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Light chrome unify for stone panels on parchment */
+[data-theme="light"] .stone-panel {
+  background:
+    linear-gradient(180deg, #fffaf2, color-mix(in srgb, var(--parchment) 55%, #fffcf6));
+  box-shadow: var(--shadow-card), inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+
+[data-theme="light"] .self-vessel-card {
+  background: var(--vessel-wash);
+}

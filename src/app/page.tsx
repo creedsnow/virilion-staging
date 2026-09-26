@@ -87,7 +87,7 @@ export default function RealmPage() {
 
   return (
     <div className="space-y-7 -mt-0.5">
-      <div>
+      <div className="realm-hero-glow">
         <h1 className="display-hero">
           The lamps of Virelios are lit, {firstName}.
         </h1>
@@ -97,10 +97,13 @@ export default function RealmPage() {
       </div>
 
       {/* YOUR VESSEL */}
-      <section className="card vessel-card rounded-2xl space-y-3.5 relative overflow-hidden">
-        <div className="flex gap-3.5 items-start">
+      <section className="card vessel-card vessel-card-glow rounded-2xl space-y-3.5 relative overflow-hidden">
+        <span className="vessel-watermark" aria-hidden>
+          V
+        </span>
+        <div className="flex gap-3.5 items-start relative z-[1]">
           <div
-            className="h-[5.25rem] w-[5.25rem] shrink-0 rounded-[0.95rem] flex items-center justify-center text-[1.85rem] font-display font-semibold text-gold-soft border border-gold/25 relative overflow-hidden"
+            className="h-[5.25rem] w-[5.25rem] shrink-0 rounded-[0.95rem] flex items-center justify-center text-[1.85rem] font-display font-semibold text-gold-soft border border-gold/25 relative overflow-hidden shadow-[0_0_24px_rgba(123,94,167,0.28)]"
             style={{
               background:
                 "linear-gradient(145deg, color-mix(in srgb, var(--aura) 42%, #1a1028), #121018 72%)",
@@ -138,12 +141,12 @@ export default function RealmPage() {
         </div>
 
         {vessel.bio ? (
-          <p className="text-sm text-fg-muted leading-relaxed border-t border-border/55 pt-3">
+          <p className="text-sm text-fg-muted leading-relaxed border-t border-border/55 pt-3 relative z-[1]">
             {vessel.bio}
           </p>
         ) : null}
 
-        <div className="seg-control" role="group" aria-label="Presence">
+        <div className="seg-control relative z-[1]" role="group" aria-label="Presence">
           {(
             [
               ["open", "Open"],
@@ -164,7 +167,7 @@ export default function RealmPage() {
       </section>
 
       {/* Walking now */}
-      <section className="space-y-3">
+      <section className="space-y-3 feed-panel">
         <div className="flex items-baseline justify-between gap-3">
           <h2 className="section-serif text-fg">Walking now</h2>
           <Link
@@ -198,10 +201,13 @@ export default function RealmPage() {
             </div>
           ))}
         </div>
+        <p className="text-[10px] text-fg-muted/70 tracking-wide">
+          Presence stubs · demo cast — not live world data
+        </p>
       </section>
 
       {/* Coming up */}
-      <section className="space-y-3">
+      <section className="space-y-3 feed-panel">
         <div className="flex items-baseline justify-between gap-3">
           <h2 className="section-serif text-fg">Coming up</h2>
           <span className="text-[10px] font-semibold tracking-[0.14em] uppercase text-gold/80">
