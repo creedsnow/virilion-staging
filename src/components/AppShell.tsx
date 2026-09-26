@@ -10,6 +10,7 @@ import { DemoBadge } from "./DemoBadge";
 import { UiAssetIcon } from "./UiAssetIcon";
 import { useTheme } from "./ThemeProvider";
 import { clearSession, getAgeOk, getPlayer, getVessel } from "@/lib/storage";
+import { wispStill } from "@/lib/assets";
 
 const PUBLIC = new Set(["/enter", "/rules"]);
 
@@ -210,7 +211,14 @@ export function AppShell({ children }: { children: ReactNode }) {
                   title="Wisp"
                 >
                   <span className="wisp-mote-glow" aria-hidden />
-                  <span className="wisp-mote-core" aria-hidden />
+                  <img
+                    src={wispStill(128)}
+                    alt=""
+                    width={22}
+                    height={22}
+                    className="wisp-mote-still"
+                    draggable={false}
+                  />
                 </Link>
               ) : null}
               {hasPlayer ? (

@@ -108,3 +108,50 @@ export function uiIcon(name: string): string | null {
   if (!UI_ICON_IDS.has(name)) return null;
   return `/assets/icons/ui/${name}.svg`;
 }
+
+/** Moonmarket dice skins shipped in Batch A4 (filename slug → label). */
+export const MOONMARKET_SKINS = [
+  { id: "night-court", label: "Night Court", blurb: "Obsidian dice skin" },
+  { id: "starveil", label: "Starveil", blurb: "Dice skin" },
+  { id: "gilded-coil", label: "Gilded Coil", blurb: "Dice skin" },
+  { id: "parchment-bone", label: "Parchment Bone", blurb: "Dice skin" },
+  { id: "mosswood", label: "Mosswood", blurb: "Dice skin" },
+] as const;
+
+/** Moonmarket single-shape die shots. */
+export const MOONMARKET_DIES = [
+  { id: "d4", label: "d4" },
+  { id: "d6", label: "d6" },
+  { id: "d8", label: "d8" },
+  { id: "d10", label: "d10" },
+  { id: "d12", label: "d12" },
+  { id: "dpercent", label: "d%" },
+] as const;
+
+/** Prefer 800² webp for shop cards. */
+export function moonmarketSkin(id: string, size: "full" | "800" = "800"): string {
+  const suffix = size === "800" ? "-800" : "";
+  return `/assets/moonmarket/shop-skin-${id}${suffix}.webp`;
+}
+
+export function moonmarketDie(id: string, size: "full" | "800" = "800"): string {
+  const suffix = size === "800" ? "-800" : "";
+  return `/assets/moonmarket/shop-die-${id}${suffix}.webp`;
+}
+
+export type WispLoop = "idle" | "greet" | "notify" | "pet" | "poke";
+
+export function wispWebm(loop: WispLoop): string {
+  return `/assets/wisps/wisp-${loop}.webm`;
+}
+
+export function wispApng(loop: WispLoop): string {
+  return `/assets/wisps/wisp-${loop}.apng`;
+}
+
+/** Reduced-motion / poster still. Prefer 256 for panel hero, 128 for mote. */
+export function wispStill(size: 128 | 256 = 256): string {
+  return size === 128
+    ? "/assets/wisps/wisp-still-128.webp"
+    : "/assets/wisps/wisp-still-256.webp";
+}
