@@ -11,19 +11,22 @@ export default function CodexPage() {
 
   return (
     <div className="space-y-6">
-      <div className="rite-hero">
-        <p className="section-kicker mb-1">World book · Demo spine</p>
-        <h1 className="font-display text-3xl font-semibold text-fg leading-tight">
-          The World{" "}
-          <span className="display-italic text-[1.05em]">Codex</span>
-        </h1>
-        <p className="text-sm text-fg-muted mt-1.5 leading-relaxed">
-          Everything known of Virilion — peoples, classes, places, rules. Unwritten pages
-          stay honest: Record incomplete.
-        </p>
+      <div className="codex-hero">
+        <div className="codex-hero-sheen" aria-hidden />
+        <div className="relative z-[1]">
+          <p className="section-kicker mb-1">World book · lantern library</p>
+          <h1 className="font-display text-3xl font-semibold text-fg leading-tight">
+            The World{" "}
+            <span className="display-italic text-[1.05em]">Codex</span>
+          </h1>
+          <p className="text-sm text-fg-muted mt-1.5 leading-relaxed max-w-md">
+            Everything known of Virilion — peoples, classes, places, rules. Unwritten
+            pages stay honest: Record incomplete.
+          </p>
+        </div>
       </div>
 
-      <nav className="flex flex-wrap gap-2" aria-label="Codex sections">
+      <nav className="tome-tabs" aria-label="Codex sections">
         {[
           ["#peoples", "Peoples"],
           ["#classes", "Classes"],
@@ -31,7 +34,7 @@ export default function CodexPage() {
           ["#rules", "Rules"],
           ["#chronicle", "Chronicle"],
         ].map(([href, label]) => (
-          <a key={href} href={href} className="chip">
+          <a key={href} href={href} className="tome-tab">
             {label}
           </a>
         ))}
@@ -44,22 +47,25 @@ export default function CodexPage() {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {PEOPLES.map((p) => (
-            <div key={p.id} className="people-tile people-tile-rich">
-              <div className="flex items-start justify-between gap-2">
-                <p className="text-base font-medium text-fg font-display">{p.name}</p>
-                <span
-                  className="h-2.5 w-2.5 rounded-full shrink-0 mt-1.5 border border-border/40"
-                  style={{ background: p.mapColor }}
-                  aria-hidden
-                />
+            <div key={p.id} className="people-tile people-tile-rich people-tile-tome">
+              <div className="people-tile-accent" aria-hidden />
+              <div className="relative z-[1]">
+                <div className="flex items-start justify-between gap-2">
+                  <p className="text-base font-medium text-fg font-display">{p.name}</p>
+                  <span
+                    className="h-2.5 w-2.5 rounded-full shrink-0 mt-1.5 border border-border/40"
+                    style={{ background: p.mapColor }}
+                    aria-hidden
+                  />
+                </div>
+                <p className="text-[11px] text-fg-muted mt-0.5">
+                  {p.cultureName} · {p.homeland}
+                </p>
+                <p className="text-xs text-fg-muted/90 mt-1.5 leading-snug">
+                  {p.racialAbility}
+                  {p.roleNote ? ` · ${p.roleNote}` : ""}
+                </p>
               </div>
-              <p className="text-[11px] text-fg-muted mt-0.5">
-                {p.cultureName} · {p.homeland}
-              </p>
-              <p className="text-xs text-fg-muted/90 mt-1.5 leading-snug">
-                {p.racialAbility}
-                {p.roleNote ? ` · ${p.roleNote}` : ""}
-              </p>
             </div>
           ))}
         </div>
@@ -78,7 +84,8 @@ export default function CodexPage() {
             return (
               <li key={c.id}>
                 <div className="codex-class-row">
-                  <div className="min-w-0 flex-1">
+                  <div className="codex-class-accent" aria-hidden />
+                  <div className="min-w-0 flex-1 relative z-[1]">
                     <p className="font-display text-lg font-semibold text-fg">{c.name}</p>
                     <p className="text-xs text-fg-muted mt-0.5 leading-snug">{c.blurb}</p>
                     <p className="text-[11px] text-gold-soft mt-1.5">
@@ -88,7 +95,7 @@ export default function CodexPage() {
                   </div>
                   <Link
                     href="/map"
-                    className="text-[10px] uppercase tracking-[0.12em] text-gold shrink-0 hover:text-gold-soft"
+                    className="text-[10px] uppercase tracking-[0.12em] text-gold shrink-0 hover:text-gold-soft relative z-[1]"
                   >
                     Map →
                   </Link>
@@ -115,16 +122,25 @@ export default function CodexPage() {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {MAP_REGIONS.map((r) => (
-            <Link key={r.id} href="/map" className="people-tile hover:border-gold/40 transition">
-              <div className="flex items-start justify-between gap-2">
-                <p className="text-sm font-medium text-fg font-display">{r.label}</p>
+            <Link
+              key={r.id}
+              href="/map"
+              className="lantern-card codex-place-card"
+              style={{ ["--lantern-accent" as string]: r.color }}
+            >
+              <div className="lantern-card-accent" aria-hidden />
+              <div className="lantern-card-glow" aria-hidden />
+              <div className="relative z-[1] flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-fg font-display">{r.label}</p>
+                  <p className="text-[11px] text-fg-muted mt-0.5 capitalize">{r.kind}</p>
+                </div>
                 <span
                   className="h-2.5 w-2.5 rounded-full shrink-0 mt-1 border border-border/40"
                   style={{ background: r.color }}
                   aria-hidden
                 />
               </div>
-              <p className="text-[11px] text-fg-muted mt-0.5 capitalize">{r.kind}</p>
             </Link>
           ))}
         </div>
@@ -132,27 +148,33 @@ export default function CodexPage() {
 
       <section id="rules" className="space-y-3">
         <h2 className="section-serif">Rules</h2>
-        <Link href="/rules" className="codex-card">
-          <span className="codex-icon" aria-hidden>
-            ☾
-          </span>
-          <span className="min-w-0">
-            <span className="font-display text-xl font-semibold text-fg block">
-              Rules · 21 locks
+        <Link href="/rules" className="care-panel care-panel-link">
+          <div className="care-panel-glow" aria-hidden />
+          <span className="relative z-[1] flex items-center gap-3">
+            <span className="codex-icon" aria-hidden>
+              ☾
             </span>
-            <span className="text-sm text-fg-muted mt-0.5 block">
-              Community product rules · 21 locks.
+            <span className="min-w-0">
+              <span className="font-display text-xl font-semibold text-fg block">
+                Rules · 21 locks
+              </span>
+              <span className="text-sm text-fg-muted mt-0.5 block">
+                Community product rules · 21 locks.
+              </span>
             </span>
           </span>
         </Link>
-        <Link href="/safety" className="codex-card">
-          <span className="codex-icon" aria-hidden>
-            ✦
-          </span>
-          <span className="min-w-0">
-            <span className="font-display text-xl font-semibold text-fg block">Safety</span>
-            <span className="text-sm text-fg-muted mt-0.5 block">
-              Report · Block · consent reminder
+        <Link href="/safety" className="care-panel care-panel-link">
+          <div className="care-panel-glow" aria-hidden />
+          <span className="relative z-[1] flex items-center gap-3">
+            <span className="codex-icon" aria-hidden>
+              ✦
+            </span>
+            <span className="min-w-0">
+              <span className="font-display text-xl font-semibold text-fg block">Safety</span>
+              <span className="text-sm text-fg-muted mt-0.5 block">
+                Report · Block · consent reminder
+              </span>
             </span>
           </span>
         </Link>
