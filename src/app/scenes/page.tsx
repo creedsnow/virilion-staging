@@ -11,6 +11,7 @@ import type { Vessel } from "@/lib/types";
 export default function ScenesPage() {
   const [vessel, setVessel] = useState<Vessel | null>(null);
   const [active, setActive] = useState<SceneInfo | null>(null);
+  const [openVoice, setOpenVoice] = useState(false);
   const [booted, setBooted] = useState(false);
 
   useEffect(() => {
@@ -38,7 +39,15 @@ export default function ScenesPage() {
 
   if (active) {
     return (
-      <SceneRoom scene={active} vessel={vessel} onBack={() => setActive(null)} />
+      <SceneRoom
+        scene={active}
+        vessel={vessel}
+        onBack={() => {
+          setActive(null);
+          setOpenVoice(false);
+        }}
+        autoJoinVoice={openVoice}
+      />
     );
   }
 
@@ -51,23 +60,19 @@ export default function ScenesPage() {
           <span className="display-italic text-[1.05em]">happening</span>
         </h1>
         <p className="text-sm text-fg-muted mt-1.5 leading-relaxed">
-          Discover live rooms → open text RP here. Join call opens in-app voice —
-          never leaves Virilion. No Discord-as-home.
+          Step inside a room as your Vessel. Join call lives inside the chamber —
+          same place, voice when you want it.
         </p>
       </div>
 
       <p className="text-[10px] text-fg-muted/75 tracking-wide">
-        Text rooms stay in this browser until shared backend.
+        This-browser demo until shared backend.
       </p>
 
       <ul className="space-y-3">
         {DEMO_SCENES.map((s) => (
           <li key={s.id}>
-            <button
-              type="button"
-              className="scene-card w-full text-left"
-              onClick={() => setActive(s)}
-            >
+            <article className="scene-card">
               <div className="scene-card-glow" aria-hidden />
               <div className="relative z-[1] flex justify-between gap-3 items-start">
                 <div className="min-w-0">
@@ -78,17 +83,32 @@ export default function ScenesPage() {
                     {s.title}
                   </h2>
                   <p className="text-sm text-fg-muted mt-2 leading-relaxed">{s.vibe}</p>
-                  <p className="text-[11px] text-fg-muted mt-2">
-                    Text in-app · Voice via Join call
-                  </p>
                 </div>
                 <span className="scene-seat shrink-0">{s.seats}</span>
               </div>
               <div className="relative z-[1] mt-3.5 flex gap-2">
-                <span className="scene-step">Step inside</span>
-                <span className="scene-call-hint">Join call · in-app</span>
+                <button
+                  type="button"
+                  className="scene-step"
+                  onClick={() => {
+                    setOpenVoice(false);
+                    setActive(s);
+                  }}
+                >
+                  Step inside
+                </button>
+                <button
+                  type="button"
+                  className="scene-call-hint"
+                  onClick={() => {
+                    setOpenVoice(true);
+                    setActive(s);
+                  }}
+                >
+                  Join call
+                </button>
               </div>
-            </button>
+            </article>
           </li>
         ))}
       </ul>

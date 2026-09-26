@@ -6,6 +6,7 @@ const KEYS = {
   player: "virilion_demo_player",
   vessel: "virilion_vessel",
   pending: "virilion_pending_vessels",
+  presence: "virilion_presence",
 } as const;
 
 export type ThemeMode = "dark" | "light";
@@ -129,4 +130,18 @@ export function clearSession(): void {
 export function wipeVesselForDemo(): void {
   if (!canUseStorage()) return;
   localStorage.removeItem(KEYS.vessel);
+}
+
+export type PresenceMode = "open" | "scene" | "unseen";
+
+export function getPresence(): PresenceMode {
+  if (!canUseStorage()) return "open";
+  const v = localStorage.getItem(KEYS.presence);
+  if (v === "scene" || v === "unseen" || v === "open") return v;
+  return "open";
+}
+
+export function setPresence(mode: PresenceMode): void {
+  if (!canUseStorage()) return;
+  localStorage.setItem(KEYS.presence, mode);
 }

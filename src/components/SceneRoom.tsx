@@ -31,14 +31,18 @@ export function SceneRoom({
   scene,
   vessel,
   onBack,
+  backLabel = "← Scenes",
+  autoJoinVoice = false,
 }: {
   scene: SceneInfo;
   vessel: Vessel;
   onBack: () => void;
+  backLabel?: string;
+  autoJoinVoice?: boolean;
 }) {
   const [messages, setMessages] = useState<SceneMessage[]>([]);
   const [text, setText] = useState("");
-  const [voiceOpen, setVoiceOpen] = useState(false);
+  const [voiceOpen, setVoiceOpen] = useState(autoJoinVoice);
   const [menuId, setMenuId] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -86,7 +90,7 @@ export function SceneRoom({
   const initial = vessel.name.trim().charAt(0).toUpperCase() || "V";
 
   return (
-    <div className="scene-chamber flex flex-col h-[calc(100dvh-8rem)]">
+    <div className="scene-chamber flex flex-col min-h-[calc(100dvh-11.5rem)]">
       <header className="room-chrome px-4 py-3.5 mb-3">
         <div className="room-chrome-sheen" aria-hidden />
         <div className="relative z-[1] flex items-start justify-between gap-3">
@@ -96,7 +100,7 @@ export function SceneRoom({
               className="text-xs text-gold mb-1.5 hover:text-gold-soft inline-flex items-center gap-1"
               onClick={onBack}
             >
-              ← Scenes
+              {backLabel}
             </button>
             <div className="flex items-start gap-3">
               <span className="room-lamp-seal" aria-hidden>
@@ -149,8 +153,8 @@ export function SceneRoom({
               ✦
             </span>
             <p>
-              The lamps are lit. Speak as your Vessel. Chat stays in this browser until
-              shared backend — Join call opens voice here, not Discord.
+              The lamps are lit. Speak as your Vessel. This-browser demo · Join call opens
+              voice in this room.
             </p>
           </div>
 
@@ -177,8 +181,7 @@ export function SceneRoom({
                 No one has spoken yet.
               </p>
               <p className="text-sm text-fg-muted leading-relaxed max-w-sm mx-auto">
-                Ink the first line below — or open this scene in another tab to demo
-                multi-vessel talk (same browser).
+                Ink the first line below. Open another tab to demo multi-vessel talk.
               </p>
             </div>
           ) : (
@@ -277,36 +280,38 @@ export function SceneRoom({
         </p>
       ) : null}
 
-      <form onSubmit={send} className="story-composer">
-        <div className="story-composer-seal" aria-hidden>
-          {initial}
-        </div>
-        <div className="min-w-0 flex-1">
-          <label className="sr-only" htmlFor="scene-speak">
-            Speak as {vessel.name}
-          </label>
-          <input
-            id="scene-speak"
-            ref={inputRef}
-            className="story-composer-input"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            placeholder={`Speak as ${vessel.name}…`}
-            maxLength={1000}
-            autoComplete="off"
-          />
-        </div>
-        <button
-          type="submit"
-          className="btn-gold px-4 !min-h-0 !rounded-xl text-sm py-2.5"
-          disabled={!text.trim()}
-        >
-          Speak
-        </button>
-      </form>
-      <p className="text-[10px] text-fg-muted/75 mt-1.5 text-center leading-relaxed">
-        On another vessel&apos;s line, tap ··· for Report or Block (local demo).
-      </p>
+      <div className="story-composer-dock">
+        <form onSubmit={send} className="story-composer">
+          <div className="story-composer-seal" aria-hidden>
+            {initial}
+          </div>
+          <div className="min-w-0 flex-1">
+            <label className="sr-only" htmlFor="scene-speak">
+              Speak as {vessel.name}
+            </label>
+            <input
+              id="scene-speak"
+              ref={inputRef}
+              className="story-composer-input"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              placeholder={`Speak as ${vessel.name}…`}
+              maxLength={1000}
+              autoComplete="off"
+            />
+          </div>
+          <button
+            type="submit"
+            className="btn-gold px-4 !min-h-0 !rounded-xl text-sm py-2.5"
+            disabled={!text.trim()}
+          >
+            Speak
+          </button>
+        </form>
+        <p className="text-[10px] text-fg-muted/70 mt-1.5 text-center leading-relaxed">
+          ··· on another line · Report / Block (saved locally)
+        </p>
+      </div>
 
       {voiceOpen ? (
         <VoicePanel

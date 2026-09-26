@@ -44,7 +44,7 @@ export const DEMO_SCENES: SceneInfo[] = [
     title: "Moonshift Watch",
     place: "Velkrath Wood",
     vibe: "Quiet hunt, pack-friendly",
-    seats: "3 / 8",
+    seats: "Gathering · demo",
     open: true,
   },
   {
@@ -60,7 +60,7 @@ export const DEMO_SCENES: SceneInfo[] = [
     title: "Bell Hall Echo",
     place: "The Wastes — Bell Hall Ruins",
     vibe: "Warlock pact talk — consent first",
-    seats: "2 / 6",
+    seats: "Gathering · demo",
     open: true,
   },
 ];
@@ -166,4 +166,39 @@ export function reportStub(sceneId: string, vesselId: string, note: string): voi
   const list = JSON.parse(localStorage.getItem(key) || "[]") as unknown[];
   list.push({ sceneId, vesselId, note, at: new Date().toISOString() });
   localStorage.setItem(key, JSON.stringify(list));
+}
+
+
+/** Build a place-scoped room from a map region (SceneRoom reuse). */
+export function sceneForPlace(opts: {
+  id: string;
+  label: string;
+  note: string;
+  kind: string;
+}): SceneInfo {
+  return {
+    id: `place-${opts.id}`,
+    title: opts.label,
+    place: opts.kind === "hub" ? "Open hub · everyone" : opts.kind === "wastes" ? "Wild holding" : "Homeland · place room",
+    vibe: opts.note,
+    seats: "Demo cast",
+    open: true,
+  };
+}
+
+/** Build a hall-scoped room from an Order Hall. */
+export function sceneForHall(opts: {
+  id: string;
+  name: string;
+  mapPlace: string;
+  tiedTo: string;
+}): SceneInfo {
+  return {
+    id: `hall-${opts.id}`,
+    title: opts.name,
+    place: `Order Hall · ${opts.mapPlace}`,
+    vibe: `Class circle for ${opts.tiedTo}`,
+    seats: "Demo cast",
+    open: true,
+  };
 }

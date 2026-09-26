@@ -1,20 +1,74 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { ORDER_HALLS, type OrderHall } from "@/lib/canon/orderHalls";
 import { MAP_REGIONS, hallsForRegion, type MapRegion } from "@/lib/canon/mapRegions";
+import { CLASSES } from "@/lib/canon/classes";
 import { EmptyState } from "@/components/EmptyState";
+import { SceneRoom } from "@/components/SceneRoom";
+import { sceneForHall, sceneForPlace, type SceneInfo } from "@/lib/scenes";
+import { getVessel } from "@/lib/storage";
+import type { Vessel } from "@/lib/types";
 
 type Filter = "all" | "places" | "halls";
 type Selection =
   | { kind: "region"; id: string }
   | { kind: "hall"; id: string };
 
+function demoHeat(id: string): number {
+  let n = 0;
+  for (let i = 0; i < id.length; i++) n += id.charCodeAt(i);
+  return (n % 5) + 2;
+}
+
+function hallGate(
+  hall: OrderHall,
+  vessel: Vessel | null
+): { enterable: boolean; label: string; reason: string } {
+  if (!vessel) {
+    return {
+      enterable: false,
+      label: "Locked",
+      reason: "Embody a Vessel in the Rite first.",
+    };
+  }
+  if (hall.id === "the-blood-hideaway") {
+    return {
+      enterable: false,
+      label: "Locked",
+      reason: "Vampirism affliction required · Coming soon",
+    };
+  }
+  const cls = CLASSES.find((c) => c.id === vessel.classId);
+  const className = cls?.name || vessel.classId;
+  if (vessel.classId === "custom" || !cls || cls.name !== hall.tiedTo) {
+    return {
+      enterable: false,
+      label: "Locked",
+      reason: `${hall.tiedTo} class only · you are ${className}`,
+    };
+  }
+  return {
+    enterable: true,
+    label: "Open to your class",
+    reason: `Your ${hall.tiedTo} seal opens this hall.`,
+  };
+}
+
 export default function MapPage() {
   const [filter, setFilter] = useState<Filter>("all");
   const [sel, setSel] = useState<Selection>({ kind: "region", id: "virelios" });
   const [hoverId, setHoverId] = useState<string | null>(null);
   const [hallsOpen, setHallsOpen] = useState(false);
+  const [vessel, setVessel] = useState<Vessel | null>(null);
+  const [active, setActive] = useState<SceneInfo | null>(null);
+  const [booted, setBooted] = useState(false);
+
+  useEffect(() => {
+    setVessel(getVessel());
+    setBooted(true);
+  }, []);
 
   const region = useMemo(
     () => MAP_REGIONS.find((r) => r.id === (sel.kind === "region" ? sel.id : "")),
@@ -36,6 +90,21 @@ export default function MapPage() {
     setSel({ kind: "hall", id });
   }
 
+  if (!booted) {
+    return <p className="text-sm text-fg-muted">Unfurling the map…</p>;
+  }
+
+  if (active && vessel) {
+    return (
+      <SceneRoom
+        scene={active}
+        vessel={vessel}
+        onBack={() => setActive(null)}
+        backLabel="← Map"
+      />
+    );
+  }
+
   return (
     <div className="space-y-4">
       <div className="rite-hero">
@@ -45,8 +114,8 @@ export default function MapPage() {
           <span className="display-italic text-[1.05em]">sixteen holdings</span>
         </h1>
         <p className="text-sm text-fg-muted mt-1.5 leading-relaxed">
-          Colour marks whose homeland it is. Tap a region or Order Hall pin. No
-          Google-Maps chrome. Wisp stays off the map.
+          Tap a region or Order Hall pin, then Enter. Colour marks whose homeland
+          it is. Wisp stays off the map.
         </p>
       </div>
 
@@ -118,8 +187,8 @@ export default function MapPage() {
 
           {showPlaces
             ? MAP_REGIONS.map((r) => {
-                const active = sel.kind === "region" && sel.id === r.id;
-                const hovered = hoverId === r.id && !active;
+                const activeRegion = sel.kind === "region" && sel.id === r.id;
+                const hovered = hoverId === r.id && !activeRegion;
                 return (
                   <g
                     key={r.id}
@@ -132,26 +201,25 @@ export default function MapPage() {
                     onKeyDown={(e) => {
                       if (e.key === "Enter" || e.key === " ") selectRegion(r.id);
                     }}
-                    filter={active ? "url(#regionSelect)" : "url(#regionSoft)"}
+                    filter={activeRegion ? "url(#regionSelect)" : "url(#regionSoft)"}
                   >
                     <polygon
                       points={r.points}
                       fill={r.color}
-                      opacity={active ? 0.95 : hovered ? 0.86 : 0.68}
+                      opacity={activeRegion ? 0.95 : hovered ? 0.86 : 0.68}
                       stroke={
-                        active
+                        activeRegion
                           ? "#e8d28a"
                           : hovered
                             ? "rgba(224,195,106,0.65)"
                             : "rgba(46,42,58,0.75)"
                       }
-                      strokeWidth={active ? 2.6 : hovered ? 1.6 : 1}
+                      strokeWidth={activeRegion ? 2.6 : hovered ? 1.6 : 1}
                       style={{ transition: "opacity 0.15s ease" }}
                     />
-                    {/* soft inner wash */}
                     <polygon
                       points={r.points}
-                      fill={active ? "rgba(224,195,106,0.14)" : "rgba(255,255,255,0.04)"}
+                      fill={activeRegion ? "rgba(224,195,106,0.14)" : "rgba(255,255,255,0.04)"}
                       style={{ pointerEvents: "none" }}
                     />
                     <text
@@ -181,12 +249,12 @@ export default function MapPage() {
                 const spread = siblings.length > 1 ? (idx - (siblings.length - 1) / 2) * 14 : 0;
                 const x = host.cx + spread;
                 const y = host.cy - (h.placement === "standalone" ? 18 : 10) - (i % 3);
-                const active = sel.kind === "hall" && sel.id === h.id;
+                const activeHall = sel.kind === "hall" && sel.id === h.id;
                 return (
                   <g
                     key={h.id}
                     className="cursor-pointer"
-                    filter={active ? "url(#pinActive)" : "url(#pinGlow)"}
+                    filter={activeHall ? "url(#pinActive)" : "url(#pinGlow)"}
                     onClick={(e) => {
                       e.stopPropagation();
                       selectHall(h.id);
@@ -195,9 +263,9 @@ export default function MapPage() {
                     <circle
                       cx={x}
                       cy={y}
-                      r={active ? 7.5 : 5.8}
-                      fill={active ? "#e0c36a" : "#16102a"}
-                      stroke={active ? "#f5efe4" : "#b894e0"}
+                      r={activeHall ? 7.5 : 5.8}
+                      fill={activeHall ? "#e0c36a" : "#16102a"}
+                      stroke={activeHall ? "#f5efe4" : "#b894e0"}
                       strokeWidth={1.6}
                     />
                     <text
@@ -205,7 +273,7 @@ export default function MapPage() {
                       y={y + 0.5}
                       textAnchor="middle"
                       dominantBaseline="middle"
-                      fill={active ? "#1a1408" : "#e0c36a"}
+                      fill={activeHall ? "#1a1408" : "#e0c36a"}
                       fontSize="6"
                       style={{ pointerEvents: "none" }}
                     >
@@ -221,11 +289,44 @@ export default function MapPage() {
       </div>
 
       {sel.kind === "region" && region ? (
-        <PlaceCard region={region} halls={regionHalls} onHall={selectHall} />
+        <PlaceCard
+          region={region}
+          halls={regionHalls}
+          vessel={vessel}
+          onHall={selectHall}
+          onEnter={() => {
+            if (!vessel) return;
+            setActive(
+              sceneForPlace({
+                id: region.id,
+                label: region.label,
+                note: region.note,
+                kind: region.kind,
+              })
+            );
+          }}
+        />
       ) : null}
 
       {sel.kind === "hall" && hall ? (
-        <HallCard hall={hall} onRegion={() => selectRegion(hall.regionId)} />
+        <HallCard
+          hall={hall}
+          vessel={vessel}
+          onRegion={() => selectRegion(hall.regionId)}
+          onEnter={() => {
+            if (!vessel) return;
+            const gate = hallGate(hall, vessel);
+            if (!gate.enterable) return;
+            setActive(
+              sceneForHall({
+                id: hall.id,
+                name: hall.name,
+                mapPlace: hall.mapPlace,
+                tiedTo: hall.tiedTo,
+              })
+            );
+          }}
+        />
       ) : null}
 
       {filter === "halls" || filter === "all" ? (
@@ -253,31 +354,34 @@ export default function MapPage() {
                 vampires. Mix of hub/city attach and standalone landmarks.
               </p>
               <ul className="grid gap-2 sm:grid-cols-2">
-                {ORDER_HALLS.map((h) => (
-                  <li key={h.id}>
-                    <button
-                      type="button"
-                      className="hall-tile w-full text-left"
-                      data-active={sel.kind === "hall" && sel.id === h.id}
-                      onClick={() => selectHall(h.id)}
-                    >
-                      <span className="hall-tile-glyph" aria-hidden>
-                        {h.glyph}
-                      </span>
-                      <span className="min-w-0">
-                        <span className="block text-[10px] uppercase tracking-[0.14em] text-gold">
-                          Order Hall · {h.tiedTo}
+                {ORDER_HALLS.map((h) => {
+                  const gate = hallGate(h, vessel);
+                  return (
+                    <li key={h.id}>
+                      <button
+                        type="button"
+                        className="hall-tile w-full text-left"
+                        data-active={sel.kind === "hall" && sel.id === h.id}
+                        onClick={() => selectHall(h.id)}
+                      >
+                        <span className="hall-tile-glyph" aria-hidden>
+                          {h.glyph}
                         </span>
-                        <span className="font-display text-base font-semibold text-fg block truncate">
-                          {h.name}
+                        <span className="min-w-0">
+                          <span className="block text-[10px] uppercase tracking-[0.14em] text-gold">
+                            Order Hall · {h.tiedTo}
+                          </span>
+                          <span className="font-display text-base font-semibold text-fg block truncate">
+                            {h.name}
+                          </span>
+                          <span className="text-[11px] text-fg-muted block truncate">
+                            {gate.enterable ? h.mapPlace : gate.label + " · " + gate.reason}
+                          </span>
                         </span>
-                        <span className="text-[11px] text-fg-muted block truncate">
-                          {h.mapPlace}
-                        </span>
-                      </span>
-                    </button>
-                  </li>
-                ))}
+                      </button>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           ) : null}
@@ -286,7 +390,7 @@ export default function MapPage() {
 
       <EmptyState
         title="Border Pass"
-        body="Each vessel earns access separately. Staging shows places; passport checks ship with live place gates."
+        body="Each vessel earns access separately. Staging lets you Preview homeland rooms; live passport checks come later."
       />
     </div>
   );
@@ -295,36 +399,54 @@ export default function MapPage() {
 function PlaceCard({
   region,
   halls,
+  vessel,
   onHall,
+  onEnter,
 }: {
   region: MapRegion;
   halls: OrderHall[];
+  vessel: Vessel | null;
   onHall: (id: string) => void;
+  onEnter: () => void;
 }) {
-  const status =
-    region.kind === "hub"
-      ? "Open to all · world capital · every People, no pass"
-      : region.kind === "wastes"
-        ? "Wild holding · Border Pass later"
-        : region.culture
-          ? `Homeland of the ${region.culture}`
-          : "Homeland · Border Pass later";
+  const heat = demoHeat(region.id);
+  const isHub = region.kind === "hub";
+  const isWastes = region.kind === "wastes";
+  const accessLabel = isHub
+    ? "Open"
+    : isWastes
+      ? "Preview"
+      : "Preview · Border Pass later";
+  const status = isHub
+    ? "Open to all · world capital · every People, no pass"
+    : isWastes
+      ? "Wild holding · enter as Preview (demo)"
+      : region.culture
+        ? `Homeland of the ${region.culture} · Border Pass later · Preview open`
+        : "Homeland · Border Pass later · Preview open";
 
   return (
-    <article className="place-card">
+    <article className="place-card place-card-arrive" data-arrive="true">
       <div className="place-card-sheen" aria-hidden />
-      <p className="relative z-[1] text-[10px] uppercase tracking-[0.16em] text-gold mb-1">
-        {region.kind === "hub"
-          ? "Open hub · everyone"
-          : region.kind === "wastes"
-            ? "Wild holding"
-            : region.culture
-              ? `Homeland of the ${region.culture}`
-              : "Homeland"}
-      </p>
-      <h2 className="relative z-[1] font-display text-2xl font-semibold text-fg leading-tight">
-        {region.label}
-      </h2>
+      <div className="relative z-[1] flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="text-[10px] uppercase tracking-[0.16em] text-gold mb-1">
+            {isHub
+              ? "Open hub · everyone"
+              : isWastes
+                ? "Wild holding"
+                : region.culture
+                  ? `Homeland of the ${region.culture}`
+                  : "Homeland"}
+          </p>
+          <h2 className="font-display text-2xl font-semibold text-fg leading-tight">
+            {region.label}
+          </h2>
+        </div>
+        <span className="place-heat shrink-0" title="Demo cast">
+          demo · {heat} here
+        </span>
+      </div>
       <div
         className="relative z-[1] mt-2 mb-3 h-1.5 w-16 rounded-full"
         style={{
@@ -336,6 +458,18 @@ function PlaceCard({
       <p className="relative z-[1] text-sm text-fg-muted leading-relaxed">{region.note}</p>
       <div className="place-status relative z-[1]" data-kind={region.kind}>
         {status}
+      </div>
+      <div className="relative z-[1] mt-3.5 flex flex-wrap gap-2 items-center">
+        {vessel ? (
+          <button type="button" className="btn-gold text-sm py-2 px-4 !min-h-0" onClick={onEnter}>
+            Enter place
+          </button>
+        ) : (
+          <Link href="/rite" className="btn-gold text-sm py-2 px-4 !min-h-0 inline-flex">
+            Rite first
+          </Link>
+        )}
+        <span className="demo-badge">{accessLabel}</span>
       </div>
       {halls.length > 0 ? (
         <div className="relative z-[1] mt-3 pt-3 border-t border-border/60 space-y-1.5">
@@ -360,30 +494,59 @@ function PlaceCard({
   );
 }
 
-function HallCard({ hall, onRegion }: { hall: OrderHall; onRegion: () => void }) {
+function HallCard({
+  hall,
+  vessel,
+  onRegion,
+  onEnter,
+}: {
+  hall: OrderHall;
+  vessel: Vessel | null;
+  onRegion: () => void;
+  onEnter: () => void;
+}) {
   const host = MAP_REGIONS.find((r) => r.id === hall.regionId);
   const vampire = hall.tiedTo.includes("Vampire");
+  const gate = hallGate(hall, vessel);
+  const heat = demoHeat(hall.id);
+
   return (
-    <article className="place-card place-card-hall">
+    <article className="place-card place-card-hall place-card-arrive" data-arrive="true">
       <div className="place-card-sheen" aria-hidden />
-      <p className="relative z-[1] text-[10px] uppercase tracking-[0.16em] text-gold mb-1">
-        Order Hall · {hall.tiedTo}
-      </p>
-      <h2 className="relative z-[1] font-display text-2xl font-semibold text-fg leading-tight">
-        {hall.name}
-      </h2>
+      <div className="relative z-[1] flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="text-[10px] uppercase tracking-[0.16em] text-gold mb-1">
+            Order Hall · {hall.tiedTo}
+          </p>
+          <h2 className="font-display text-2xl font-semibold text-fg leading-tight">
+            {hall.name}
+          </h2>
+        </div>
+        <span className="place-heat shrink-0" title="Demo cast">
+          demo · {heat} here
+        </span>
+      </div>
       <p className="relative z-[1] text-sm text-fg-muted mt-2 leading-relaxed">
         {hall.mapPlace}. Access is class-gated
         {vampire ? " (vampirism affliction)" : ""} — not Border Pass.
       </p>
-      <div
-        className="place-status relative z-[1]"
-        data-kind="hall"
-      >
-        Class-gated · {hall.tiedTo}
-        {vampire ? " · vampirism" : ""}
+      <div className="place-status relative z-[1]" data-kind={gate.enterable ? "hall" : "locked"}>
+        {gate.enterable ? gate.reason : `${gate.label} · ${gate.reason}`}
       </div>
-      <div className="relative z-[1] mt-3 flex flex-wrap gap-2 items-center">
+      <div className="relative z-[1] mt-3.5 flex flex-wrap gap-2 items-center">
+        {gate.enterable ? (
+          <button type="button" className="btn-gold text-sm py-2 px-4 !min-h-0" onClick={onEnter}>
+            Enter hall
+          </button>
+        ) : vessel ? (
+          <span className="btn-ghost text-sm py-2 px-4 !min-h-0 opacity-70 cursor-not-allowed inline-flex">
+            Locked
+          </span>
+        ) : (
+          <Link href="/rite" className="btn-gold text-sm py-2 px-4 !min-h-0 inline-flex">
+            Rite first
+          </Link>
+        )}
         <span className="demo-badge">
           {hall.placement === "standalone" ? "Standalone landmark" : "In / attached to place"}
         </span>

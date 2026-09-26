@@ -29,12 +29,15 @@ function statusLabel(s: Bond["status"]) {
 function BondRow({
   bond,
   onAccept,
+  onDecline,
 }: {
   bond: Bond;
   onAccept: (id: string) => void;
+  onDecline: (id: string) => void;
 }) {
   const initial = bond.name.trim().charAt(0).toUpperCase() || "·";
   const hue = bond.hue || HUES[0];
+  const incoming = bond.status === "open";
   return (
     <li className="bond-card" data-status={bond.status}>
       <div
@@ -58,14 +61,23 @@ function BondRow({
         </div>
         <p className="text-xs text-fg-muted mt-1">{bond.kind}</p>
       </div>
-      {bond.status === "open" || bond.status === "asked" ? (
-        <button
-          type="button"
-          className="btn-gold text-[10px] py-1.5 px-3.5 min-h-0 shrink-0 tracking-[0.12em]"
-          onClick={() => onAccept(bond.id)}
-        >
-          Accept
-        </button>
+      {incoming ? (
+        <div className="bond-actions">
+          <button
+            type="button"
+            className="btn-gold text-[10px] py-1.5 px-3.5 min-h-0 shrink-0 tracking-[0.12em]"
+            onClick={() => onAccept(bond.id)}
+          >
+            Accept
+          </button>
+          <button
+            type="button"
+            className="bond-decline"
+            onClick={() => onDecline(bond.id)}
+          >
+            Decline
+          </button>
+        </div>
       ) : null}
     </li>
   );
@@ -101,6 +113,11 @@ export default function WeavePage() {
     persist(
       bonds.map((b) => (b.id === id ? { ...b, status: "accepted" as const } : b))
     );
+  }
+
+  function decline(id: string) {
+    // Honest demo: declining removes the incoming ask from your constellation
+    persist(bonds.filter((b) => b.id !== id));
   }
 
   function submitAsk(e: FormEvent) {
@@ -208,7 +225,7 @@ export default function WeavePage() {
           <h2 className="section-serif text-fg">Asking for you</h2>
           <ul className="space-y-2.5">
             {askingForYou.map((b) => (
-              <BondRow key={b.id} bond={b} onAccept={accept} />
+              <BondRow key={b.id} bond={b} onAccept={accept} onDecline={decline} />
             ))}
           </ul>
         </section>
@@ -223,7 +240,7 @@ export default function WeavePage() {
         ) : (
           <ul className="space-y-2.5">
             {yourThread.map((b) => (
-              <BondRow key={b.id} bond={b} onAccept={accept} />
+              <BondRow key={b.id} bond={b} onAccept={accept} onDecline={decline} />
             ))}
           </ul>
         )}
