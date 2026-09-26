@@ -2428,12 +2428,18 @@ body {
 }
 
 .walk-card-tap {
+  display: block;
   background: transparent;
   border: none;
   padding: 0;
+  margin: 0;
   cursor: pointer;
   text-align: center;
   color: inherit;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  appearance: none;
+  font: inherit;
 }
 .walk-card-tap:hover .walk-avatar {
   border-color: color-mix(in srgb, var(--gold) 50%, var(--border));
@@ -3010,6 +3016,7 @@ button.scene-call-hint:hover {
 }
 .walk-card-tap {
   text-decoration: none;
+  pointer-events: auto;
 }
 
 /* —— Calendar · lantern board + Safety · care chamber —— */

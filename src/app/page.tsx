@@ -304,24 +304,22 @@ export default function RealmPage() {
           </Link>
         </div>
         <div className="h-scroll">
-          {/* Self presence in strip */}
-          <Link
-            href="/self"
+          {/* Self presence in strip — tap opens preview with Self CTA */}
+          <button
+            type="button"
             className="walk-card walk-card-tap"
-            onClick={(e) => {
-              if (e.altKey || e.shiftKey) {
-                e.preventDefault();
-                setPreview({
-                  name: vessel.name,
-                  status: presenceLabel(presence).toLowerCase(),
-                  presence,
-                  hue: "#5a3d78",
-                  pip: presencePip(presence),
-                  blurb: "You · " + peopleLabel,
-                  href: "/self",
-                });
-              }
-            }}
+            aria-label="You · open vessel preview"
+            onClick={() =>
+              setPreview({
+                name: vessel.name,
+                status: presenceLabel(presence).toLowerCase(),
+                presence,
+                hue: "#5a3d78",
+                pip: presencePip(presence),
+                blurb: "You · " + peopleLabel,
+                href: "/self",
+              })
+            }
           >
             <div
               className="walk-avatar"
@@ -345,19 +343,14 @@ export default function RealmPage() {
             <p className="text-[11px] text-fg-muted mt-1.5 text-center leading-snug capitalize px-0.5">
               {presenceLabel(presence)}
             </p>
-          </Link>
+          </button>
           {WALKING.map((w) => (
-            <Link
+            <button
               key={w.name}
-              href={w.href}
+              type="button"
               className="walk-card walk-card-tap"
-              onClick={(e) => {
-                // Keep preview sheet for long-press feel: shift/alt opens preview instead
-                if (e.altKey || e.shiftKey) {
-                  e.preventDefault();
-                  setPreview(w);
-                }
-              }}
+              aria-label={`${w.name} · ${w.blurb}`}
+              onClick={() => setPreview(w)}
             >
               <div
                 className="walk-avatar"
@@ -377,11 +370,11 @@ export default function RealmPage() {
               <p className="text-[11px] text-fg-muted mt-1.5 text-center leading-snug capitalize px-0.5">
                 {w.status}
               </p>
-            </Link>
+            </button>
           ))}
         </div>
         <p className="text-[10px] text-fg-muted/70 tracking-wide">
-          Demo cast · tap a face to open scene / Weave / Map
+          Demo cast · tap a face for preview · Enter scene / Weave / Map
         </p>
       </section>
 
@@ -487,28 +480,30 @@ export default function RealmPage() {
               </div>
             </div>
             <div className="mt-4 flex flex-wrap gap-2">
-              {preview.href ? (
-                <Link
-                  href={preview.href}
-                  className="btn-gold text-sm py-2 px-4 !min-h-0"
-                  onClick={() => setPreview(null)}
-                >
-                  {preview.sceneId
-                    ? "Enter scene"
-                    : preview.href.startsWith("/map")
-                      ? "Open map"
-                      : preview.href.startsWith("/self")
-                        ? "Open Self"
-                        : "Open Weave"}
-                </Link>
-              ) : null}
               <Link
-                href="/weave"
-                className="btn-ghost text-sm py-2 px-4 !min-h-0"
+                href={preview.href || (preview.sceneId ? `/scenes?open=${preview.sceneId}` : "/weave")}
+                className="btn-gold text-sm py-2 px-4 !min-h-0"
                 onClick={() => setPreview(null)}
               >
-                Weave
+                {preview.sceneId
+                  ? "Enter scene"
+                  : (preview.href || "").startsWith("/map")
+                    ? "Open map"
+                    : (preview.href || "").startsWith("/self")
+                      ? "Open Self"
+                      : (preview.href || "").startsWith("/scenes")
+                        ? "Open scenes"
+                        : "Open Weave"}
               </Link>
+              {preview.href && !preview.href.startsWith("/weave") ? (
+                <Link
+                  href="/weave"
+                  className="btn-ghost text-sm py-2 px-4 !min-h-0"
+                  onClick={() => setPreview(null)}
+                >
+                  Weave
+                </Link>
+              ) : null}
               <button
                 type="button"
                 className="btn-ghost text-sm py-2 px-4 !min-h-0"

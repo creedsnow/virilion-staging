@@ -146,7 +146,10 @@ function normalizePresence(raw: string | null | undefined): PresenceMode | null 
   return null;
 }
 
-export function getPresence(): PresenceMode {
+/** Cached snapshot so useSyncExternalStore getSnapshot stays referentially stable. */
+let presenceSnapshot: PresenceMode | null = null;
+
+function readPresenceRaw(): PresenceMode {
   if (!canUseStorage()) return "open";
 
   const primary = normalizePresence(localStorage.getItem(KEYS.presence));
@@ -155,7 +158,12 @@ export function getPresence(): PresenceMode {
   const legacy = normalizePresence(localStorage.getItem(KEYS.presenceLegacy));
   if (legacy) {
     // Migrate legacy key forward so refresh keeps the choice.
-    localStorage.setItem(KEYS.presence, legacy);
+    try {
+      localStorage.setItem(KEYS.presence, legacy);
+      localStorage.removeItem(KEYS.presenceLegacy);
+    } catch {
+      /* ignore */
+    }
     return legacy;
   }
 
@@ -163,7 +171,12 @@ export function getPresence(): PresenceMode {
     const vessel = getVessel();
     const mirrored = normalizePresence(vessel?.presence ?? null);
     if (mirrored) {
-      localStorage.setItem(KEYS.presence, mirrored);
+      try {
+        localStorage.setItem(KEYS.presence, mirrored);
+        localStorage.removeItem(KEYS.presenceLegacy);
+      } catch {
+        /* ignore */
+      }
       return mirrored;
     }
   } catch {
@@ -173,12 +186,24 @@ export function getPresence(): PresenceMode {
   return "open";
 }
 
+/** One source of truth for Self + Realm: Open / In scene / Unseen. Survives refresh. */
+export function getPresence(): PresenceMode {
+  const next = readPresenceRaw();
+  presenceSnapshot = next;
+  return next;
+}
+
 export function setPresence(mode: PresenceMode): void {
   if (!canUseStorage()) return;
-  localStorage.setItem(KEYS.presence, mode);
-  // Drop legacy key so nothing re-reads a stale Open.
-  localStorage.removeItem(KEYS.presenceLegacy);
-  // Mirror onto vessel JSON so presence survives key churn.
+  try {
+    localStorage.setItem(KEYS.presence, mode);
+    // Drop legacy key so nothing re-reads a stale Open.
+    localStorage.removeItem(KEYS.presenceLegacy);
+  } catch {
+    /* ignore */
+  }
+  presenceSnapshot = mode;
+  // Mirror onto vessel JSON so presence survives key churn / accidental key drops.
   try {
     const vessel = getVessel();
     if (vessel && vessel.presence !== mode) {
@@ -189,30 +214,46 @@ export function setPresence(mode: PresenceMode): void {
   }
 }
 
-/** Subscribe to presence changes (same-tab custom event + cross-tab storage). */
+function notifyPresenceListeners(): void {
+  if (!canUseStorage()) return;
+  window.dispatchEvent(new Event("virilion-presence"));
+}
+
+/** Subscribe to presence changes (same-tab, cross-tab, bfcache restore). */
 export function subscribePresence(onStoreChange: () => void): () => void {
   if (!canUseStorage()) return () => undefined;
-  const onCustom = () => onStoreChange();
+  const onCustom = () => {
+    presenceSnapshot = null; // force re-read
+    onStoreChange();
+  };
   const onStorage = (e: StorageEvent) => {
     if (
       e.key === KEYS.presence ||
       e.key === KEYS.presenceLegacy ||
       e.key === KEYS.vessel
     ) {
+      presenceSnapshot = null;
       onStoreChange();
     }
   };
+  // bfcache / tab resume: re-read so Realm never sticks on SSR default "open"
+  const onResume = () => {
+    presenceSnapshot = null;
+    onStoreChange();
+  };
   window.addEventListener("virilion-presence", onCustom);
   window.addEventListener("storage", onStorage);
+  window.addEventListener("pageshow", onResume);
+  window.addEventListener("focus", onResume);
   return () => {
     window.removeEventListener("virilion-presence", onCustom);
     window.removeEventListener("storage", onStorage);
+    window.removeEventListener("pageshow", onResume);
+    window.removeEventListener("focus", onResume);
   };
 }
 
 export function setPresenceAndNotify(mode: PresenceMode): void {
   setPresence(mode);
-  if (canUseStorage()) {
-    window.dispatchEvent(new Event("virilion-presence"));
-  }
+  notifyPresenceListeners();
 }
