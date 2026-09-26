@@ -63,6 +63,7 @@ export function SceneRoom({
   return (
     <div className="flex flex-col h-[calc(100dvh-8rem)]">
       <div className="room-chrome px-4 py-3.5 mb-3">
+        <div className="room-chrome-sheen" aria-hidden />
         <div className="relative z-[1] flex items-start justify-between gap-2">
           <div className="min-w-0">
             <button
@@ -95,8 +96,11 @@ export function SceneRoom({
 
       <div className="scene-log flex-1 overflow-y-auto space-y-3 mb-3">
         {messages.length === 0 ? (
-          <div className="text-center py-10 px-4">
-            <p className="font-display text-lg text-gold-soft mb-2">Quiet for now</p>
+          <div className="scene-empty text-center py-12 px-4">
+            <p className="section-kicker mb-2">Quiet room</p>
+            <p className="font-display text-xl text-gold-soft mb-2">
+              The lamps are lit. No one has spoken yet.
+            </p>
             <p className="text-sm text-fg-muted leading-relaxed max-w-sm mx-auto">
               Open this scene in another tab to demo multi-vessel chat (same browser).
               Present as your Vessel. Consent before escalation. Never Discord-as-home.
@@ -165,7 +169,7 @@ export function SceneRoom({
         <div ref={bottomRef} />
       </div>
 
-      <form onSubmit={send} className="flex gap-2">
+      <form onSubmit={send} className="scene-composer flex gap-2">
         <input
           className="input flex-1"
           value={text}

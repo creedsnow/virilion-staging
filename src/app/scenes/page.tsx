@@ -46,7 +46,10 @@ export default function ScenesPage() {
     <div className="space-y-4">
       <div className="rite-hero">
         <p className="section-kicker mb-1">In-app RP</p>
-        <h1 className="font-display text-3xl font-semibold text-fg">Scenes</h1>
+        <h1 className="font-display text-3xl font-semibold text-fg leading-tight">
+          Where the story is{" "}
+          <span className="display-italic text-[1.05em]">happening</span>
+        </h1>
         <p className="text-sm text-fg-muted mt-1.5 leading-relaxed">
           Discover live rooms → open text RP here. Join call opens in-app voice —
           never leaves Virilion. No Discord-as-home.
@@ -75,9 +78,11 @@ export default function ScenesPage() {
                     Text in-app · Voice via Join call
                   </p>
                 </div>
-                <span className="shrink-0 text-[10px] uppercase tracking-wide text-ok border border-ok/40 rounded-full px-2.5 py-1 bg-ok/10">
-                  {s.seats}
-                </span>
+                <span className="scene-seat shrink-0">{s.seats}</span>
+              </div>
+              <div className="relative z-[1] mt-3.5 flex gap-2">
+                <span className="scene-step">Step inside</span>
+                <span className="scene-call-hint">Join call · in-app</span>
               </div>
             </button>
           </li>

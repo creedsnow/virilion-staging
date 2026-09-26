@@ -77,7 +77,6 @@ export function VoicePanel({
         }
         streamRef.current = stream;
 
-        // Loopback WebRTC so the demo exercises a real peer connection path
         const pc1 = new RTCPeerConnection();
         const pc2 = new RTCPeerConnection();
         pcRef.current = pc1;
@@ -85,7 +84,7 @@ export function VoicePanel({
         pc2.ontrack = (ev) => {
           if (audioRef.current) {
             audioRef.current.srcObject = ev.streams[0];
-            audioRef.current.muted = true; // avoid feedback; level meter uses analyser
+            audioRef.current.muted = true;
           }
         };
         pc1.onicecandidate = (e) => e.candidate && pc2.addIceCandidate(e.candidate);
@@ -185,68 +184,91 @@ export function VoicePanel({
   }
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/70 flex items-end sm:items-center justify-center p-4">
-      <div className="card w-full max-w-md space-y-4 shadow-2xl">
-        <div className="flex items-start justify-between gap-3">
+    <div className="voice-sheet fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4">
+      <div className="voice-panel w-full max-w-md space-y-4">
+        <div className="voice-panel-glow" aria-hidden />
+        <div className="relative z-[1] flex items-start justify-between gap-3">
           <div>
-            <p className="text-xs uppercase tracking-widest text-gold">In-app voice</p>
-            <h2 className="text-lg font-semibold text-fg">{sceneTitle}</h2>
+            <p className="section-kicker mb-1">In-app voice</p>
+            <h2 className="font-display text-xl font-semibold text-fg leading-tight">
+              {sceneTitle}
+            </h2>
+            <p className="text-[11px] text-fg-muted mt-1">
+              Stays in Virilion · never Discord-as-home
+            </p>
           </div>
-          <button type="button" className="btn-ghost text-xs py-1 px-2" onClick={leave}>
+          <button type="button" className="btn-ghost text-xs py-1.5 px-2.5 !min-h-0" onClick={leave}>
             Close
           </button>
         </div>
 
         {status === "connecting" && (
-          <p className="text-sm text-fg-muted animate-pulse">
-            Connecting demo voice… requesting microphone…
-          </p>
+          <div className="voice-state relative z-[1]">
+            <p className="font-display text-base text-gold-soft mb-1">Opening the circle…</p>
+            <p className="text-sm text-fg-muted leading-relaxed">
+              Requesting microphone for the in-app voice shell.
+            </p>
+          </div>
         )}
         {status === "error" && (
-          <p className="text-sm text-danger">
-            {error}. Allow mic access to join the in-app voice shell (WebRTC demo).
-          </p>
+          <div className="voice-state voice-state-error relative z-[1]">
+            <p className="font-display text-base text-danger mb-1">Mic unavailable</p>
+            <p className="text-sm text-fg-muted leading-relaxed">
+              {error}. Allow mic access to join the staging voice shell (WebRTC demo).
+            </p>
+          </div>
         )}
         {status === "live" && (
-          <>
-            <div className="space-y-1">
-              <p className="text-xs text-fg-muted">Your mic level</p>
-              <div className="h-2 rounded-full bg-border overflow-hidden">
-                <div
-                  className="h-full bg-gold transition-[width] duration-75"
-                  style={{ width: `${muted || deafened ? 0 : level}%` }}
-                />
-              </div>
+          <div className="relative z-[1] space-y-2">
+            <p className="text-[10px] uppercase tracking-[0.14em] text-gold">Your mic level</p>
+            <div className="voice-meter">
+              <div
+                className="voice-meter-fill"
+                style={{ width: `${muted || deafened ? 0 : level}%` }}
+              />
             </div>
             <audio ref={audioRef} autoPlay playsInline />
-          </>
+          </div>
         )}
 
-        <div>
-          <p className="label">In call</p>
-          <ul className="space-y-1">
+        <div className="relative z-[1]">
+          <p className="text-[10px] uppercase tracking-[0.14em] text-gold mb-2">In call</p>
+          <ul className="voice-roster space-y-1.5">
             {roster.length === 0 ? (
-              <li className="text-sm text-fg-muted">Waiting for presence…</li>
+              <li className="voice-state text-sm text-fg-muted py-3 px-3">
+                Quiet circle — waiting for presence…
+              </li>
             ) : (
-              roster.map((p) => (
-                <li
-                  key={p.vesselId}
-                  className="flex justify-between text-sm border-b border-border/60 py-1"
-                >
-                  <span className="text-fg">{p.vesselName}</span>
-                  <span className="text-fg-muted text-xs">
-                    {p.muted ? "Muted" : ""}
-                    {p.muted && p.deafened ? " · " : ""}
-                    {p.deafened ? "Deafened" : ""}
-                    {!p.muted && !p.deafened ? "Live" : ""}
-                  </span>
-                </li>
-              ))
+              roster.map((p) => {
+                const initial = p.vesselName.trim().charAt(0).toUpperCase() || "·";
+                const live = !p.muted && !p.deafened;
+                return (
+                  <li key={p.vesselId} className="voice-roster-row">
+                    <span className="voice-avatar" aria-hidden>
+                      {initial}
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-sm font-medium text-fg truncate">
+                        {p.vesselName}
+                      </span>
+                    </span>
+                    <span
+                      className="voice-pip"
+                      data-live={live ? "true" : "false"}
+                    >
+                      {p.muted ? "Muted" : ""}
+                      {p.muted && p.deafened ? " · " : ""}
+                      {p.deafened ? "Deafened" : ""}
+                      {live ? "Live" : ""}
+                    </span>
+                  </li>
+                );
+              })
             )}
           </ul>
         </div>
 
-        <div className="grid grid-cols-3 gap-2">
+        <div className="relative z-[1] grid grid-cols-3 gap-2">
           <button
             type="button"
             className={`btn-ghost text-sm ${muted ? "border-gold text-gold" : ""}`}
@@ -267,8 +289,9 @@ export function VoicePanel({
             Leave
           </button>
         </div>
-        <p className="text-[11px] text-fg-muted leading-relaxed">
-          Staging voice: local mic + WebRTC loopback + shared presence. Multi-browser mesh signaling ships next — still in-app.
+        <p className="relative z-[1] text-[11px] text-fg-muted leading-relaxed">
+          Staging voice: local mic + WebRTC loopback + shared presence. Multi-browser
+          mesh signaling ships next — still in-app.
         </p>
       </div>
     </div>
