@@ -418,8 +418,11 @@ export default function SelfPage() {
 
           <div className="pt-1 space-y-2">
             <button type="button" className="btn-ghost w-full" onClick={logout}>
-              Log out → Enter
+              Log out
             </button>
+            <p className="text-[11px] text-fg-muted text-center leading-relaxed px-2">
+              Clears demo session and vessel, then returns to Enter — fresh start without clearing browser cache.
+            </p>
             {qa ? (
               <button
                 type="button"

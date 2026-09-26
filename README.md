@@ -34,14 +34,11 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-### QA / demo wipe
+### Log out vs hard-refresh vs `?qa=1`
 
-Player path hides demo wipe CTAs. To retake the Rite in staging:
-
-- Visit any route with `?qa=1` (latches `localStorage.virilion_qa=1`), or
-- Set `localStorage.setItem("virilion_qa", "1")` in the console
-
-Clear with `?qa=0` or `localStorage.removeItem("virilion_qa")`.
+- **Log out** (Self → Player, header ⋯ menu, or Enter when already signed in): clears demo session + vessel + related play keys (`virilion_demo_player`, `virilion_vessel`, pending, presence, scenes/voice/weave/reports/blocked) and returns to Enter as a fresh demo; Moonlight dark is the default after clear. Keeps age gate + QA latch. No hard-refresh needed (HTML is network-first).
+- **Hard-refresh** alone does **not** clear localStorage — you stay in the same saved demo state.
+- **`?qa=1` wipe**: player path hides demo wipe CTAs. Latch `localStorage.virilion_qa=1` (or `?qa=1`) to show vessel-only “wipe & re-Rite” for QA retake — not a full Log out. Clear with `?qa=0`.
 
 
 ```bash
@@ -56,7 +53,7 @@ npm start       # serve production build
 3. **Rite of Making** (Role → Can carry → People → Style → Class → Name → Review)  
 4. App shell: Realm · Map · d20 · Scenes · Self (+ Weave)  
 5. Scenes → open room → chat as Vessel; **Join call** opens in-app voice (mic, Mute/Deafen/Leave)  
-6. Self → Player → Log out returns to Enter; GM demo at `/admin`
+6. Self → Player → **Log out** (or header ⋯ → Log out) clears session + vessel and returns to Enter for a fresh demo; GM demo at `/admin`
 
 ## Staging deploy (Vercel)
 

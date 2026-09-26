@@ -38,6 +38,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     const t = applyStoredTheme();
     setThemeState(t);
     setReady(true);
+    const onLogout = () => setThemeState("dark");
+    window.addEventListener("virilion-logout", onLogout);
+    return () => window.removeEventListener("virilion-logout", onLogout);
   }, []);
 
   const setTheme = useCallback((t: ThemeMode) => {

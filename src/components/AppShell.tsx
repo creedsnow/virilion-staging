@@ -2,13 +2,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { AgeGate } from "./AgeGate";
 import { BottomNav } from "./BottomNav";
 import { DemoBadge } from "./DemoBadge";
 import { useTheme } from "./ThemeProvider";
-import { getAgeOk, getPlayer, getVessel } from "@/lib/storage";
+import { clearSession, getAgeOk, getPlayer, getVessel } from "@/lib/storage";
 
 const PUBLIC = new Set(["/enter", "/rules"]);
 
@@ -39,6 +39,16 @@ function IconLamp() {
   );
 }
 
+function IconMore() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+      <circle cx="5" cy="12" r="1.6" />
+      <circle cx="12" cy="12" r="1.6" />
+      <circle cx="19" cy="12" r="1.6" />
+    </svg>
+  );
+}
+
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -47,13 +57,42 @@ export function AppShell({ children }: { children: ReactNode }) {
   const [ageOk, setAgeOkState] = useState(false);
   const [hasPlayer, setHasPlayer] = useState(false);
   const [hasVessel, setHasVessel] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setAgeOkState(getAgeOk());
     setHasPlayer(!!getPlayer());
     setHasVessel(!!getVessel());
     setReady(true);
+    setMenuOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    function onDoc(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    }
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setMenuOpen(false);
+    }
+    document.addEventListener("mousedown", onDoc);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDoc);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [menuOpen]);
+
+  function logout() {
+    clearSession();
+    setHasPlayer(false);
+    setHasVessel(false);
+    setMenuOpen(false);
+    router.replace("/enter");
+  }
 
   useEffect(() => {
     if (!ready) return;
@@ -172,6 +211,52 @@ export function AppShell({ children }: { children: ReactNode }) {
                   <span className="wisp-mote-glow" aria-hidden />
                   <span className="wisp-mote-core" aria-hidden />
                 </Link>
+              ) : null}
+              {hasPlayer ? (
+                <div className="relative" ref={menuRef}>
+                  <button
+                    type="button"
+                    className="header-icon-btn"
+                    aria-label="Menu"
+                    aria-expanded={menuOpen}
+                    aria-haspopup="menu"
+                    title="Menu"
+                    onClick={() => setMenuOpen((o) => !o)}
+                  >
+                    <IconMore />
+                  </button>
+                  {menuOpen ? (
+                    <div
+                      role="menu"
+                      className="shell-overflow-menu card stone-panel absolute right-0 top-[calc(100%+0.35rem)] z-40 min-w-[9.5rem] p-1.5 shadow-lg"
+                    >
+                      <Link
+                        href="/self"
+                        role="menuitem"
+                        className="shell-menu-item"
+                        onClick={() => setMenuOpen(false)}
+                      >
+                        Self
+                      </Link>
+                      <Link
+                        href="/rules"
+                        role="menuitem"
+                        className="shell-menu-item sm:hidden"
+                        onClick={() => setMenuOpen(false)}
+                      >
+                        Rules
+                      </Link>
+                      <button
+                        type="button"
+                        role="menuitem"
+                        className="shell-menu-item w-full text-left"
+                        onClick={logout}
+                      >
+                        Log out
+                      </button>
+                    </div>
+                  ) : null}
+                </div>
               ) : null}
               <button
                 type="button"

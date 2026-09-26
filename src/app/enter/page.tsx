@@ -2,14 +2,19 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState, type FormEvent } from "react";
-import { getVessel, setPlayer } from "@/lib/storage";
+import { useEffect, useState, type FormEvent } from "react";
+import { clearSession, getPlayer, getVessel, setPlayer } from "@/lib/storage";
 
 export default function EnterPage() {
   const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [alreadyIn, setAlreadyIn] = useState(false);
+
+  useEffect(() => {
+    setAlreadyIn(!!getPlayer());
+  }, []);
 
   function enter(e?: FormEvent) {
     e?.preventDefault();
@@ -27,6 +32,14 @@ export default function EnterPage() {
       enteredAt: new Date().toISOString(),
     });
     router.replace("/rite");
+  }
+
+  function logout() {
+    clearSession();
+    setAlreadyIn(false);
+    setName("");
+    setEmail("");
+    setPassword("");
   }
 
   return (
@@ -60,6 +73,17 @@ export default function EnterPage() {
         <p className="text-[11px] tracking-[0.14em] uppercase text-fg-muted/85 text-center mb-8 leading-relaxed max-w-[17rem]">
           Adult queer mythic fantasy · one vessel · in-app home
         </p>
+
+        {alreadyIn ? (
+          <div className="w-full space-y-3 mb-5 text-center">
+            <p className="text-sm text-fg-muted leading-relaxed">
+              You still have a saved demo session in this browser.
+            </p>
+            <button type="button" className="btn-ghost w-full" onClick={logout}>
+              Log out · start over
+            </button>
+          </div>
+        ) : null}
 
         <form onSubmit={enter} className="enter-form w-full">
           <div className="enter-fields">

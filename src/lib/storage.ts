@@ -167,12 +167,6 @@ export function rejectPendingVessel(id: string): void {
   }
 }
 
-export function clearSession(): void {
-  if (!canUseStorage()) return;
-  localStorage.removeItem(KEYS.player);
-  // Keep vessel + age + theme so "log out" returns to Enter but vessel persists for one-vessel demo.
-  // Per brief: Log out from Self → Player returns to Enter. Vessel stays (one vessel lock).
-}
 
 
 /**
@@ -288,6 +282,53 @@ function notifyPresenceListeners(): void {
   if (!canUseStorage()) return;
   window.dispatchEvent(new Event("virilion-presence"));
 }
+
+
+/**
+ * Player Log out — leave the demo and return to Enter as a fresh start.
+ * Clears auth/session + vessel + related play keys. Keeps age gate + QA latch.
+ * Removes saved theme so Moonlight (dark) is the fresh-load default.
+ * Differs from `?qa=1` wipe (vessel-only Rite retake) and hard-refresh (keeps localStorage).
+ */
+export const LOGOUT_CLEAR_KEYS = [
+  KEYS.player,
+  KEYS.vessel,
+  KEYS.pending,
+  KEYS.presence,
+  KEYS.presenceLegacy,
+  "virilion_scene_messages",
+  "virilion_voice_presence",
+  "virilion_blocked_vessels",
+  "virilion_reports",
+  "virilion_weave",
+] as const;
+
+export function clearSession(): void {
+  if (!canUseStorage()) return;
+  for (const k of LOGOUT_CLEAR_KEYS) {
+    try {
+      localStorage.removeItem(k);
+    } catch {
+      /* ignore */
+    }
+  }
+  // Moonlight fresh default
+  try {
+    localStorage.removeItem(KEYS.theme);
+    localStorage.removeItem(KEYS.themeLegacy);
+  } catch {
+    /* ignore */
+  }
+  applyThemeDom("dark");
+  presenceSnapshot = null;
+  try {
+    window.dispatchEvent(new Event("virilion-logout"));
+  } catch {
+    /* ignore */
+  }
+  notifyPresenceListeners();
+}
+
 
 /** Subscribe to presence changes (same-tab, cross-tab, bfcache restore). */
 export function subscribePresence(onStoreChange: () => void): () => void {
