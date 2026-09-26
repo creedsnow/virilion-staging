@@ -1020,16 +1020,16 @@ body {
   opacity: 0.45;
 }
 .place-status {
-  margin-top: 0.85rem;
-  padding: 0.65rem 0.85rem;
-  border-radius: 0.85rem;
-  font-size: 0.72rem;
+  margin-top: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.95rem;
+  font-size: 0.68rem;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
   line-height: 1.35;
-  color: var(--gold-soft);
-  border: 1px solid color-mix(in srgb, var(--gold) 28%, var(--border));
-  background: color-mix(in srgb, var(--gold) 10%, var(--bg-elevated));
+  color: color-mix(in srgb, var(--fg-muted) 88%, var(--gold-soft));
+  border: 1px solid color-mix(in srgb, var(--border) 72%, var(--gold) 18%);
+  background: color-mix(in srgb, var(--bg-elevated) 82%, transparent);
 }
 .place-status[data-kind="hub"] {
   color: var(--gold-deep);
@@ -2702,11 +2702,32 @@ body {
 
 /* —— Cycle 1: Map enter / Realm asks / Weave decline / composer dock —— */
 .place-card-arrive[data-arrive="true"] {
+  border-color: color-mix(in srgb, var(--gold) 58%, var(--border));
+  background:
+    radial-gradient(ellipse 90% 70% at 88% -12%, color-mix(in srgb, var(--gold) 22%, transparent), transparent 58%),
+    radial-gradient(ellipse 55% 45% at 6% 108%, color-mix(in srgb, var(--aura) 20%, transparent), transparent 52%),
+    linear-gradient(165deg, color-mix(in srgb, var(--bg-card) 78%, var(--parchment)), var(--bg-card));
   box-shadow:
     var(--shadow-card),
-    0 0 36px color-mix(in srgb, var(--gold) 16%, transparent),
-    0 0 22px color-mix(in srgb, var(--aura) 18%, transparent);
-  border-color: color-mix(in srgb, var(--gold) 48%, var(--border));
+    0 0 0 1px color-mix(in srgb, var(--gold) 22%, transparent),
+    0 0 42px color-mix(in srgb, var(--gold) 26%, transparent),
+    0 0 28px color-mix(in srgb, var(--aura) 24%, transparent);
+  animation: place-arrive-settle 0.85s ease-out both;
+}
+.place-card-hall.place-card-arrive[data-arrive="true"] {
+  background:
+    radial-gradient(ellipse 80% 60% at 10% -8%, color-mix(in srgb, var(--aura) 34%, transparent), transparent 58%),
+    radial-gradient(ellipse 48% 38% at 96% 108%, color-mix(in srgb, var(--gold) 16%, transparent), transparent 52%),
+    linear-gradient(165deg, color-mix(in srgb, var(--bg-card) 74%, #2a1a38), var(--bg-card));
+}
+.place-card-arrive[data-arrive="true"] .place-card-sheen {
+  opacity: 0.72;
+  background:
+    radial-gradient(ellipse 70% 50% at 70% 0%, color-mix(in srgb, var(--gold-soft) 18%, transparent), transparent 60%),
+    radial-gradient(1px 1px at 16% 20%, var(--speckle), transparent),
+    radial-gradient(1px 1px at 78% 28%, var(--speckle), transparent),
+    radial-gradient(1.5px 1.5px at 42% 82%, var(--speckle), transparent),
+    radial-gradient(1px 1px at 62% 58%, color-mix(in srgb, var(--gold) 55%, transparent), transparent);
 }
 .place-heat {
   font-size: 0.62rem;
@@ -4221,4 +4242,125 @@ button.scene-call-hint:hover {
 .codex-art-card-link:hover {
   transform: translateY(-2px);
   filter: brightness(1.04);
+}
+
+/* —— Map arriving feel: selected place settle + Enter CTA frame —— */
+.place-arrive-ring {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  z-index: 0;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--gold) 34%, transparent),
+    inset 0 0 28px color-mix(in srgb, var(--gold) 10%, transparent);
+  animation: place-arrive-ring 0.9s ease-out both;
+}
+.place-arrive-kicker {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold-soft);
+  text-shadow: 0 0 12px color-mix(in srgb, var(--gold) 28%, transparent);
+}
+.place-arrive-title {
+  text-shadow: 0 0 18px color-mix(in srgb, var(--gold) 16%, transparent);
+}
+.place-arrive-note {
+  font-size: 0.84rem;
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--fg-muted) 92%, var(--fg));
+  max-width: 36rem;
+}
+.place-arrive-swatch {
+  border: 1px solid color-mix(in srgb, var(--gold) 28%, transparent);
+}
+
+.place-enter-frame {
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem 0.85rem;
+  padding: 0.7rem 0.8rem;
+  border-radius: 1.15rem;
+  border: 1px solid color-mix(in srgb, var(--gold) 38%, var(--border));
+  background:
+    radial-gradient(ellipse 80% 90% at 12% 50%, color-mix(in srgb, var(--gold) 18%, transparent), transparent 58%),
+    linear-gradient(180deg, color-mix(in srgb, var(--bg-elevated) 70%, var(--gold) 8%), color-mix(in srgb, var(--bg-card) 92%, transparent));
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--gold-soft) 18%, transparent),
+    0 0 22px color-mix(in srgb, var(--gold) 12%, transparent);
+}
+.place-enter-cta {
+  box-shadow:
+    var(--shadow-gold),
+    0 0 18px color-mix(in srgb, var(--gold) 28%, transparent),
+    0 0 28px color-mix(in srgb, var(--aura) 16%, transparent);
+}
+.place-enter-meta {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+
+@keyframes place-arrive-settle {
+  0% {
+    transform: translateY(4px) scale(0.985);
+    box-shadow:
+      var(--shadow-card),
+      0 0 0 1px color-mix(in srgb, var(--gold) 10%, transparent),
+      0 0 18px color-mix(in srgb, var(--gold) 10%, transparent),
+      0 0 12px color-mix(in srgb, var(--aura) 10%, transparent);
+  }
+  45% {
+    transform: translateY(0) scale(1.01);
+    box-shadow:
+      var(--shadow-card),
+      0 0 0 1px color-mix(in srgb, var(--gold) 30%, transparent),
+      0 0 52px color-mix(in srgb, var(--gold) 34%, transparent),
+      0 0 34px color-mix(in srgb, var(--aura) 28%, transparent);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    box-shadow:
+      var(--shadow-card),
+      0 0 0 1px color-mix(in srgb, var(--gold) 22%, transparent),
+      0 0 42px color-mix(in srgb, var(--gold) 26%, transparent),
+      0 0 28px color-mix(in srgb, var(--aura) 24%, transparent);
+  }
+}
+@keyframes place-arrive-ring {
+  0% { opacity: 0.35; }
+  40% { opacity: 1; }
+  100% { opacity: 0.85; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .place-card-arrive[data-arrive="true"] {
+    animation: none;
+    box-shadow:
+      var(--shadow-card),
+      0 0 0 1px color-mix(in srgb, var(--gold) 28%, transparent),
+      0 0 48px color-mix(in srgb, var(--gold) 30%, transparent),
+      0 0 32px color-mix(in srgb, var(--aura) 26%, transparent);
+  }
+  .place-arrive-ring {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+[data-theme="light"] .place-card-arrive[data-arrive="true"] {
+  background:
+    radial-gradient(ellipse 90% 70% at 88% -12%, color-mix(in srgb, var(--gold) 16%, transparent), transparent 58%),
+    linear-gradient(180deg, #fffaf2, color-mix(in srgb, var(--parchment) 52%, #fffcf6));
+}
+[data-theme="light"] .place-enter-frame {
+  background:
+    radial-gradient(ellipse 80% 90% at 12% 50%, color-mix(in srgb, var(--gold) 14%, transparent), transparent 58%),
+    linear-gradient(180deg, #fff8ee, color-mix(in srgb, var(--parchment) 45%, #fffcf6));
 }

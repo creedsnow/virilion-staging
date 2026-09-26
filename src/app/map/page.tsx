@@ -292,14 +292,18 @@ function MapInner() {
                       style={{ pointerEvents: "none" }}
                     />
                     <text
+                      className="map-region-label"
                       x={r.cx}
                       y={r.cy}
                       textAnchor="middle"
                       dominantBaseline="middle"
                       fill={r.kind === "hub" ? "#1a1408" : "#f5efe4"}
-                      fontSize={r.kind === "hub" ? 9 : 6.5}
+                      fontSize={r.kind === "hub" ? 10 : 7.5}
                       fontWeight={r.kind === "hub" ? 700 : 600}
-                      letterSpacing="0.04em"
+                      letterSpacing="0.03em"
+                      stroke={r.kind === "hub" ? "rgba(255,248,230,0.35)" : "rgba(8,6,14,0.72)"}
+                      strokeWidth={r.kind === "hub" ? 0.35 : 0.9}
+                      paintOrder="stroke fill"
                       style={{ pointerEvents: "none" }}
                     >
                       {r.short}
@@ -359,6 +363,7 @@ function MapInner() {
 
       {sel.kind === "region" && region ? (
         <PlaceCard
+          key={`place-${region.id}`}
           region={region}
           halls={regionHalls}
           vessel={vessel}
@@ -372,6 +377,7 @@ function MapInner() {
 
       {sel.kind === "hall" && hall ? (
         <HallCard
+          key={`hall-${hall.id}`}
           hall={hall}
           vessel={vessel}
           onRegion={() => selectRegion(hall.regionId)}
@@ -492,9 +498,10 @@ function PlaceCard({
   return (
     <article className="place-card place-card-arrive" data-arrive="true">
       <div className="place-card-sheen" aria-hidden />
+      <div className="place-arrive-ring" aria-hidden />
       <div className="relative z-[1] flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <p className="text-[10px] uppercase tracking-[0.16em] text-gold mb-1">
+          <p className="place-arrive-kicker mb-1">
             {isHub
               ? "Open hub · everyone"
               : isWastes
@@ -503,7 +510,7 @@ function PlaceCard({
                   ? `Homeland of the ${region.culture}`
                   : "Homeland"}
           </p>
-          <h2 className="font-display text-2xl font-semibold text-fg leading-tight">
+          <h2 className="font-display text-2xl font-semibold text-fg leading-tight place-arrive-title">
             {region.label}
           </h2>
         </div>
@@ -517,27 +524,27 @@ function PlaceCard({
         </span>
       </div>
       <div
-        className="relative z-[1] mt-2 mb-3 h-1.5 w-16 rounded-full"
+        className="relative z-[1] mt-2 mb-3 h-1.5 w-16 rounded-full place-arrive-swatch"
         style={{
           background: region.color,
-          boxShadow: `0 0 12px ${region.color}88`,
+          boxShadow: `0 0 14px ${region.color}99`,
         }}
         aria-hidden
       />
-      <p className="relative z-[1] text-sm text-fg-muted leading-relaxed">{region.note}</p>
+      <p className="relative z-[1] place-arrive-note">{region.note}</p>
       <div className="place-status relative z-[1]" data-kind={region.kind} data-state={accessState}>
         <span className="place-state-pill" data-state={accessState}>
           {accessLabel}
         </span>
         <span>{status}</span>
       </div>
-      <div className="relative z-[1] mt-3.5 flex flex-wrap gap-2 items-center">
+      <div className="place-enter-frame relative z-[1]">
         {vessel ? (
-          <button type="button" className="btn-gold text-sm py-2 px-4 !min-h-0" onClick={onEnter}>
+          <button type="button" className="btn-gold place-enter-cta text-sm py-2 px-4 !min-h-0" onClick={onEnter}>
             Enter place
           </button>
         ) : (
-          <Link href="/rite" className="btn-gold text-sm py-2 px-4 !min-h-0 inline-flex">
+          <Link href="/rite" className="btn-gold place-enter-cta text-sm py-2 px-4 !min-h-0 inline-flex">
             Rite first
           </Link>
         )}
@@ -584,12 +591,13 @@ function HallCard({
   return (
     <article className="place-card place-card-hall place-card-arrive" data-arrive="true">
       <div className="place-card-sheen" aria-hidden />
+      <div className="place-arrive-ring" aria-hidden />
       <div className="relative z-[1] flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <p className="text-[10px] uppercase tracking-[0.16em] text-gold mb-1">
+          <p className="place-arrive-kicker mb-1">
             Order Hall · {hall.tiedTo}
           </p>
-          <h2 className="font-display text-2xl font-semibold text-fg leading-tight">
+          <h2 className="font-display text-2xl font-semibold text-fg leading-tight place-arrive-title">
             {hall.name}
           </h2>
         </div>
@@ -602,7 +610,7 @@ function HallCard({
           <span>{heat}</span>
         </span>
       </div>
-      <p className="relative z-[1] text-sm text-fg-muted mt-2 leading-relaxed">
+      <p className="relative z-[1] place-arrive-note mt-2">
         {hall.mapPlace}
         {vampire ? " · vampirism gate" : " · class-gated"}
         {" · not Border Pass"}
@@ -620,9 +628,9 @@ function HallCard({
         </span>
         <span>{gate.reason}</span>
       </div>
-      <div className="relative z-[1] mt-3.5 flex flex-wrap gap-2 items-center">
+      <div className="place-enter-frame relative z-[1]">
         {gate.enterable ? (
-          <button type="button" className="btn-gold text-sm py-2 px-4 !min-h-0" onClick={onEnter}>
+          <button type="button" className="btn-gold place-enter-cta text-sm py-2 px-4 !min-h-0" onClick={onEnter}>
             Enter hall
           </button>
         ) : vessel ? (
@@ -633,11 +641,11 @@ function HallCard({
             Locked
           </span>
         ) : (
-          <Link href="/rite" className="btn-gold text-sm py-2 px-4 !min-h-0 inline-flex">
+          <Link href="/rite" className="btn-gold place-enter-cta text-sm py-2 px-4 !min-h-0 inline-flex">
             Rite first
           </Link>
         )}
-        <span className="text-[10px] uppercase tracking-wide text-fg-muted">
+        <span className="place-enter-meta">
           {hall.placement === "standalone" ? "Standalone" : "Attached"} · {hall.hallLabel}
         </span>
       </div>
