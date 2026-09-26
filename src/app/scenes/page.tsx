@@ -113,23 +113,23 @@ function ScenesInner() {
   }
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 scenes-lobby">
       <div className="scenes-hero">
         <div className="scenes-hero-sheen" aria-hidden />
         <div className="relative z-[1]">
-          <p className="section-kicker mb-1">Places · Halls · Rooms</p>
-          <h1 className="font-display text-3xl font-semibold text-fg leading-tight">
+          <p className="realm-kicker mb-1.5">Places · Halls · Rooms</p>
+          <h1 className="scenes-hero-title">
             Where the story is{" "}
-            <span className="display-italic text-[1.05em]">happening</span>
+            <span className="display-italic">happening</span>
           </h1>
-          <p className="text-sm text-fg-muted mt-1.5 leading-relaxed max-w-md">
+          <p className="scenes-hero-sub">
             Step into a room as your Vessel. Presence and voice stay in the same
             place — open when you want company under the lamps.
           </p>
         </div>
       </div>
 
-      <ul className="space-y-3">
+      <ul className="space-y-3.5 scenes-lobby-list">
         {DEMO_SCENES.map((s) => (
           <li key={s.id}>
             <article className="scene-card">
@@ -140,10 +140,10 @@ function ScenesInner() {
                 <div className="min-w-0 flex-1">
                   <div className="flex justify-between gap-3 items-start">
                     <div className="min-w-0">
-                      <p className="text-[10px] uppercase tracking-[0.16em] text-gold font-semibold mb-1">
+                      <p className="scene-card-place">
                         ✦ {s.place}
                       </p>
-                      <h2 className="font-display text-xl font-semibold text-fg leading-tight">
+                      <h2 className="scene-card-title">
                         {s.title}
                       </h2>
                       <p className="text-sm text-fg-muted mt-2 leading-relaxed">

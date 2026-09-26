@@ -357,7 +357,7 @@ export default function RitePage() {
         </h1>
         <p className="text-sm text-fg-muted leading-relaxed max-w-sm mx-auto">
           Shape one vessel — role, People, style, class, name — then step into a living Realm.
-          No second slot. No Discord play path.
+          One vessel only.
         </p>
         <div className="threshold-progress mx-auto" aria-hidden>
           <span />
@@ -397,10 +397,10 @@ export default function RitePage() {
       </div>
 
       <div>
-        <h1 className="font-display text-3xl font-semibold text-fg leading-tight">
+        <h1 className="rite-step-title">
           {stepTitles[step]}
         </h1>
-        <p className="text-sm text-fg-muted mt-1.5 leading-relaxed">
+        <p className="rite-step-hint">
           {stepHints[step]}
         </p>
       </div>
@@ -424,7 +424,7 @@ export default function RitePage() {
                 onClick={() => onSelectRole(r.id)}
               >
                 <span className="min-w-0 text-left">
-                  <span className="font-display text-xl font-semibold text-fg block">
+                  <span className="rite-role-name">
                     {r.name}
                   </span>
                   <span className="text-sm text-fg-muted">{r.note}</span>

@@ -174,8 +174,8 @@ export function SceneRoom({
                 </span>
               )}
               <div className="min-w-0">
-                <p className="section-kicker mb-0.5">Room · presence</p>
-                <h1 className="font-display text-xl font-semibold text-fg leading-tight">
+                <p className="realm-kicker mb-1">Room · presence</p>
+                <h1 className="scene-room-title">
                   {scene.title}
                 </h1>
                 <p className="text-xs text-fg-muted mt-1 leading-snug">

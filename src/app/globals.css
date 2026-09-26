@@ -5312,3 +5312,404 @@ button.scene-call-hint:hover {
     transform: none;
   }
 }
+
+/* —— Must-loop identity: Rite · Map · Scenes (match Enter/Realm) —— */
+/* Spectral hierarchy, champagne gold, violet washes, denser plates.
+   Enter floating fields + Realm vessel plate left alone. */
+
+.rite-chamber {
+  position: relative;
+}
+.rite-chamber::before {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: -0.5rem -0.35rem auto;
+  height: 11rem;
+  z-index: -1;
+  background: radial-gradient(
+    ellipse 85% 70% at 50% 0%,
+    color-mix(in srgb, var(--aura) 22%, transparent),
+    transparent 72%
+  );
+  opacity: 0.95;
+}
+.rite-step-title {
+  font-family: var(--font-display), Spectral, Georgia, serif;
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+  color: var(--title, var(--gold-soft));
+  text-shadow: 0 0 22px color-mix(in srgb, var(--gold) 14%, transparent);
+}
+.rite-step-hint {
+  margin-top: 0.4rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--fg) 62%, transparent);
+  max-width: 36rem;
+}
+.rite-role-name {
+  font-family: var(--font-display), Spectral, Georgia, serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--title, var(--gold-soft));
+  display: block;
+}
+.rite-progress-head {
+  border-color: color-mix(in srgb, var(--border) 52%, var(--gold) 38%);
+  background:
+    radial-gradient(ellipse 80% 70% at 92% -28%, color-mix(in srgb, var(--aura) 30%, transparent), transparent 62%),
+    radial-gradient(ellipse 42% 48% at 0% 120%, color-mix(in srgb, var(--gold) 14%, transparent), transparent 55%),
+    linear-gradient(165deg, color-mix(in srgb, var(--bg-card) 88%, var(--parchment)), var(--bg-card));
+  box-shadow:
+    var(--shadow-card),
+    0 0 28px color-mix(in srgb, var(--gold) 14%, transparent),
+    0 0 36px color-mix(in srgb, var(--aura) 12%, transparent);
+}
+.rite-step-label {
+  font-family: var(--font-display), Spectral, Georgia, serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: var(--gold-soft);
+}
+.role-pick {
+  border-color: color-mix(in srgb, var(--border) 70%, var(--gold) 18%);
+  background:
+    radial-gradient(ellipse 70% 80% at 100% 0%, color-mix(in srgb, var(--aura) 16%, transparent), transparent 60%),
+    linear-gradient(155deg, color-mix(in srgb, var(--bg-card) 90%, var(--parchment)), var(--bg-card));
+}
+.role-pick[data-active="true"] {
+  border-color: color-mix(in srgb, var(--gold) 72%, var(--aura) 18%);
+  background:
+    linear-gradient(155deg, color-mix(in srgb, var(--gold) 14%, var(--bg-card)), color-mix(in srgb, var(--aura) 10%, var(--bg-card)));
+  box-shadow:
+    var(--shadow-card),
+    0 0 20px color-mix(in srgb, var(--gold) 20%, transparent),
+    0 0 14px color-mix(in srgb, var(--aura) 14%, transparent);
+}
+.rite-choice {
+  border-color: color-mix(in srgb, var(--border) 68%, var(--gold) 18%);
+  background:
+    radial-gradient(ellipse 90% 60% at 80% -20%, color-mix(in srgb, var(--aura) 14%, transparent), transparent 65%),
+    linear-gradient(155deg, color-mix(in srgb, var(--bg-card) 88%, var(--aura) 5%), var(--bg-card));
+}
+.rite-choice-name {
+  font-family: var(--font-display), Spectral, Georgia, serif;
+  color: var(--fg);
+}
+.rite-choice[data-active="true"] .rite-choice-name {
+  color: var(--title, var(--gold-soft));
+}
+.rite-choice-grid {
+  gap: 0.72rem;
+}
+.rite-hero,
+.rite-threshold {
+  border-color: color-mix(in srgb, var(--border) 48%, var(--gold) 40%);
+  box-shadow:
+    var(--shadow-card),
+    0 0 40px color-mix(in srgb, var(--aura) 20%, transparent),
+    0 0 28px color-mix(in srgb, var(--gold) 10%, transparent);
+}
+.gate-note {
+  border-radius: 0.95rem;
+  border: 1px solid color-mix(in srgb, var(--border) 62%, var(--gold) 26%);
+  background:
+    radial-gradient(ellipse 80% 90% at 0% 50%, color-mix(in srgb, var(--gold) 10%, transparent), transparent 60%),
+    color-mix(in srgb, var(--bg-elevated) 88%, transparent);
+  padding: 0.65rem 0.85rem;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--fg-muted) 92%, var(--gold-soft));
+}
+.gate-warn {
+  border-radius: 0.95rem;
+  border: 1px solid color-mix(in srgb, var(--gold) 42%, var(--border));
+  background: color-mix(in srgb, var(--gold) 10%, var(--bg-elevated));
+  padding: 0.55rem 0.8rem;
+  font-size: 0.72rem;
+  line-height: 1.4;
+  color: var(--gold-soft);
+}
+
+/* Map — viewport weight + ceremonial hierarchy */
+.map-chamber {
+  position: relative;
+}
+.map-chamber::before {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: -0.4rem -0.25rem auto;
+  height: 10rem;
+  z-index: -1;
+  background: radial-gradient(
+    ellipse 90% 75% at 40% 0%,
+    color-mix(in srgb, var(--aura) 24%, transparent),
+    transparent 70%
+  );
+}
+.map-hero {
+  border-color: color-mix(in srgb, var(--border) 48%, var(--aura) 36%);
+  box-shadow:
+    var(--shadow-card),
+    0 0 32px color-mix(in srgb, var(--aura) 16%, transparent),
+    0 0 22px color-mix(in srgb, var(--gold) 8%, transparent);
+}
+.map-hero-title {
+  font-family: var(--font-display), Spectral, Georgia, serif;
+  font-size: 1.65rem;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+  color: var(--fg);
+}
+.map-hero-title .display-italic {
+  font-size: 1.05em;
+  color: var(--gold-soft);
+}
+.map-hero-sub {
+  margin-top: 0.4rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--fg) 62%, transparent);
+  max-width: 36rem;
+}
+.map-stage-weight {
+  border: 1px solid color-mix(in srgb, var(--border) 45%, var(--gold) 36%);
+  box-shadow:
+    var(--shadow-card),
+    0 0 48px color-mix(in srgb, var(--aura) 26%, transparent),
+    0 0 28px color-mix(in srgb, var(--gold) 12%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+.map-stage-hero.map-stage-weight {
+  max-height: 16.5rem;
+}
+.map-stage-hero.map-stage-weight .map-svg {
+  max-height: 16.5rem;
+}
+@media (min-width: 640px) {
+  .map-stage-hero.map-stage-weight {
+    max-height: 19rem;
+  }
+  .map-stage-hero.map-stage-weight .map-svg {
+    max-height: 19rem;
+  }
+}
+.place-arrive-title {
+  font-family: var(--font-display), Spectral, Georgia, serif;
+  font-size: 1.45rem;
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--title, var(--gold-soft));
+  text-shadow: 0 0 18px color-mix(in srgb, var(--gold) 18%, transparent);
+}
+.place-card {
+  border-color: color-mix(in srgb, var(--border) 48%, var(--gold) 40%);
+  box-shadow:
+    var(--shadow-card),
+    0 0 32px color-mix(in srgb, var(--aura) 14%, transparent),
+    0 0 20px color-mix(in srgb, var(--gold) 10%, transparent);
+}
+.hall-tile {
+  border-color: color-mix(in srgb, var(--border) 62%, var(--gold) 22%);
+  background:
+    radial-gradient(ellipse 70% 80% at 0% 0%, color-mix(in srgb, var(--aura) 18%, transparent), transparent 60%),
+    linear-gradient(145deg, color-mix(in srgb, var(--bg-card) 88%, var(--aura) 8%), var(--bg-card));
+  min-height: 4.75rem;
+  padding: 0.95rem 1.1rem;
+}
+.hall-tile-name {
+  display: block;
+  font-family: var(--font-display), Spectral, Georgia, serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--title, var(--gold-soft));
+}
+.map-halls-secondary {
+  padding: 0.95rem 0.15rem 0.25rem;
+  border-top-color: color-mix(in srgb, var(--border) 55%, var(--gold) 28%);
+}
+.map-halls-toggle .section-serif {
+  font-size: 1.05rem;
+  color: var(--title, var(--gold-soft));
+}
+
+/* Scenes lobby + chamber — plate density, gold accents */
+.scenes-lobby {
+  position: relative;
+}
+.scenes-lobby::before {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: -0.4rem -0.25rem auto;
+  height: 10rem;
+  z-index: -1;
+  background: radial-gradient(
+    ellipse 85% 70% at 70% 0%,
+    color-mix(in srgb, var(--aura) 22%, transparent),
+    transparent 72%
+  );
+}
+.scenes-hero {
+  border-color: color-mix(in srgb, var(--border) 48%, var(--gold) 38%);
+  box-shadow:
+    var(--shadow-card),
+    0 0 32px color-mix(in srgb, var(--gold) 12%, transparent),
+    0 0 36px color-mix(in srgb, var(--aura) 14%, transparent);
+}
+.scenes-hero-title {
+  font-family: var(--font-display), Spectral, Georgia, serif;
+  font-size: 1.65rem;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+  color: var(--fg);
+}
+.scenes-hero-title .display-italic {
+  font-size: 1.05em;
+  color: var(--gold-soft);
+}
+.scenes-hero-sub {
+  margin-top: 0.4rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--fg) 62%, transparent);
+  max-width: 28rem;
+}
+.scene-card {
+  padding: 1.15rem 1.25rem 1.2rem 1.4rem;
+  border-color: color-mix(in srgb, var(--border) 50%, var(--gold) 36%);
+  background:
+    radial-gradient(ellipse 90% 70% at 88% -22%, color-mix(in srgb, var(--aura) 28%, transparent), transparent 60%),
+    radial-gradient(ellipse 42% 48% at 0% 100%, color-mix(in srgb, var(--gold) 14%, transparent), transparent 52%),
+    linear-gradient(165deg, color-mix(in srgb, var(--bg-card) 88%, var(--parchment)), var(--bg-card));
+  box-shadow:
+    var(--shadow-card),
+    0 0 26px color-mix(in srgb, var(--gold) 12%, transparent),
+    0 0 18px color-mix(in srgb, var(--aura) 10%, transparent);
+  min-height: 6.75rem;
+}
+.scene-card:hover {
+  border-color: color-mix(in srgb, var(--gold) 58%, var(--aura));
+  box-shadow:
+    var(--shadow-card),
+    0 0 32px color-mix(in srgb, var(--gold) 18%, transparent),
+    0 0 22px color-mix(in srgb, var(--aura) 14%, transparent);
+}
+.scene-card-accent {
+  width: 3.5px;
+  box-shadow:
+    0 0 14px color-mix(in srgb, var(--gold) 65%, transparent),
+    0 0 26px color-mix(in srgb, var(--aura) 32%, transparent);
+}
+.scene-card-place {
+  font-size: 0.59375rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+}
+.scene-card-title {
+  font-family: var(--font-display), Spectral, Georgia, serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--title, var(--gold-soft));
+  text-shadow: 0 0 16px color-mix(in srgb, var(--gold) 12%, transparent);
+}
+.scene-place-thumb {
+  width: 3.85rem;
+  height: 4.85rem;
+  border-radius: 0.9rem;
+  border-color: color-mix(in srgb, var(--gold) 48%, var(--border));
+  box-shadow:
+    0 0 20px color-mix(in srgb, var(--gold) 20%, transparent),
+    0 0 14px color-mix(in srgb, var(--aura) 16%, transparent),
+    0 8px 16px rgba(0, 0, 0, 0.32);
+}
+.scene-seat {
+  letter-spacing: 0.14em;
+  border-color: color-mix(in srgb, var(--gold) 48%, transparent);
+  background: color-mix(in srgb, var(--gold) 12%, transparent);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--gold) 16%, transparent);
+}
+.scene-step {
+  box-shadow:
+    var(--shadow-gold),
+    0 0 18px color-mix(in srgb, var(--gold) 26%, transparent);
+}
+.scene-call-hint {
+  border-color: color-mix(in srgb, var(--gold) 42%, var(--border));
+  background: color-mix(in srgb, var(--gold) 8%, transparent);
+}
+.scene-call-hint:hover {
+  border-color: color-mix(in srgb, var(--gold) 62%, var(--border));
+  background: color-mix(in srgb, var(--gold) 14%, transparent);
+}
+
+/* Scene chamber (in-room) — same ceremonial language */
+.scene-chamber .room-chrome {
+  border-color: color-mix(in srgb, var(--border) 48%, var(--gold) 36%);
+  background:
+    radial-gradient(ellipse 85% 65% at 50% -5%, color-mix(in srgb, var(--aura) 34%, transparent), transparent 68%),
+    radial-gradient(ellipse 40% 40% at 100% 100%, color-mix(in srgb, var(--gold) 14%, transparent), transparent 55%),
+    var(--bg-card);
+  box-shadow:
+    var(--shadow-card),
+    0 0 28px color-mix(in srgb, var(--aura) 16%, transparent),
+    0 0 18px color-mix(in srgb, var(--gold) 10%, transparent);
+}
+.scene-room-title {
+  font-family: var(--font-display), Spectral, Georgia, serif;
+  font-size: 1.35rem;
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--title, var(--gold-soft));
+  text-shadow: 0 0 16px color-mix(in srgb, var(--gold) 14%, transparent);
+}
+.room-place-thumb {
+  width: 3.55rem;
+  height: 4.4rem;
+  border-color: color-mix(in srgb, var(--gold) 48%, var(--border));
+  box-shadow:
+    0 0 18px color-mix(in srgb, var(--gold) 18%, transparent),
+    0 0 12px color-mix(in srgb, var(--aura) 18%, transparent);
+}
+.story-log {
+  border-color: color-mix(in srgb, var(--border) 50%, var(--gold) 28%);
+  box-shadow:
+    var(--shadow-card),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 0 24px color-mix(in srgb, var(--aura) 12%, transparent);
+}
+
+[data-theme="light"] .rite-step-title,
+[data-theme="light"] .rite-role-name,
+[data-theme="light"] .place-arrive-title,
+[data-theme="light"] .hall-tile-name,
+[data-theme="light"] .scene-card-title,
+[data-theme="light"] .scene-room-title {
+  color: var(--title, #3a2a12);
+  text-shadow: none;
+}
+[data-theme="light"] .map-hero-title .display-italic,
+[data-theme="light"] .scenes-hero-title .display-italic {
+  color: var(--gold-deep);
+}
+[data-theme="light"] .map-stage-weight,
+[data-theme="light"] .scene-card,
+[data-theme="light"] .place-card,
+[data-theme="light"] .scenes-hero,
+[data-theme="light"] .map-hero,
+[data-theme="light"] .rite-progress-head {
+  box-shadow: var(--shadow-card), inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}

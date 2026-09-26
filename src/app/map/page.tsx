@@ -172,16 +172,16 @@ function MapInner() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 map-chamber">
       <div className="map-hero">
         <div className="map-hero-sheen" aria-hidden />
         <div className="relative z-[1]">
-          <p className="section-kicker mb-1">World</p>
-          <h1 className="font-display text-3xl font-semibold text-fg leading-tight">
+          <p className="realm-kicker mb-1.5">World</p>
+          <h1 className="map-hero-title">
             One world,{" "}
-            <span className="display-italic text-[1.05em]">sixteen holdings</span>
+            <span className="display-italic">sixteen holdings</span>
           </h1>
-          <p className="text-sm text-fg-muted mt-1.5 leading-relaxed">
+          <p className="map-hero-sub">
             Tap a region or Order Hall pin, then Enter. Colour marks whose homeland
             it is.
           </p>
@@ -217,7 +217,7 @@ function MapInner() {
         ))}
       </div>
 
-      <div className="map-stage map-stage-hero card p-0 overflow-hidden stone-panel rounded-2xl">
+      <div className="map-stage map-stage-hero map-stage-weight card p-0 overflow-hidden stone-panel rounded-2xl">
         <svg
           viewBox="0 0 360 270"
           className="w-full h-auto map-svg"
@@ -431,7 +431,7 @@ function MapInner() {
                           <span className="block text-[10px] uppercase tracking-[0.14em] text-gold">
                             Order Hall · {h.tiedTo}
                           </span>
-                          <span className="font-display text-base font-semibold text-fg block truncate">
+                          <span className="hall-tile-name truncate">
                             {h.name}
                           </span>
                           <span className="text-[11px] text-fg-muted block truncate">
@@ -510,7 +510,7 @@ function PlaceCard({
                   ? `Homeland of the ${region.culture}`
                   : "Homeland"}
           </p>
-          <h2 className="font-display text-2xl font-semibold text-fg leading-tight place-arrive-title">
+          <h2 className="place-arrive-title">
             {region.label}
           </h2>
         </div>
@@ -597,7 +597,7 @@ function HallCard({
           <p className="place-arrive-kicker mb-1">
             Order Hall · {hall.tiedTo}
           </p>
-          <h2 className="font-display text-2xl font-semibold text-fg leading-tight place-arrive-title">
+          <h2 className="place-arrive-title">
             {hall.name}
           </h2>
         </div>
