@@ -65,7 +65,7 @@ export default function InboxPage() {
         >
           ← Whispers
         </button>
-        <div className="flex gap-3 items-center">
+        <div className="whisper-thread-head">
           <div
             className="vessel-medallion h-12 w-12 rounded-xl font-display text-xl"
             style={{
@@ -101,7 +101,7 @@ export default function InboxPage() {
           })}
         </div>
 
-        <p className="text-[11px] text-fg-muted text-center leading-relaxed">
+        <p className="whisper-demo-note">
           Demo whispers · this browser only. Real multi-device chat ships later.
         </p>
         <div className="flex flex-wrap gap-2 justify-center">
@@ -118,22 +118,32 @@ export default function InboxPage() {
 
   return (
     <div className="space-y-5">
-      <div>
-        <p className="section-kicker mb-1">Private · Vessel-first</p>
-        <h1 className="font-display text-3xl font-semibold text-fg leading-tight">
-          Whispers
-        </h1>
-        <p className="text-sm text-fg-muted mt-1.5 leading-relaxed max-w-md">
-          Soft words between vessels. Threads show faces first — never Player accounts.
-        </p>
+      <div className="inbox-hero">
+        <div className="inbox-hero-sheen" aria-hidden />
+        <div className="inbox-hero-lamp" aria-hidden />
+        <div className="relative z-[1]">
+          <p className="section-kicker mb-1">Whispers · lantern hall</p>
+          <h1 className="font-display text-3xl font-semibold text-fg leading-tight">
+            Soft{" "}
+            <span className="display-italic text-[1.05em]">words</span>
+          </h1>
+          <p className="text-sm text-fg-muted mt-1.5 leading-relaxed max-w-md">
+            Soft words between vessels. Threads show faces first — never Player
+            accounts.
+          </p>
+        </div>
       </div>
 
       {DEMO_THREADS.length === 0 ? (
-        <div className="card stone-panel rounded-2xl space-y-2 text-center py-8">
-          <p className="font-display text-xl text-gold-soft">The night is quiet</p>
-          <p className="text-sm text-fg-muted leading-relaxed max-w-sm mx-auto">
-            No whispers yet. When another vessel reaches for you, their face will rest here.
-          </p>
+        <div className="whisper-empty">
+          <div className="whisper-empty-glow" aria-hidden />
+          <div className="relative z-[1] space-y-2 text-center py-2">
+            <p className="font-display text-xl text-gold-soft">The night is quiet</p>
+            <p className="text-sm text-fg-muted leading-relaxed max-w-sm mx-auto">
+              No whispers yet. When another vessel reaches for you, their face
+              will rest here.
+            </p>
+          </div>
         </div>
       ) : (
         <ul className="space-y-2.5">
@@ -144,6 +154,7 @@ export default function InboxPage() {
                 className="whisper-row"
                 onClick={() => setOpenId(t.id)}
               >
+                <span className="whisper-row-accent" aria-hidden />
                 <div
                   className="vessel-medallion h-12 w-12 rounded-xl font-display text-lg"
                   style={{
@@ -162,7 +173,9 @@ export default function InboxPage() {
                       {t.when}
                     </span>
                   </span>
-                  <span className="text-[11px] text-fg-muted block mt-0.5">{t.people}</span>
+                  <span className="text-[11px] text-fg-muted block mt-0.5">
+                    {t.people}
+                  </span>
                   <span className="text-sm text-fg-muted/90 block mt-1 line-clamp-1">
                     {t.preview}
                   </span>
@@ -176,9 +189,7 @@ export default function InboxPage() {
         </ul>
       )}
 
-      <p className="text-[10px] text-fg-muted/75 text-center tracking-wide">
-        Demo cast · one sample thread
-      </p>
+      <p className="whisper-demo-note">Demo cast · one sample thread</p>
 
       <section className="card stone-panel rounded-2xl space-y-2">
         <p className="section-kicker">World & tools</p>
