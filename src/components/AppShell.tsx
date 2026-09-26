@@ -159,11 +159,14 @@ export function AppShell({ children }: { children: ReactNode }) {
                   Rules
                 </a>
               ) : null}
-              {showNav ? (
+              {showNav &&
+              !pathname.startsWith("/map") &&
+              !pathname.startsWith("/scenes") &&
+              !pathname.startsWith("/self") ? (
                 <Link
                   href="/wisp"
                   className="wisp-mote"
-                  aria-label="Open Wisp companion"
+                  aria-label="Wisp"
                   title="Wisp"
                 >
                   <span className="wisp-mote-glow" aria-hidden />
@@ -185,7 +188,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       ) : null}
       <main
         className={`flex-1 w-full max-w-lg mx-auto px-4 py-4 ${
-          showNav ? "pb-28" : isEnter ? "pb-0 pt-0 px-0 max-w-none" : "pb-8"
+          showNav ? "pb-[7.25rem]" : isEnter ? "pb-0 pt-0 px-0 max-w-none" : "pb-8"
         }`}
       >
         {children}

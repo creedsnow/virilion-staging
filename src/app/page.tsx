@@ -3,14 +3,9 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { EmptyState } from "@/components/EmptyState";
-import {
-  getPlayer,
-  getPresence,
-  getVessel,
-  setPresence as persistPresence,
-  type PresenceMode,
-} from "@/lib/storage";
-import type { DemoPlayer, Vessel } from "@/lib/types";
+import { getPlayer, getVessel } from "@/lib/storage";
+import type { DemoPlayer, PresenceMode, Vessel } from "@/lib/types";
+import { usePresence } from "@/hooks/usePresence";
 import { PEOPLES } from "@/lib/canon/peoples";
 import { CLASSES } from "@/lib/canon/classes";
 import { STYLES } from "@/lib/canon/styles";
@@ -26,6 +21,7 @@ const WALKING = [
     pip: "#c9a227",
     blurb: "Rival · lantern walk",
     sceneId: "virelios-lantern",
+    href: "/scenes?open=virelios-lantern",
   },
   {
     name: "Ilyan",
@@ -34,6 +30,7 @@ const WALKING = [
     hue: "#3d5a80",
     pip: "#6b9fd4",
     blurb: "Looking for adventure",
+    href: "/weave",
   },
   {
     name: "Ryven",
@@ -42,6 +39,7 @@ const WALKING = [
     hue: "#6b3d4a",
     pip: "#6b8f71",
     blurb: "Open to bonds",
+    href: "/weave",
   },
   {
     name: "Auren",
@@ -50,6 +48,7 @@ const WALKING = [
     hue: "#3d6b58",
     pip: "#a78bfa",
     blurb: "Social · market lamps",
+    href: "/map",
   },
   {
     name: "Halvard",
@@ -58,6 +57,7 @@ const WALKING = [
     hue: "#6b5a3d",
     pip: "#9a9488",
     blurb: "Unseen for now",
+    href: "/weave",
   },
   {
     name: "Brogar",
@@ -66,6 +66,7 @@ const WALKING = [
     hue: "#4a3d6b",
     pip: "#c9784a",
     blurb: "Looking for party",
+    href: "/scenes",
   },
   {
     name: "Sen",
@@ -75,6 +76,7 @@ const WALKING = [
     pip: "#8b6bb8",
     blurb: "Moonshift watch",
     sceneId: "velkrath-moon",
+    href: "/scenes?open=velkrath-moon",
   },
 ];
 
@@ -87,6 +89,7 @@ type Preview = {
   pip: string;
   blurb: string;
   sceneId?: string;
+  href?: string;
 } | null;
 
 function presenceLabel(p: PresenceMode) {
@@ -104,19 +107,26 @@ function presencePip(p: PresenceMode) {
 export default function RealmPage() {
   const [vessel, setV] = useState<Vessel | null>(null);
   const [player, setP] = useState<DemoPlayer | null>(null);
-  const [presence, setPresence] = useState<PresenceMode>("open");
+  const [presence, changePresence] = usePresence();
   const [preview, setPreview] = useState<Preview>(null);
+  const [askCount, setAskCount] = useState(2);
 
   useEffect(() => {
     setV(getVessel());
     setP(getPlayer());
-    setPresence(getPresence());
+    try {
+      const raw = localStorage.getItem("virilion_weave");
+      if (raw) {
+        const bonds = JSON.parse(raw) as { status?: string }[];
+        const n = bonds.filter((b) => b.status === "open").length;
+        setAskCount(n > 0 ? n : 2);
+      } else {
+        setAskCount(2);
+      }
+    } catch {
+      setAskCount(2);
+    }
   }, []);
-
-  function changePresence(next: PresenceMode) {
-    setPresence(next);
-    persistPresence(next);
-  }
 
   if (!vessel) {
     return (
@@ -256,14 +266,19 @@ export default function RealmPage() {
 
       {/* 2. Actionable asks + where to go */}
       <section className="realm-asks space-y-2">
-        <Link href="/weave" className="realm-ask-row">
+        <Link href="/weave#asking" className="realm-ask-row" data-persist="asking-for-you">
           <span className="min-w-0">
             <span className="section-kicker block mb-0.5">Asking for you</span>
             <span className="font-display text-lg text-fg leading-tight block">
-              Two vessels wait on the Weave
+              {askCount === 1
+                ? "One vessel waits on the Weave"
+                : `${askCount} vessels wait on the Weave`}
+            </span>
+            <span className="text-[11px] text-fg-muted mt-1 block">
+              Open Weave · accept or decline
             </span>
           </span>
-          <span className="text-gold shrink-0 text-sm tracking-wide">Open →</span>
+          <span className="text-gold shrink-0 text-sm tracking-wide">Weave →</span>
         </Link>
         <div className="grid grid-cols-2 gap-2">
           <Link href="/map" className="realm-ask-chip">
@@ -290,19 +305,23 @@ export default function RealmPage() {
         </div>
         <div className="h-scroll">
           {/* Self presence in strip */}
-          <button
-            type="button"
+          <Link
+            href="/self"
             className="walk-card walk-card-tap"
-            onClick={() =>
-              setPreview({
-                name: vessel.name,
-                status: presenceLabel(presence).toLowerCase(),
-                presence,
-                hue: "#5a3d78",
-                pip: presencePip(presence),
-                blurb: "You · " + peopleLabel,
-              })
-            }
+            onClick={(e) => {
+              if (e.altKey || e.shiftKey) {
+                e.preventDefault();
+                setPreview({
+                  name: vessel.name,
+                  status: presenceLabel(presence).toLowerCase(),
+                  presence,
+                  hue: "#5a3d78",
+                  pip: presencePip(presence),
+                  blurb: "You · " + peopleLabel,
+                  href: "/self",
+                });
+              }
+            }}
           >
             <div
               className="walk-avatar"
@@ -326,13 +345,19 @@ export default function RealmPage() {
             <p className="text-[11px] text-fg-muted mt-1.5 text-center leading-snug capitalize px-0.5">
               {presenceLabel(presence)}
             </p>
-          </button>
+          </Link>
           {WALKING.map((w) => (
-            <button
+            <Link
               key={w.name}
-              type="button"
+              href={w.href}
               className="walk-card walk-card-tap"
-              onClick={() => setPreview(w)}
+              onClick={(e) => {
+                // Keep preview sheet for long-press feel: shift/alt opens preview instead
+                if (e.altKey || e.shiftKey) {
+                  e.preventDefault();
+                  setPreview(w);
+                }
+              }}
             >
               <div
                 className="walk-avatar"
@@ -352,11 +377,11 @@ export default function RealmPage() {
               <p className="text-[11px] text-fg-muted mt-1.5 text-center leading-snug capitalize px-0.5">
                 {w.status}
               </p>
-            </button>
+            </Link>
           ))}
         </div>
         <p className="text-[10px] text-fg-muted/70 tracking-wide">
-          Demo cast · tap a face for preview
+          Demo cast · tap a face to open scene / Weave / Map
         </p>
       </section>
 
@@ -462,13 +487,19 @@ export default function RealmPage() {
               </div>
             </div>
             <div className="mt-4 flex flex-wrap gap-2">
-              {"sceneId" in preview && preview.sceneId ? (
+              {preview.href ? (
                 <Link
-                  href="/scenes"
+                  href={preview.href}
                   className="btn-gold text-sm py-2 px-4 !min-h-0"
                   onClick={() => setPreview(null)}
                 >
-                  Open scenes
+                  {preview.sceneId
+                    ? "Enter scene"
+                    : preview.href.startsWith("/map")
+                      ? "Open map"
+                      : preview.href.startsWith("/self")
+                        ? "Open Self"
+                        : "Open Weave"}
                 </Link>
               ) : null}
               <Link

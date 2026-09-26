@@ -45,6 +45,8 @@ export type ClassId =
 
 export type VesselStatus = "approved" | "pending_gm";
 
+export type PresenceMode = "open" | "scene" | "unseen";
+
 export interface Vessel {
   id: string;
   name: string;
@@ -59,6 +61,8 @@ export interface Vessel {
   bio?: string;
   status: VesselStatus;
   createdAt: string;
+  /** Mirrored demo presence — Open / In scene / Unseen */
+  presence?: PresenceMode;
 }
 
 export interface DemoPlayer {

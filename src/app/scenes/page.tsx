@@ -1,14 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { EmptyState } from "@/components/EmptyState";
 import { SceneRoom } from "@/components/SceneRoom";
 import { DEMO_SCENES, type SceneInfo } from "@/lib/scenes";
 import { getVessel } from "@/lib/storage";
 import type { Vessel } from "@/lib/types";
 
-export default function ScenesPage() {
+function ScenesInner() {
+  const search = useSearchParams();
   const [vessel, setVessel] = useState<Vessel | null>(null);
   const [active, setActive] = useState<SceneInfo | null>(null);
   const [openVoice, setOpenVoice] = useState(false);
@@ -18,6 +20,17 @@ export default function ScenesPage() {
     setVessel(getVessel());
     setBooted(true);
   }, []);
+
+  useEffect(() => {
+    if (!booted || !vessel) return;
+    const openId = search.get("open");
+    if (!openId) return;
+    const match = DEMO_SCENES.find((s) => s.id === openId);
+    if (match) {
+      setOpenVoice(false);
+      setActive(match);
+    }
+  }, [booted, vessel, search]);
 
   if (!booted) {
     return <p className="text-sm text-fg-muted">Opening scenes…</p>;
@@ -109,5 +122,14 @@ export default function ScenesPage() {
         ))}
       </ul>
     </div>
+  );
+}
+
+
+export default function ScenesPage() {
+  return (
+    <Suspense fallback={<p className="text-sm text-fg-muted">Opening scenes…</p>}>
+      <ScenesInner />
+    </Suspense>
   );
 }

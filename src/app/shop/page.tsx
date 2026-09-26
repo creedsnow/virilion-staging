@@ -27,9 +27,6 @@ export default function ShopPage() {
         <Link href="/self" className="btn-ghost text-sm py-2 px-3 !min-h-0">
           ← Self
         </Link>
-        <Link href="/wisp" className="btn-ghost text-sm py-2 px-3 !min-h-0">
-          Wisp
-        </Link>
       </div>
     </div>
   );

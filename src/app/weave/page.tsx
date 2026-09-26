@@ -96,10 +96,21 @@ export default function WeavePage() {
     const raw = localStorage.getItem("virilion_weave");
     if (raw) {
       try {
-        setBonds(JSON.parse(raw) as Bond[]);
+        const parsed = JSON.parse(raw) as Bond[];
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setBonds(parsed);
+        } else {
+          localStorage.setItem("virilion_weave", JSON.stringify(SEED));
+          setBonds(SEED);
+        }
       } catch {
-        /* keep seed */
+        localStorage.setItem("virilion_weave", JSON.stringify(SEED));
+        setBonds(SEED);
       }
+    } else {
+      // Seed demo asks so Realm → Weave deep-link stays actionable after refresh
+      localStorage.setItem("virilion_weave", JSON.stringify(SEED));
+      setBonds(SEED);
     }
     setReady(true);
   }, []);
@@ -221,7 +232,7 @@ export default function WeavePage() {
       ) : null}
 
       {askingForYou.length > 0 ? (
-        <section className="space-y-2.5">
+        <section id="asking" className="space-y-2.5 scroll-mt-24">
           <h2 className="section-serif text-fg">Asking for you</h2>
           <ul className="space-y-2.5">
             {askingForYou.map((b) => (

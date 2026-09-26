@@ -1591,13 +1591,24 @@ body {
     inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 .map-stage-hero {
-  min-height: 17.5rem;
+  min-height: 0;
+  max-height: 13.5rem;
 }
 .map-stage-hero .map-svg {
-  min-height: 17.5rem;
+  min-height: 0;
+  max-height: 13.5rem;
   width: 100%;
   height: auto;
   aspect-ratio: 360 / 270;
+  object-fit: contain;
+}
+@media (min-width: 640px) {
+  .map-stage-hero {
+    max-height: 15.5rem;
+  }
+  .map-stage-hero .map-svg {
+    max-height: 15.5rem;
+  }
 }
 .map-svg {
   background: #0a0812;
@@ -2293,9 +2304,15 @@ body {
   position: sticky;
   bottom: 0;
   z-index: 6;
-  padding-bottom: max(0.35rem, env(safe-area-inset-bottom));
+  /* Clear fixed bottom nav on narrow + desktop */
+  padding-bottom: max(5.75rem, calc(4.85rem + env(safe-area-inset-bottom)));
   margin-top: auto;
   background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--bg) 88%, transparent) 28%, var(--bg));
+}
+@media (min-width: 640px) {
+  .story-composer-dock {
+    padding-bottom: max(6.25rem, calc(5.25rem + env(safe-area-inset-bottom)));
+  }
 }
 
 button.scene-step,
@@ -2726,4 +2743,52 @@ button.scene-call-hint:hover {
   font-size: 0.8rem;
   color: var(--fg-muted);
   line-height: 1.45;
+}
+
+
+/* —— P0 residuals: Rite selected + map/composer clearance helpers —— */
+.rite-choice-selected-tag {
+  position: absolute;
+  top: 0.4rem;
+  left: 0.45rem;
+  font-size: 0.55rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #1a1208;
+  background: linear-gradient(135deg, var(--gold), color-mix(in srgb, var(--gold-soft) 70%, var(--aura)));
+  border-radius: 9999px;
+  padding: 0.12rem 0.45rem;
+  box-shadow: 0 0 10px color-mix(in srgb, var(--gold) 40%, transparent);
+  z-index: 2;
+}
+.rite-choice[data-active="true"] {
+  border-width: 2px;
+  border-color: var(--gold) !important;
+  outline: 2px solid color-mix(in srgb, var(--gold) 55%, transparent);
+  outline-offset: 1px;
+  background:
+    linear-gradient(155deg, color-mix(in srgb, var(--gold) 34%, var(--bg-card)), color-mix(in srgb, var(--aura) 18%, var(--bg-card))) !important;
+  box-shadow:
+    var(--shadow-card),
+    0 0 28px color-mix(in srgb, var(--gold) 42%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--gold) 45%, transparent) !important;
+}
+.rite-choice[data-active="true"] .rite-choice-name {
+  color: var(--gold-soft);
+  text-shadow: 0 0 18px color-mix(in srgb, var(--gold) 35%, transparent);
+}
+.role-pick[data-active="true"] {
+  border-width: 2px;
+  border-color: var(--gold) !important;
+  outline: 2px solid color-mix(in srgb, var(--gold) 45%, transparent);
+  outline-offset: 1px;
+  background:
+    linear-gradient(155deg, color-mix(in srgb, var(--gold) 22%, var(--bg-card)), var(--bg-card)) !important;
+  box-shadow:
+    var(--shadow-card),
+    0 0 22px color-mix(in srgb, var(--gold) 28%, transparent);
+}
+.walk-card-tap {
+  text-decoration: none;
 }

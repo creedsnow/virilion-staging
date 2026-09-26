@@ -1,4 +1,4 @@
-import type { DemoPlayer, Vessel } from "./types";
+import type { DemoPlayer, PresenceMode, Vessel } from "./types";
 
 const KEYS = {
   ageOk: "virilion_age_ok",
@@ -6,10 +6,13 @@ const KEYS = {
   player: "virilion_demo_player",
   vessel: "virilion_vessel",
   pending: "virilion_pending_vessels",
-  presence: "virilion_presence",
+  /** Canonical presence key (v1). Legacy `virilion_presence` is migrated on read. */
+  presence: "virilion_presence_v1",
+  presenceLegacy: "virilion_presence",
 } as const;
 
 export type ThemeMode = "dark" | "light";
+export type { PresenceMode };
 
 function canUseStorage(): boolean {
   return typeof window !== "undefined";
@@ -132,16 +135,84 @@ export function wipeVesselForDemo(): void {
   localStorage.removeItem(KEYS.vessel);
 }
 
-export type PresenceMode = "open" | "scene" | "unseen";
+function normalizePresence(raw: string | null | undefined): PresenceMode | null {
+  if (!raw) return null;
+  const v = raw.trim().toLowerCase().replace(/\s+/g, " ");
+  if (v === "scene" || v === "in scene" || v === "in_scene" || v === "inscene") {
+    return "scene";
+  }
+  if (v === "unseen" || v === "away" || v === "hidden") return "unseen";
+  if (v === "open" || v === "available") return "open";
+  return null;
+}
 
 export function getPresence(): PresenceMode {
   if (!canUseStorage()) return "open";
-  const v = localStorage.getItem(KEYS.presence);
-  if (v === "scene" || v === "unseen" || v === "open") return v;
+
+  const primary = normalizePresence(localStorage.getItem(KEYS.presence));
+  if (primary) return primary;
+
+  const legacy = normalizePresence(localStorage.getItem(KEYS.presenceLegacy));
+  if (legacy) {
+    // Migrate legacy key forward so refresh keeps the choice.
+    localStorage.setItem(KEYS.presence, legacy);
+    return legacy;
+  }
+
+  try {
+    const vessel = getVessel();
+    const mirrored = normalizePresence(vessel?.presence ?? null);
+    if (mirrored) {
+      localStorage.setItem(KEYS.presence, mirrored);
+      return mirrored;
+    }
+  } catch {
+    /* ignore */
+  }
+
   return "open";
 }
 
 export function setPresence(mode: PresenceMode): void {
   if (!canUseStorage()) return;
   localStorage.setItem(KEYS.presence, mode);
+  // Drop legacy key so nothing re-reads a stale Open.
+  localStorage.removeItem(KEYS.presenceLegacy);
+  // Mirror onto vessel JSON so presence survives key churn.
+  try {
+    const vessel = getVessel();
+    if (vessel && vessel.presence !== mode) {
+      setVessel({ ...vessel, presence: mode });
+    }
+  } catch {
+    /* ignore */
+  }
+}
+
+/** Subscribe to presence changes (same-tab custom event + cross-tab storage). */
+export function subscribePresence(onStoreChange: () => void): () => void {
+  if (!canUseStorage()) return () => undefined;
+  const onCustom = () => onStoreChange();
+  const onStorage = (e: StorageEvent) => {
+    if (
+      e.key === KEYS.presence ||
+      e.key === KEYS.presenceLegacy ||
+      e.key === KEYS.vessel
+    ) {
+      onStoreChange();
+    }
+  };
+  window.addEventListener("virilion-presence", onCustom);
+  window.addEventListener("storage", onStorage);
+  return () => {
+    window.removeEventListener("virilion-presence", onCustom);
+    window.removeEventListener("storage", onStorage);
+  };
+}
+
+export function setPresenceAndNotify(mode: PresenceMode): void {
+  setPresence(mode);
+  if (canUseStorage()) {
+    window.dispatchEvent(new Event("virilion-presence"));
+  }
 }

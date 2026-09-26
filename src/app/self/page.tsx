@@ -11,13 +11,11 @@ import { useTheme } from "@/components/ThemeProvider";
 import {
   clearSession,
   getPlayer,
-  getPresence,
   getVessel,
-  setPresence as persistPresence,
   wipeVesselForDemo,
-  type PresenceMode,
 } from "@/lib/storage";
-import type { DemoPlayer, Vessel } from "@/lib/types";
+import type { DemoPlayer, PresenceMode, Vessel } from "@/lib/types";
+import { usePresence } from "@/hooks/usePresence";
 
 function roleLabel(role: string) {
   if (role === "top") return "Top";
@@ -44,22 +42,16 @@ export default function SelfPage() {
   const [tab, setTab] = useState<"vessel" | "player">("vessel");
   const [vessel, setV] = useState<Vessel | null>(null);
   const [player, setP] = useState<DemoPlayer | null>(null);
-  const [presence, setPresence] = useState<PresenceMode>("open");
+  const [presence, changePresence] = usePresence();
 
   useEffect(() => {
     setV(getVessel());
     setP(getPlayer());
-    setPresence(getPresence());
   }, []);
 
   function logout() {
     clearSession();
     router.replace("/enter");
-  }
-
-  function changePresence(next: PresenceMode) {
-    setPresence(next);
-    persistPresence(next);
   }
 
   const peopleMeta =
@@ -328,10 +320,6 @@ export default function SelfPage() {
                     <span className="section-kicker block mb-0.5">Moonmarket</span>
                     <span className="font-display text-base text-fg">Shop</span>
                   </Link>
-                  <Link href="/wisp" className="realm-ask-chip">
-                    <span className="section-kicker block mb-0.5">Companion</span>
-                    <span className="font-display text-base text-fg">Wisp</span>
-                  </Link>
                 </div>
               </section>
 
@@ -341,10 +329,6 @@ export default function SelfPage() {
                   <li className="flex gap-2">
                     <span className="text-gold shrink-0">✦</span>
                     <span>One vessel. No second slot, no switcher, no paid CTA.</span>
-                  </li>
-                  <li className="flex gap-2">
-                    <span className="text-gold shrink-0">✦</span>
-                    <span>Wisp: shell mote → pet panel. Not on Map, Scenes, showcase, or roster.</span>
                   </li>
                   <li className="flex gap-2">
                     <span className="text-gold shrink-0">✦</span>

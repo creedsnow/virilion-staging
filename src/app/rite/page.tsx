@@ -21,6 +21,7 @@ import {
   getVessel,
   setPlayer,
   setVessel,
+  wipeVesselForDemo,
 } from "@/lib/storage";
 import type { ClassId, PeopleId, RoleId, StyleId, Vessel } from "@/lib/types";
 
@@ -73,7 +74,7 @@ export default function RitePage() {
     return <p className="text-sm text-fg-muted">Opening the Rite…</p>;
   }
 
-  // One vessel lock
+  // One vessel lock — no second vessel CTA; demo wipe is QA-only retake
   if (existing) {
     return (
       <div className="rite-hero text-center space-y-4">
@@ -83,9 +84,42 @@ export default function RitePage() {
           You already embody <strong className="text-fg">{existing.name}</strong>.
           Virilion is one vessel per player — no second slot.
         </p>
-        <button type="button" className="btn-gold" onClick={() => router.replace("/")}>
-          Return to Realm
-        </button>
+        <div className="flex flex-col sm:flex-row gap-2 justify-center items-center">
+          <button type="button" className="btn-gold" onClick={() => router.replace("/")}>
+            Return to Realm
+          </button>
+          <button
+            type="button"
+            className="btn-ghost text-sm border-danger/40 text-danger"
+            onClick={() => {
+              if (
+                confirm(
+                  "Demo QA only: wipe this vessel and retake the Rite? Not a second vessel — the one-vessel lock stays."
+                )
+              ) {
+                wipeVesselForDemo();
+                setExisting(null);
+                setStep(0);
+                setRole(null);
+                setCanCarry(false);
+                setPeople(null);
+                setPeopleCustom("");
+                setStyle(null);
+                setStyleCustom("");
+                setClassId(null);
+                setClassCustom("");
+                setName("");
+                setBio("");
+                setError("");
+              }
+            }}
+          >
+            Demo: wipe & retake Rite
+          </button>
+        </div>
+        <p className="text-[10px] text-fg-muted/75 leading-relaxed max-w-sm mx-auto">
+          QA path only · clears local demo vessel so tile selection and People lore can be re-tested.
+        </p>
       </div>
     );
   }
@@ -292,6 +326,7 @@ export default function RitePage() {
                 type="button"
                 className="role-pick"
                 data-active={role === r.id}
+                aria-pressed={role === r.id}
                 onClick={() => onSelectRole(r.id)}
               >
                 <span className="min-w-0 text-left">
@@ -379,10 +414,11 @@ export default function RitePage() {
               const label = id === "custom" ? "Custom" : p?.name || id;
               const lore =
                 id === "custom"
-                  ? "GM approval required"
+                  ? "GM approval required · describe your People"
                   : p
-                    ? `${p.racialAbility}`
+                    ? p.lore
                     : "";
+              const gift = id === "custom" ? "" : p ? `Gift · ${p.racialAbility}` : "";
               const home = id === "custom" ? "" : p?.homeland || "";
               const active = people === id;
               return (
@@ -391,13 +427,18 @@ export default function RitePage() {
                   type="button"
                   className="rite-choice"
                   data-active={active}
+                  aria-pressed={active}
                   onClick={() => onSelectPeople(id)}
                 >
                   <span className="rite-choice-seal" aria-hidden data-on={active}>
                     {active ? "✓" : ""}
                   </span>
+                  {active ? (
+                    <span className="rite-choice-selected-tag">Selected</span>
+                  ) : null}
                   <span className="rite-choice-name">{label}</span>
                   {lore ? <span className="rite-choice-note">{lore}</span> : null}
+                  {gift ? <span className="rite-choice-home">{gift}</span> : null}
                   {home ? <span className="rite-choice-home">{home}</span> : null}
                 </button>
               );
@@ -440,6 +481,7 @@ export default function RitePage() {
                   type="button"
                   className="rite-choice"
                   data-active={style === s.id}
+                  aria-pressed={style === s.id}
                   disabled={!allowed}
                   title={
                     allowed
@@ -451,6 +493,9 @@ export default function RitePage() {
                   <span className="rite-choice-seal" aria-hidden data-on={style === s.id}>
                     {style === s.id ? "✓" : ""}
                   </span>
+                  {style === s.id ? (
+                    <span className="rite-choice-selected-tag">Selected</span>
+                  ) : null}
                   <span className="rite-choice-name">{s.name}</span>
                   {note ? <span className="rite-choice-note">{note}</span> : null}
                 </button>
@@ -488,11 +533,15 @@ export default function RitePage() {
                   type="button"
                   className="rite-choice"
                   data-active={active}
+                  aria-pressed={active}
                   onClick={() => setClassId(c.id)}
                 >
                   <span className="rite-choice-seal" aria-hidden data-on={active}>
                     {active ? "✓" : ""}
                   </span>
+                  {active ? (
+                    <span className="rite-choice-selected-tag">Selected</span>
+                  ) : null}
                   <span className="rite-choice-name">{c.name}</span>
                   <span className="rite-choice-note">
                     {c.id === "custom" ? c.blurb : c.orderHall}
