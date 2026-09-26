@@ -467,7 +467,7 @@ export default function RealmPage() {
           <div className="news-card-body">
             <p className="news-card-title">Voice and video now live inside Virilion.</p>
             <p className="news-card-sub">
-              Deep-links and Discord voice stay the voice path — the portal does not replace Discord RP chat.
+              Virilion is the RP chat and voice home. Discord stays a temporary community hub while players migrate in.
             </p>
             <span className="news-card-cta">Open Scenes →</span>
           </div>
