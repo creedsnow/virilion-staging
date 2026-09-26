@@ -293,15 +293,13 @@ body {
 .enter-fields {
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
-  margin-bottom: 1.35rem;
-  padding: 1rem 1.05rem 1.05rem;
-  border-radius: 1.15rem;
-  border: 1px solid color-mix(in srgb, var(--border) 55%, var(--gold) 22%);
-  background:
-    radial-gradient(ellipse 90% 70% at 50% 0%, color-mix(in srgb, var(--aura) 14%, transparent), transparent 65%),
-    color-mix(in srgb, var(--bg-elevated) 55%, transparent);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  gap: 1rem;
+  margin-bottom: 1.4rem;
+  padding: 0.1rem 0.05rem 0.2rem;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 .enter-label {
@@ -317,17 +315,17 @@ body {
 }
 
 .enter-input {
-  border-radius: 0.75rem !important;
+  border-radius: 0.85rem !important;
   min-height: 44px !important;
-  padding: 0.7rem 0.9rem !important;
-  background: color-mix(in srgb, var(--bg) 72%, transparent) !important;
-  border-color: color-mix(in srgb, var(--border) 55%, transparent) !important;
-  box-shadow: none !important;
+  padding: 0.72rem 0.95rem !important;
+  background: color-mix(in srgb, var(--bg) 48%, transparent) !important;
+  border-color: color-mix(in srgb, var(--border) 32%, var(--gold) 8%) !important;
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--gold) 6%, transparent) !important;
 }
 
 .enter-input:focus {
-  border-color: color-mix(in srgb, var(--gold) 55%, var(--border)) !important;
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--gold) 18%, transparent) !important;
+  border-color: color-mix(in srgb, var(--gold) 48%, var(--border)) !important;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--gold) 14%, transparent) !important;
 }
 
 .enter-demo-note {
@@ -380,17 +378,15 @@ body {
 }
 
 [data-theme="light"] .enter-fields {
-  background:
-    radial-gradient(ellipse 90% 70% at 50% 0%, color-mix(in srgb, var(--aura) 18%, transparent), transparent 65%),
-    color-mix(in srgb, var(--parchment) 55%, rgba(255, 250, 242, 0.65));
-  border-color: color-mix(in srgb, var(--border) 70%, var(--gold) 18%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  background: transparent;
+  border: none;
+  box-shadow: none;
 }
 
 [data-theme="light"] .enter-input {
-  background: color-mix(in srgb, #fffaf2 78%, var(--parchment)) !important;
-  border-color: color-mix(in srgb, var(--border) 65%, transparent) !important;
-  box-shadow: none !important;
+  background: color-mix(in srgb, #fffaf2 70%, transparent) !important;
+  border-color: color-mix(in srgb, var(--border) 42%, var(--gold) 10%) !important;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.45) !important;
 }
 
 [data-theme="light"] .enter-label {
@@ -725,7 +721,8 @@ body {
     0 0 28px rgba(139, 107, 184, 0.55),
     0 0 48px rgba(123, 94, 167, 0.35),
     0 10px 26px rgba(0, 0, 0, 0.38);
-  transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 0.15s ease, filter 0.15s ease;
+  animation: nav-d20-glow-breathe 5.2s ease-in-out infinite;
 }
 .nav-d20 > * {
   transform: rotate(-45deg);
@@ -745,11 +742,13 @@ body {
   pointer-events: none;
   filter: blur(3px);
   transform: rotate(-45deg);
+  animation: nav-d20-aura-breathe 5.2s ease-in-out infinite;
 }
 .nav-d20[data-active="true"] {
   background: linear-gradient(160deg, var(--gold-soft), var(--gold));
   color: #1a1408;
   border-color: var(--gold-soft);
+  animation: none;
   box-shadow:
     0 0 0 1px color-mix(in srgb, var(--gold) 50%, transparent),
     0 0 32px rgba(201, 162, 39, 0.45),
@@ -758,6 +757,41 @@ body {
 }
 .nav-d20:hover {
   transform: rotate(45deg) translateY(-3px) scale(1.04);
+}
+
+@keyframes nav-d20-aura-breathe {
+  0%, 100% {
+    opacity: 0.68;
+    transform: rotate(-45deg) scale(0.94);
+  }
+  50% {
+    opacity: 1;
+    transform: rotate(-45deg) scale(1.08);
+  }
+}
+
+@keyframes nav-d20-glow-breathe {
+  0%, 100% {
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--aura) 36%, transparent),
+      0 0 24px rgba(139, 107, 184, 0.48),
+      0 0 42px rgba(123, 94, 167, 0.28),
+      0 10px 26px rgba(0, 0, 0, 0.38);
+  }
+  50% {
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--gold) 28%, var(--aura) 30%),
+      0 0 34px rgba(139, 107, 184, 0.62),
+      0 0 56px rgba(201, 162, 39, 0.22),
+      0 10px 26px rgba(0, 0, 0, 0.38);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-d20,
+  .nav-d20::before {
+    animation: none;
+  }
 }
 
 .walk-card {
