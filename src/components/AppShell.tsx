@@ -144,7 +144,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const isEnter = pathname === "/enter";
   const subtitle =
     pathname === "/"
-      ? "The World Feed"
+      ? "The Realm"
       : pathname.startsWith("/rite")
         ? "Rite of Making"
         : pathname.startsWith("/scenes")

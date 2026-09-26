@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { EmptyState } from "@/components/EmptyState";
@@ -11,6 +12,7 @@ import { CLASSES } from "@/lib/canon/classes";
 import { STYLES } from "@/lib/canon/styles";
 import { DEMO_SCENES } from "@/lib/scenes";
 import { COMING_UP } from "@/lib/events";
+import { codexPeopleCardSm } from "@/lib/assets";
 
 const WALKING = [
   {
@@ -110,6 +112,22 @@ export default function RealmPage() {
   const [presence, changePresence] = usePresence();
   const [preview, setPreview] = useState<Preview>(null);
   const [askCount, setAskCount] = useState(2);
+  const [justArrived, setJustArrived] = useState(false);
+
+  useEffect(() => {
+    try {
+      const flag = sessionStorage.getItem("virilion_threshold");
+      if (flag === "rite-complete" || flag === "rite-pending") {
+        setJustArrived(true);
+        sessionStorage.setItem("virilion_arrived", "1");
+        sessionStorage.removeItem("virilion_threshold");
+      } else if (flag === "enter-realm" || flag === "enter-rite") {
+        sessionStorage.removeItem("virilion_threshold");
+      }
+    } catch {
+      /* ignore */
+    }
+  }, []);
 
   useEffect(() => {
     function hydrate() {
@@ -135,11 +153,11 @@ export default function RealmPage() {
   if (!vessel) {
     return (
       <EmptyState
-        title="The Realm awaits"
-        body="Finish the Rite of Making to embody your one Vessel, then return here for calm presence."
+        title="The threshold is closed"
+        body="Finish the Rite of Making to embody your one Vessel — then the lamps of Virelios open for him."
         action={
           <Link href="/rite" className="btn-gold">
-            Begin Rite
+            Begin the Rite
           </Link>
         }
       />
@@ -161,13 +179,25 @@ export default function RealmPage() {
       : CLASSES.find((c) => c.id === vessel.classId)?.name || vessel.classId;
   const initial = vessel.name.trim().charAt(0).toUpperCase() || "V";
 
+  const peopleArt =
+    vessel.people !== "custom" ? codexPeopleCardSm(vessel.people) : null;
+
   return (
-    <div className="space-y-6 -mt-0.5">
+    <div className="space-y-6 -mt-0.5 realm-arrival">
       <div className="realm-hero-glow page-header">
-        <p className="section-kicker mb-2">World feed</p>
+        <p className="section-kicker mb-2">
+          {justArrived ? "You have arrived" : "The Realm"}
+        </p>
         <h1 className="display-hero">
-          The lamps of Virelios are lit, {firstName}.
+          {justArrived
+            ? `Welcome under the lamps, ${firstName}.`
+            : `The lamps of Virelios are lit, ${firstName}.`}
         </h1>
+        {justArrived ? (
+          <p className="text-sm text-fg-muted mt-2.5 leading-relaxed max-w-md">
+            Presence, places, and open halls — a living world, not a server home.
+          </p>
+        ) : null}
       </div>
 
       {/* 1. Who am I — Vessel */}
@@ -177,14 +207,30 @@ export default function RealmPage() {
         </span>
         <div className="flex gap-3.5 items-start relative z-[1]">
           <div
-            className="vessel-medallion h-[5.25rem] w-[5.25rem] rounded-[0.95rem] text-[1.85rem]"
-            style={{
-              background:
-                "radial-gradient(circle at 30% 22%, rgba(232, 200, 120, 0.22), transparent 55%), linear-gradient(145deg, color-mix(in srgb, var(--aura) 42%, #1a1028), #121018 72%)",
-            }}
+            className={`vessel-medallion h-[5.25rem] w-[5.25rem] rounded-[0.95rem] text-[1.85rem]${peopleArt ? " vessel-medallion-art" : ""}`}
+            style={
+              peopleArt
+                ? undefined
+                : {
+                    background:
+                      "radial-gradient(circle at 30% 22%, rgba(232, 200, 120, 0.22), transparent 55%), linear-gradient(145deg, color-mix(in srgb, var(--aura) 42%, #1a1028), #121018 72%)",
+                  }
+            }
             aria-hidden
           >
-            <span>{initial}</span>
+            {peopleArt ? (
+              <Image
+                src={peopleArt}
+                alt=""
+                width={120}
+                height={150}
+                className="vessel-medallion-img"
+                sizes="84px"
+                priority
+              />
+            ) : (
+              <span>{initial}</span>
+            )}
             <span
               className="absolute bottom-1.5 right-1.5 h-2.5 w-2.5 rounded-full border border-bg-card z-[2]"
               style={{
@@ -220,9 +266,9 @@ export default function RealmPage() {
 
         {vessel.status === "pending_gm" ? (
           <div className="relative z-[1] border-t border-gold/30 pt-3 space-y-2">
-            <p className="text-sm text-gold-soft font-medium">Awaiting GM approval</p>
+            <p className="text-sm text-gold-soft font-medium">Held at the gate · GM blessing</p>
             <p className="text-xs text-fg-muted leading-relaxed">
-              Custom People / Style / Class needs a demo approve. Check status on Self, then open Admin.
+              Custom People / Style / Class waits under soft lamps. Check Self, then open Admin to approve.
             </p>
             <div className="flex flex-wrap gap-2">
               <Link href="/self" className="btn-ghost text-xs py-1.5 px-3 !min-h-0">
@@ -279,20 +325,20 @@ export default function RealmPage() {
         </Link>
         <div className="grid grid-cols-2 gap-2">
           <Link href="/map" className="realm-ask-chip">
-            <span className="section-kicker block mb-0.5">Where</span>
-            <span className="font-display text-base text-fg">Map · Enter places</span>
+            <span className="section-kicker block mb-0.5">Places</span>
+            <span className="font-display text-base text-fg">Map · halls & lands</span>
           </Link>
           <Link href="/scenes" className="realm-ask-chip">
-            <span className="section-kicker block mb-0.5">Scenes</span>
-            <span className="font-display text-base text-fg">Live rooms</span>
+            <span className="section-kicker block mb-0.5">Halls</span>
+            <span className="font-display text-base text-fg">Open scenes</span>
           </Link>
         </div>
       </section>
 
-      {/* Walking now */}
-      <section className="space-y-3 feed-panel">
+      {/* Presence under the lamps */}
+      <section className="space-y-3 realm-presence-panel">
         <div className="flex items-baseline justify-between gap-3">
-          <h2 className="section-serif text-fg">Walking now</h2>
+          <h2 className="section-serif text-fg">Under the lamps</h2>
           <Link
             href="/weave"
             className="text-[10px] font-semibold tracking-[0.14em] uppercase text-gold hover:text-gold-soft"
@@ -371,14 +417,14 @@ export default function RealmPage() {
           ))}
         </div>
         <p className="text-[10px] text-fg-muted/70 tracking-wide">
-          Demo cast · tap a face for preview · Enter scene / Weave / Map
+          Presence · tap a face · open a scene, place, or bond
         </p>
       </section>
 
-      {/* Coming up */}
-      <section className="space-y-3 feed-panel">
+      {/* Coming up — events, not empty stubs */}
+      <section className="space-y-3 realm-presence-panel">
         <div className="flex items-baseline justify-between gap-3">
-          <h2 className="section-serif text-fg">Coming up</h2>
+          <h2 className="section-serif text-fg">On the horizon</h2>
           <Link
             href="/calendar"
             className="text-[10px] font-semibold tracking-[0.14em] uppercase text-gold hover:text-gold-soft"
@@ -436,7 +482,7 @@ export default function RealmPage() {
       </Link>
 
       <p className="text-[11px] text-fg-muted/75 text-center pt-1">
-        Player {player?.screenName || "Traveler"} · in-app home
+        {player?.screenName || "Traveler"} · present as vessel · in-app home
       </p>
 
       {preview ? (
@@ -509,16 +555,12 @@ export default function RealmPage() {
                 Close
               </button>
             </div>
-            {!("sceneId" in preview) || !preview.sceneId ? (
+            {preview.sceneId ? (
               <p className="text-[10px] text-fg-muted mt-3">
-                Full showcase ships next cycle · demo cast only
+                Open hall:{" "}
+                {DEMO_SCENES.find((s) => s.id === preview.sceneId)?.title || "scene"}
               </p>
-            ) : (
-              <p className="text-[10px] text-fg-muted mt-3">
-                Linked scene:{" "}
-                {DEMO_SCENES.find((s) => s.id === preview.sceneId)?.title || "room"}
-              </p>
-            )}
+            ) : null}
           </div>
         </div>
       ) : null}

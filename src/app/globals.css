@@ -4692,3 +4692,201 @@ button.scene-call-hint:hover {
     transform: none;
   }
 }
+
+/* —— P0 threshold FLOW: Enter → Rite → Realm arrival —— */
+.threshold-handoff,
+.rite-threshold {
+  animation: threshold-rise 0.55s ease-out both;
+}
+@keyframes threshold-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.threshold-aura {
+  animation: threshold-aura-pulse 2.4s ease-in-out infinite;
+}
+@keyframes threshold-aura-pulse {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.04);
+  }
+}
+.threshold-progress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+}
+.threshold-progress span {
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--gold) 55%, var(--border));
+  box-shadow: 0 0 10px color-mix(in srgb, var(--gold) 35%, transparent);
+  animation: threshold-bead 1.35s ease-in-out infinite;
+}
+.threshold-progress span:nth-child(2) {
+  animation-delay: 0.18s;
+}
+.threshold-progress span:nth-child(3) {
+  animation-delay: 0.36s;
+}
+@keyframes threshold-bead {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+.rite-threshold {
+  padding: 1.75rem 1.15rem 2rem;
+  border-radius: 1.35rem;
+  border: 1px solid color-mix(in srgb, var(--border) 55%, var(--gold) 32%);
+  background:
+    radial-gradient(ellipse 90% 70% at 50% -10%, color-mix(in srgb, var(--aura) 32%, transparent), transparent 62%),
+    radial-gradient(ellipse 50% 40% at 10% 110%, color-mix(in srgb, var(--gold) 12%, transparent), transparent 55%),
+    var(--bg-card);
+  box-shadow:
+    var(--shadow-card),
+    0 0 40px color-mix(in srgb, var(--aura) 18%, transparent);
+}
+.rite-chamber .rite-progress-head {
+  box-shadow:
+    var(--shadow-card),
+    0 0 28px color-mix(in srgb, var(--gold) 12%, transparent);
+}
+
+/* Rite choice art thumbs (peoples / classes card-sm) */
+.rite-choice {
+  position: relative;
+}
+.rite-choice-art {
+  padding-top: 0.65rem;
+  min-height: 7.2rem;
+}
+.rite-choice-thumb {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3.2;
+  max-height: 4.6rem;
+  border-radius: 0.7rem;
+  overflow: hidden;
+  margin-bottom: 0.35rem;
+  border: 1px solid color-mix(in srgb, var(--gold) 22%, transparent);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--aura) 18%, transparent);
+}
+.rite-choice-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 22%;
+  display: block;
+}
+.rite-choice-thumb-veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 40%,
+    color-mix(in srgb, var(--bg-card) 55%, transparent) 100%
+  );
+  pointer-events: none;
+}
+.rite-choice[data-active="true"] .rite-choice-thumb {
+  border-color: color-mix(in srgb, var(--gold) 55%, transparent);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--gold) 32%, transparent);
+}
+.rite-review-medallion-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 18%;
+  z-index: 0;
+}
+
+/* Realm arrival + presence (not Discord feed) */
+.realm-arrival .realm-hero-glow::before {
+  width: 85%;
+  height: 180%;
+  opacity: 1;
+  background: radial-gradient(
+    ellipse at center,
+    color-mix(in srgb, var(--aura) 26%, transparent),
+    transparent 70%
+  );
+}
+.realm-presence-panel {
+  position: relative;
+  padding: 0.85rem 0 0.15rem;
+  border-radius: 1.15rem;
+}
+.realm-presence-panel::before {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0 -0.35rem;
+  border-radius: 1.25rem;
+  background: radial-gradient(
+    ellipse 80% 70% at 18% 0%,
+    color-mix(in srgb, var(--gold) 10%, transparent),
+    transparent 65%
+  );
+  z-index: -1;
+  opacity: 0.95;
+}
+.vessel-medallion-art {
+  padding: 0;
+}
+.vessel-medallion-art::before {
+  inset: 0.18rem;
+  border-radius: 0.75rem;
+  z-index: 2;
+}
+.vessel-medallion-art::after {
+  background: linear-gradient(
+    180deg,
+    transparent 45%,
+    color-mix(in srgb, #0e0c14 55%, transparent) 100%
+  );
+  z-index: 1;
+  opacity: 0.55;
+}
+.vessel-medallion-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 18%;
+  z-index: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .threshold-handoff,
+  .rite-threshold,
+  .threshold-aura,
+  .threshold-progress span {
+    animation: none;
+  }
+  .threshold-progress span {
+    opacity: 0.7;
+  }
+}

@@ -362,6 +362,12 @@ export function clearSession(): void {
   } catch {
     /* ignore */
   }
+  try {
+    sessionStorage.removeItem("virilion_threshold");
+    sessionStorage.removeItem("virilion_arrived");
+  } catch {
+    /* ignore */
+  }
   applyThemeDom("dark");
   presenceSnapshot = null;
   try {

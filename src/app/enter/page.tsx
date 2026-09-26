@@ -6,33 +6,50 @@ import { useEffect, useState, type FormEvent } from "react";
 import { clearSession, getPlayer, getVessel, setPlayer } from "@/lib/storage";
 import { Fireflies } from "@/components/Fireflies";
 
+type ThresholdKind = "rite" | "realm";
+
 export default function EnterPage() {
   const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [alreadyIn, setAlreadyIn] = useState(false);
+  const [threshold, setThreshold] = useState<ThresholdKind | null>(null);
 
   useEffect(() => {
     setAlreadyIn(!!getPlayer());
   }, []);
 
-  function enter(e?: FormEvent) {
-    e?.preventDefault();
+  useEffect(() => {
+    if (!threshold) return;
+    const dest = threshold === "realm" ? "/" : "/rite";
+    const t = window.setTimeout(() => {
+      router.replace(dest);
+    }, 2200);
+    return () => window.clearTimeout(t);
+  }, [threshold, router]);
+
+  function sealAndCross(kind: ThresholdKind) {
     setPlayer({
       screenName: name.trim() || "Traveler",
       enteredAt: new Date().toISOString(),
     });
+    try {
+      sessionStorage.setItem("virilion_threshold", kind === "rite" ? "enter-rite" : "enter-realm");
+    } catch {
+      /* ignore */
+    }
+    setThreshold(kind);
+  }
+
+  function enter(e?: FormEvent) {
+    e?.preventDefault();
     const vessel = getVessel();
-    router.replace(vessel ? "/" : "/rite");
+    sealAndCross(vessel ? "realm" : "rite");
   }
 
   function createAccount() {
-    setPlayer({
-      screenName: name.trim() || "Traveler",
-      enteredAt: new Date().toISOString(),
-    });
-    router.replace("/rite");
+    sealAndCross("rite");
   }
 
   function logout() {
@@ -41,6 +58,61 @@ export default function EnterPage() {
     setName("");
     setEmail("");
     setPassword("");
+    setThreshold(null);
+  }
+
+  if (threshold) {
+    const toRite = threshold === "rite";
+    return (
+      <div className="night-sky enter-sky -mx-4 min-h-[100dvh] px-5 py-12 flex flex-col items-center justify-center relative">
+        <Fireflies />
+        <div className="threshold-handoff relative z-[1] w-full max-w-[20.5rem] flex flex-col items-center text-center">
+          <div className="relative mb-7">
+            <div
+              className="absolute -inset-10 rounded-full blur-3xl opacity-85 threshold-aura"
+              style={{
+                background:
+                  "radial-gradient(circle, color-mix(in srgb, var(--aura) 62%, transparent), transparent 68%)",
+              }}
+              aria-hidden
+            />
+            <div className="relative rounded-[1.2rem] overflow-hidden border border-gold/30 shadow-[0_0_56px_rgba(123,94,167,0.48)]">
+              <Image
+                src="/virilion-logo.png"
+                alt="Virilion"
+                width={104}
+                height={104}
+                className="block"
+                priority
+              />
+            </div>
+          </div>
+          <p className="section-kicker mb-2">
+            {toRite ? "The threshold opens" : "The lamps remember you"}
+          </p>
+          <h1 className="font-display text-[1.85rem] font-semibold text-gold-soft leading-tight">
+            {toRite ? "Begin the Rite of Making" : "Return to the Realm"}
+          </h1>
+          <p className="display-italic text-[1.05rem] text-fg-muted mt-3 leading-relaxed max-w-[17.5rem]">
+            {toRite
+              ? "One vessel. Role first. Cross when you are ready."
+              : "Your vessel waits under Virelios lamps."}
+          </p>
+          <div className="threshold-progress mt-8" aria-hidden>
+            <span />
+            <span />
+            <span />
+          </div>
+          <button
+            type="button"
+            className="btn-gold btn-enter w-full mt-8"
+            onClick={() => router.replace(toRite ? "/rite" : "/")}
+          >
+            {toRite ? "Step through" : "Enter the Realm"}
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (

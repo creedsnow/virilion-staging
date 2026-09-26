@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { PEOPLES } from "@/lib/canon/peoples";
@@ -24,6 +25,7 @@ import {
   setVessel,
   wipeVesselForDemo,
 } from "@/lib/storage";
+import { codexClassCardSm, codexPeopleCardSm } from "@/lib/assets";
 import type { ClassId, PeopleId, RoleId, StyleId, Vessel } from "@/lib/types";
 
 const STEPS = [
@@ -54,6 +56,8 @@ export default function RitePage() {
   const [bio, setBio] = useState("");
   const [toast, setToast] = useState("");
   const [error, setError] = useState("");
+  const [showThreshold, setShowThreshold] = useState(false);
+  const [completing, setCompleting] = useState<"approved" | "pending_gm" | null>(null);
 
   const allowedPeople = useMemo(
     () => (role ? peoplesForRole(role) : []),
@@ -70,11 +74,55 @@ export default function RitePage() {
   useEffect(() => {
     setExisting(getVessel());
     setQa(isQaMode());
+    try {
+      const flag = sessionStorage.getItem("virilion_threshold");
+      if (flag === "enter-rite") {
+        setShowThreshold(true);
+        sessionStorage.removeItem("virilion_threshold");
+      }
+    } catch {
+      /* ignore */
+    }
     setBooted(true);
   }, []);
 
+  useEffect(() => {
+    if (!completing) return;
+    const t = window.setTimeout(() => {
+      router.replace("/");
+    }, 2400);
+    return () => window.clearTimeout(t);
+  }, [completing, router]);
+
   if (!booted) {
     return <p className="text-sm text-fg-muted">Opening the Rite…</p>;
+  }
+
+  if (completing) {
+    const pending = completing === "pending_gm";
+    return (
+      <div className="rite-threshold text-center space-y-4">
+        <p className="section-kicker">
+          {pending ? "Held at the gate" : "The Rite is sealed"}
+        </p>
+        <h1 className="font-display text-3xl font-semibold text-gold-soft leading-tight">
+          {pending ? "Awaiting GM blessing" : "Cross into the Realm"}
+        </h1>
+        <p className="text-sm text-fg-muted leading-relaxed max-w-sm mx-auto">
+          {pending
+            ? "Your custom vessel waits under soft lamps. The Realm opens — approve on Self or /admin when ready."
+            : "One vessel embodied. The lamps of Virelios are lit for him."}
+        </p>
+        <div className="threshold-progress mx-auto" aria-hidden>
+          <span />
+          <span />
+          <span />
+        </div>
+        <button type="button" className="btn-gold" onClick={() => router.replace("/")}>
+          Enter the Realm
+        </button>
+      </div>
+    );
   }
 
   // One vessel lock — no second vessel CTA; demo wipe is QA-only retake
@@ -246,7 +294,16 @@ export default function RitePage() {
     };
     setVessel(vessel);
     if (pending) addPendingVessel(vessel);
-    router.replace(pending ? "/self?pending=1" : "/");
+    try {
+      sessionStorage.setItem(
+        "virilion_threshold",
+        pending ? "rite-pending" : "rite-complete"
+      );
+      sessionStorage.removeItem("virilion_arrived");
+    } catch {
+      /* ignore */
+    }
+    setCompleting(pending ? "pending_gm" : "approved");
   }
 
   function copyPrompt() {
@@ -276,24 +333,51 @@ export default function RitePage() {
     3: "His style",
     4: "His class",
     5: "His name",
-    6: "Review",
+    6: "Seal the Rite",
   };
   const stepHints: Record<number, string> = {
-    0: "Role comes first, so Peoples locked to a role are filtered out before you fall for one.",
+    0: "Role comes first — Peoples locked to a role stay veiled until then.",
     1: "Sacred, consent-gated, never automatic. Defaults off.",
-    2: "Fourteen Peoples — lore line + homeland on each tile. No Veilborn. Custom → GM.",
+    2: "Fourteen Peoples — card, lore, homeland. No Veilborn. Custom → GM.",
     3: "Styles filtered by People. Daddy ≠ Bear. Daddy banned for Smols only.",
-    4: "Tiles alone select class — each shows its Order Hall. Custom → GM.",
+    4: "Each class ties to an Order Hall. Custom → GM.",
     5: "Public face in the Realm — keep him clearly adult.",
-    6: "One vessel only. Confirm before you embody.",
+    6: "One vessel only. Confirm, then cross the threshold.",
   };
 
+  if (showThreshold) {
+    return (
+      <div className="rite-threshold text-center space-y-4">
+        <p className="section-kicker">You have crossed</p>
+        <h1 className="font-display text-3xl font-semibold text-gold-soft leading-tight">
+          The Rite of Making
+        </h1>
+        <p className="text-sm text-fg-muted leading-relaxed max-w-sm mx-auto">
+          Shape one vessel — role, People, style, class, name — then step into a living Realm.
+          No second slot. No Discord play path.
+        </p>
+        <div className="threshold-progress mx-auto" aria-hidden>
+          <span />
+          <span />
+          <span />
+        </div>
+        <button
+          type="button"
+          className="btn-gold"
+          onClick={() => setShowThreshold(false)}
+        >
+          Begin the crossing
+        </button>
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 rite-chamber">
       <div className="rite-progress-head">
         <div className="flex items-baseline justify-between gap-3">
           <p className="section-kicker mb-0">
-            Rite of Making · Step {step + 1} of {STEPS.length}
+            Crossing · {step + 1} of {STEPS.length}
           </p>
           <p className="rite-step-label">{STEPS[step]}</p>
         </div>
@@ -432,7 +516,7 @@ export default function RitePage() {
                 <button
                   key={id}
                   type="button"
-                  className="rite-choice"
+                  className={`rite-choice${id !== "custom" ? " rite-choice-art" : ""}`}
                   data-active={active}
                   aria-pressed={active}
                   onClick={() => onSelectPeople(id)}
@@ -442,6 +526,19 @@ export default function RitePage() {
                   </span>
                   {active ? (
                     <span className="rite-choice-selected-tag">Selected</span>
+                  ) : null}
+                  {id !== "custom" ? (
+                    <span className="rite-choice-thumb" aria-hidden>
+                      <Image
+                        src={codexPeopleCardSm(id)}
+                        alt=""
+                        width={96}
+                        height={120}
+                        className="rite-choice-thumb-img"
+                        sizes="72px"
+                      />
+                      <span className="rite-choice-thumb-veil" />
+                    </span>
                   ) : null}
                   <span className="rite-choice-name">{label}</span>
                   {lore ? <span className="rite-choice-note">{lore}</span> : null}
@@ -538,7 +635,7 @@ export default function RitePage() {
                 <button
                   key={c.id}
                   type="button"
-                  className="rite-choice"
+                  className={`rite-choice${c.id !== "custom" ? " rite-choice-art" : ""}`}
                   data-active={active}
                   aria-pressed={active}
                   onClick={() => setClassId(c.id)}
@@ -548,6 +645,19 @@ export default function RitePage() {
                   </span>
                   {active ? (
                     <span className="rite-choice-selected-tag">Selected</span>
+                  ) : null}
+                  {c.id !== "custom" ? (
+                    <span className="rite-choice-thumb" aria-hidden>
+                      <Image
+                        src={codexClassCardSm(c.id)}
+                        alt=""
+                        width={96}
+                        height={120}
+                        className="rite-choice-thumb-img"
+                        sizes="72px"
+                      />
+                      <span className="rite-choice-thumb-veil" />
+                    </span>
                   ) : null}
                   <span className="rite-choice-name">{c.name}</span>
                   <span className="rite-choice-note">
@@ -611,9 +721,20 @@ export default function RitePage() {
             </span>
             <div className="flex gap-3.5 items-start relative z-[1]">
               <div className="rite-review-medallion" aria-hidden>
-                <span className="relative z-[1] font-display text-[1.85rem] font-semibold text-gold-soft">
-                  {(name.trim().charAt(0) || "V").toUpperCase()}
-                </span>
+                {people && people !== "custom" ? (
+                  <Image
+                    src={codexPeopleCardSm(people)}
+                    alt=""
+                    width={120}
+                    height={150}
+                    className="rite-review-medallion-art"
+                    sizes="76px"
+                  />
+                ) : (
+                  <span className="relative z-[1] font-display text-[1.85rem] font-semibold text-gold-soft">
+                    {(name.trim().charAt(0) || "V").toUpperCase()}
+                  </span>
+                )}
                 <span className="rite-review-medallion-sheen" />
               </div>
               <div className="min-w-0 flex-1 pt-0.5">
@@ -676,12 +797,12 @@ export default function RitePage() {
             </div>
             {needsGmApproval(people, style, classId) ? (
               <p className="text-gold text-xs pt-1 border-t border-border/60 leading-relaxed relative z-[1]">
-                Custom selection → <strong>pending_gm</strong>. After submit you&apos;ll land on Self
-                with links to status and <strong>/admin</strong> Approve (or Reject / clear).
+                Custom selection → <strong>pending_gm</strong>. You still cross into the Realm;
+                approve later on Self or <strong>/admin</strong>.
               </p>
             ) : (
               <p className="text-ok text-xs pt-1 border-t border-border/60 relative z-[1]">
-                Ready to embody — no GM gate needed.
+                Ready to embody — the threshold is open.
               </p>
             )}
           </div>
@@ -706,7 +827,7 @@ export default function RitePage() {
           </button>
         ) : (
           <button type="button" className="btn-gold flex-1" onClick={submit}>
-            Submit Vessel
+            Embody · enter the Realm
           </button>
         )}
       </div>
