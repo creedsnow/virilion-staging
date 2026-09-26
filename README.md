@@ -62,6 +62,21 @@ Or connect the GitHub repo (`creedsnow/virilion-staging`) in the Vercel dashboar
 
 Environment: none required for this demo slice.
 
+### Deploy blocker (box state 2026-09-26)
+
+Vercel CLI on this box is **logged out** (`npx vercel whoami` → Logged out). Device login was started but cannot be completed unattended.
+
+**Parent / Creed — pick one:**
+
+1. **Dashboard (easiest):** open https://vercel.com/new → Import `creedsnow/virilion-staging` (GitHub already connected via `gh`) → Deploy. Staging URL appears in the project.
+2. **CLI on a machine where Creed can approve OAuth:**
+   ```bash
+   cd virilion-staging
+   npx vercel login
+   npx vercel --yes
+   npx vercel --prod --yes
+   ```
+
 ## Fix loop (for Creed)
 
 1. Creed notes a change (chat / issue / comment)  
