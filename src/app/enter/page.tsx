@@ -31,8 +31,8 @@ export default function EnterPage() {
 
   return (
     <div className="night-sky enter-sky -mx-4 min-h-[100dvh] px-5 py-12 flex flex-col items-center justify-center relative">
-      <div className="relative z-[1] w-full max-w-[21.5rem] flex flex-col items-center">
-        <div className="relative mb-7">
+      <div className="relative z-[1] w-full max-w-[20.5rem] flex flex-col items-center">
+        <div className="relative mb-6">
           <div
             className="absolute -inset-9 rounded-full blur-3xl opacity-75"
             style={{
@@ -53,82 +53,64 @@ export default function EnterPage() {
           </div>
         </div>
 
-        <h1 className="display-title display-title-enter mb-1.5">Virilion</h1>
-        <p className="display-italic text-[1.2rem] mb-2.5 text-gold-soft">
+        <h1 className="display-title display-title-enter mb-1">Virilion</h1>
+        <p className="display-italic text-[1.15rem] mb-2 text-gold-soft">
           Enter Virilion
         </p>
-        <p className="text-[11px] tracking-[0.14em] uppercase text-fg-muted/90 text-center mb-9 leading-relaxed max-w-[17.5rem]">
+        <p className="text-[11px] tracking-[0.14em] uppercase text-fg-muted/85 text-center mb-8 leading-relaxed max-w-[17rem]">
           Adult queer mythic fantasy · one vessel · in-app home
         </p>
 
-        <form onSubmit={enter} className="w-full space-y-4">
-          <div>
-            <label className="label" htmlFor="email">
-              Email or screen name
-            </label>
-            <input
-              id="email"
-              className="input enter-input"
-              value={email || name}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                setName(e.target.value);
-              }}
-              placeholder="you@virilion"
-              autoComplete="username"
-            />
-          </div>
+        <form onSubmit={enter} className="enter-form w-full">
+          <div className="enter-fields">
+            <div>
+              <label className="enter-label" htmlFor="email">
+                Who seeks entry
+              </label>
+              <input
+                id="email"
+                className="input enter-input"
+                value={email || name}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setName(e.target.value);
+                }}
+                placeholder="Screen name or email"
+                autoComplete="username"
+              />
+            </div>
 
-          <div>
-            <label className="label" htmlFor="password">
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              className="input enter-input"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="········"
-              autoComplete="current-password"
-            />
-            <div className="flex justify-end mt-1.5">
-              <button
-                type="button"
-                className="text-[12px] font-display italic text-fg-muted hover:text-gold-soft underline underline-offset-2 decoration-border/80"
-                onClick={() => enter()}
-                title="Demo — no password recovery"
-              >
-                Skip · demo
-              </button>
+            <div>
+              <label className="enter-label" htmlFor="password">
+                Passphrase
+              </label>
+              <input
+                id="password"
+                type="password"
+                className="input enter-input"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Optional in demo"
+                autoComplete="current-password"
+              />
             </div>
           </div>
 
-          <button type="submit" className="btn-gold btn-enter w-full mt-3">
-            Log in
+          <button type="submit" className="btn-gold btn-enter w-full">
+            Enter Virilion
           </button>
-          <p className="text-center text-[11px] text-gold/80 -mt-0.5 leading-relaxed tracking-wide">
-            Demo — no password needed
-          </p>
-
-          <div className="flex items-center gap-3 pt-5">
-            <span className="h-px flex-1 bg-border/80" />
-            <span className="text-[10px] tracking-[0.16em] uppercase text-fg-muted whitespace-nowrap">
-              New to Virilion?
-            </span>
-            <span className="h-px flex-1 bg-border/80" />
-          </div>
+          <p className="enter-demo-note">Demo — no password needed</p>
 
           <button
             type="button"
-            className="btn-outline-gold btn-enter w-full"
+            className="enter-secondary"
             onClick={createAccount}
           >
-            Create account
+            New here? Begin the Rite
           </button>
         </form>
 
-        <p className="mt-10 text-[11px] text-fg-muted/80 text-center max-w-xs leading-relaxed">
+        <p className="mt-9 text-[11px] text-fg-muted/75 text-center max-w-xs leading-relaxed">
           Adult portal · present as your Vessel. RP chat and voice live here.
         </p>
       </div>

@@ -9,6 +9,14 @@ import {
   type VoicePresence,
 } from "@/lib/scenes";
 
+const VOICE_HUES = ["#5a3d78", "#3d5a80", "#6b3d4a", "#3d6b58", "#6b5a3d", "#4a3d6b", "#3d5a58"];
+
+function hueForVessel(id: string): string {
+  let h = 0;
+  for (let i = 0; i < id.length; i++) h = (h + id.charCodeAt(i) * (i + 1)) % VOICE_HUES.length;
+  return VOICE_HUES[h];
+}
+
 /**
  * Basic in-app voice shell for staging.
  * - getUserMedia mic
@@ -244,8 +252,14 @@ export function VoicePanel({
                 const live = !p.muted && !p.deafened;
                 return (
                   <li key={p.vesselId} className="voice-roster-row">
-                    <span className="voice-avatar" aria-hidden>
-                      {initial}
+                    <span
+                      className="voice-avatar"
+                      style={{
+                        background: `radial-gradient(circle at 30% 22%, rgba(232, 200, 120, 0.38), transparent 55%), linear-gradient(145deg, color-mix(in srgb, ${hueForVessel(p.vesselId)} 55%, #1a1028), #121018 78%)`,
+                      }}
+                      aria-hidden
+                    >
+                      <span className="relative z-[1]">{initial}</span>
                     </span>
                     <span className="min-w-0 flex-1">
                       <span className="block text-sm font-medium text-fg truncate">

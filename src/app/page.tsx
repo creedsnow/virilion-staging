@@ -327,7 +327,7 @@ export default function RealmPage() {
               className="walk-avatar"
               style={{
                 background:
-                  "linear-gradient(160deg, color-mix(in srgb, var(--aura) 45%, #1a1028), #0e0c14 78%)",
+                  "radial-gradient(circle at 32% 22%, color-mix(in srgb, var(--gold) 26%, transparent), transparent 48%), linear-gradient(160deg, color-mix(in srgb, var(--aura) 52%, #1a1028), #0e0c14 78%)",
               }}
             >
               <span
@@ -362,7 +362,7 @@ export default function RealmPage() {
               <div
                 className="walk-avatar"
                 style={{
-                  background: `linear-gradient(160deg, ${w.hue}, #0e0c14 78%)`,
+                  background: `radial-gradient(circle at 32% 22%, color-mix(in srgb, var(--gold) 22%, transparent), transparent 48%), linear-gradient(160deg, ${w.hue}, #0e0c14 78%)`,
                 }}
               >
                 <span

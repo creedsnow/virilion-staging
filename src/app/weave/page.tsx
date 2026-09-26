@@ -43,7 +43,7 @@ function BondRow({
       <div
         className="bond-avatar"
         style={{
-          background: `linear-gradient(145deg, color-mix(in srgb, ${hue} 55%, #1a1028), #121018 78%)`,
+          background: `radial-gradient(circle at 30% 22%, rgba(232, 200, 120, 0.22), transparent 55%), linear-gradient(145deg, color-mix(in srgb, ${hue} 62%, #1a1028), #0e0c14 80%)`,
         }}
         aria-hidden
       >

@@ -67,13 +67,13 @@ export default function InboxPage() {
         </button>
         <div className="flex gap-3 items-center">
           <div
-            className="h-12 w-12 shrink-0 rounded-xl flex items-center justify-center font-display text-xl font-semibold text-gold-soft border border-gold/25"
+            className="vessel-medallion h-12 w-12 rounded-xl font-display text-xl"
             style={{
-              background: `linear-gradient(145deg, ${open.hue}, #121018 75%)`,
+              background: `radial-gradient(circle at 30% 22%, rgba(232, 200, 120, 0.22), transparent 55%), linear-gradient(145deg, color-mix(in srgb, ${open.hue} 62%, #1a1028), #0e0c14 80%)`,
             }}
             aria-hidden
           >
-            {open.vesselName.charAt(0)}
+            <span>{open.vesselName.charAt(0)}</span>
           </div>
           <div className="min-w-0">
             <p className="section-kicker mb-0.5">Whisper thread · demo</p>
@@ -145,13 +145,13 @@ export default function InboxPage() {
                 onClick={() => setOpenId(t.id)}
               >
                 <div
-                  className="h-12 w-12 shrink-0 rounded-xl flex items-center justify-center font-display text-lg font-semibold text-gold-soft border border-gold/20"
+                  className="vessel-medallion h-12 w-12 rounded-xl font-display text-lg"
                   style={{
-                    background: `linear-gradient(145deg, ${t.hue}, #121018 75%)`,
+                    background: `radial-gradient(circle at 30% 22%, rgba(232, 200, 120, 0.22), transparent 55%), linear-gradient(145deg, color-mix(in srgb, ${t.hue} 62%, #1a1028), #0e0c14 80%)`,
                   }}
                   aria-hidden
                 >
-                  {t.vesselName.charAt(0)}
+                  <span>{t.vesselName.charAt(0)}</span>
                 </div>
                 <span className="min-w-0 flex-1 text-left">
                   <span className="flex items-baseline justify-between gap-2">
