@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { EmptyState } from "@/components/EmptyState";
 import { SceneRoom } from "@/components/SceneRoom";
 import { DEMO_SCENES, type SceneInfo } from "@/lib/scenes";
@@ -10,16 +11,27 @@ import type { Vessel } from "@/lib/types";
 export default function ScenesPage() {
   const [vessel, setVessel] = useState<Vessel | null>(null);
   const [active, setActive] = useState<SceneInfo | null>(null);
+  const [booted, setBooted] = useState(false);
 
   useEffect(() => {
     setVessel(getVessel());
+    setBooted(true);
   }, []);
+
+  if (!booted) {
+    return <p className="text-sm text-fg-muted">Opening scenes…</p>;
+  }
 
   if (!vessel) {
     return (
       <EmptyState
         title="No vessel yet"
         body="Complete the Rite of Making to join scenes as your Vessel."
+        action={
+          <Link href="/rite" className="btn-gold inline-flex">
+            Begin the Rite
+          </Link>
+        }
       />
     );
   }
@@ -40,21 +52,30 @@ export default function ScenesPage() {
           never leaves Virilion. No Discord-as-home.
         </p>
       </div>
+
       <ul className="space-y-3">
         {DEMO_SCENES.map((s) => (
           <li key={s.id}>
             <button
               type="button"
-              className="room-chrome w-full text-left px-4 py-4 hover:border-gold/45 transition min-h-[5.75rem]"
+              className="scene-card w-full text-left"
               onClick={() => setActive(s)}
             >
+              <div className="scene-card-glow" aria-hidden />
               <div className="relative z-[1] flex justify-between gap-3 items-start">
                 <div className="min-w-0">
-                  <h2 className="font-display text-xl font-semibold text-fg">{s.title}</h2>
-                  <p className="text-xs text-gold mt-0.5 tracking-wide">✦ {s.place}</p>
+                  <p className="text-[10px] uppercase tracking-[0.16em] text-gold mb-1">
+                    ✦ {s.place}
+                  </p>
+                  <h2 className="font-display text-xl font-semibold text-fg leading-tight">
+                    {s.title}
+                  </h2>
                   <p className="text-sm text-fg-muted mt-2 leading-relaxed">{s.vibe}</p>
+                  <p className="text-[11px] text-fg-muted mt-2">
+                    Text in-app · Voice via Join call
+                  </p>
                 </div>
-                <span className="shrink-0 text-[10px] uppercase tracking-wide text-ok border border-ok/40 rounded-full px-2 py-0.5 bg-ok/10">
+                <span className="shrink-0 text-[10px] uppercase tracking-wide text-ok border border-ok/40 rounded-full px-2.5 py-1 bg-ok/10">
                   {s.seats}
                 </span>
               </div>

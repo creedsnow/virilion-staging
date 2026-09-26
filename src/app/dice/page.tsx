@@ -38,19 +38,18 @@ export default function DicePage() {
 
   return (
     <div className="space-y-5">
-      <div>
+      <div className="rite-hero">
         <p className="section-kicker mb-1">Ritual</p>
         <h1 className="font-display text-3xl font-semibold text-fg">d20</h1>
-        <p className="text-sm text-fg-muted mt-1">
-          Premium dice ritual. Staging rolls client-side; social fairness authority later.
+        <p className="text-sm text-fg-muted mt-1.5 leading-relaxed">
+          Premium dice ritual under the lamps. Staging rolls client-side; social
+          fairness authority later.
         </p>
       </div>
 
-      <div className="card stone-panel rounded-2xl flex flex-col items-center py-10 gap-4">
+      <div className="card stone-panel rounded-2xl flex flex-col items-center py-10 gap-5 dice-stage">
         <div
-          className={`flex h-28 w-28 items-center justify-center rounded-2xl border-2 border-gold bg-bg-elevated text-4xl font-semibold text-gold-soft shadow-[0_0_40px_rgba(201,162,39,0.25)] ${
-            rolling ? "animate-pulse" : ""
-          }`}
+          className={`dice-face ${rolling ? "animate-pulse" : ""}`}
           aria-live="polite"
         >
           {value ?? "—"}
@@ -74,12 +73,15 @@ export default function DicePage() {
       </div>
 
       {history.length > 0 ? (
-        <div className="card">
+        <div className="card stone-panel rounded-2xl">
           <h2 className="text-sm font-medium text-fg mb-2">Recent</h2>
           <ul className="text-sm text-fg-muted space-y-1">
             {history.map((h, i) => (
               <li key={`${h.at}-${i}`}>
-                <span className="text-gold-soft font-medium">{h.value}</span> · {h.visibility}
+                <span className="text-gold-soft font-medium font-display text-base">
+                  {h.value}
+                </span>{" "}
+                · {h.visibility}
               </li>
             ))}
           </ul>

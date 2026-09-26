@@ -64,14 +64,23 @@ export function SceneRoom({
     <div className="flex flex-col h-[calc(100dvh-8rem)]">
       <div className="room-chrome px-4 py-3.5 mb-3">
         <div className="relative z-[1] flex items-start justify-between gap-2">
-          <div>
-            <button type="button" className="text-xs text-gold mb-1 hover:text-gold-soft" onClick={onBack}>
+          <div className="min-w-0">
+            <button
+              type="button"
+              className="text-xs text-gold mb-1 hover:text-gold-soft"
+              onClick={onBack}
+            >
               ← Scenes
             </button>
-            <h1 className="font-display text-xl font-semibold text-fg">{scene.title}</h1>
+            <h1 className="font-display text-xl font-semibold text-fg leading-tight">
+              {scene.title}
+            </h1>
             <p className="text-xs text-fg-muted mt-0.5">
               ✦ {scene.place} · Present as{" "}
               <span className="text-gold-soft font-medium">{vessel.name}</span>
+            </p>
+            <p className="text-[10px] uppercase tracking-[0.12em] text-fg-muted mt-1.5">
+              In-app text · Join call = voice here
             </p>
           </div>
           <button
@@ -84,17 +93,22 @@ export function SceneRoom({
         </div>
       </div>
 
-      <div className="card flex-1 overflow-y-auto space-y-3 mb-3 border-aura/20">
+      <div className="scene-log flex-1 overflow-y-auto space-y-3 mb-3">
         {messages.length === 0 ? (
-          <p className="text-sm text-fg-muted text-center py-8">
-            Quiet for now. Open the scene in another tab to demo multi-vessel chat
-            (same browser). Present as your Vessel. Consent before escalation.
-          </p>
+          <div className="text-center py-10 px-4">
+            <p className="font-display text-lg text-gold-soft mb-2">Quiet for now</p>
+            <p className="text-sm text-fg-muted leading-relaxed max-w-sm mx-auto">
+              Open this scene in another tab to demo multi-vessel chat (same browser).
+              Present as your Vessel. Consent before escalation. Never Discord-as-home.
+            </p>
+          </div>
         ) : (
           messages.map((m) => (
-            <div key={m.id} className="relative group">
+            <div key={m.id} className="relative group scene-bubble">
               <div className="flex items-baseline justify-between gap-2">
-                <span className="text-sm font-medium text-gold-soft">{m.vesselName}</span>
+                <span className="text-sm font-medium text-gold-soft font-display">
+                  {m.vesselName}
+                </span>
                 <div className="flex items-center gap-2">
                   <time
                     className="text-[10px] text-fg-muted tabular-nums"
@@ -116,7 +130,9 @@ export function SceneRoom({
                   </button>
                 </div>
               </div>
-              <p className="text-sm text-fg whitespace-pre-wrap mt-0.5">{m.text}</p>
+              <p className="text-sm text-fg whitespace-pre-wrap mt-0.5 leading-relaxed">
+                {m.text}
+              </p>
               {menuId === m.id && m.vesselId !== vessel.id ? (
                 <div className="absolute right-0 top-5 z-10 card py-2 px-2 space-y-1 shadow-lg text-xs">
                   <button

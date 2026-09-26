@@ -687,3 +687,244 @@ body {
     var(--bg-card);
   box-shadow: var(--shadow-card);
 }
+
+/* —— Map colour regions + place / hall cards —— */
+.map-legend {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border-radius: 9999px;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--border);
+}
+.map-legend-hub {
+  color: var(--gold-deep);
+  background: color-mix(in srgb, var(--gold) 18%, var(--bg-elevated));
+  border-color: color-mix(in srgb, var(--gold) 35%, var(--border));
+}
+[data-theme="dark"] .map-legend-hub {
+  color: var(--gold-soft);
+}
+.map-legend-home {
+  color: #9fd4b2;
+  background: color-mix(in srgb, var(--ok) 16%, var(--bg-elevated));
+  border-color: color-mix(in srgb, var(--ok) 35%, var(--border));
+}
+.map-legend-hall {
+  color: #cbb6e8;
+  background: color-mix(in srgb, var(--aura) 22%, var(--bg-elevated));
+  border-color: color-mix(in srgb, var(--aura) 40%, var(--border));
+}
+
+.place-card {
+  position: relative;
+  padding: 1.15rem 1.25rem 1.3rem;
+  border-radius: 1.25rem;
+  border: 1px solid color-mix(in srgb, var(--border) 65%, var(--gold) 28%);
+  background:
+    radial-gradient(ellipse 80% 60% at 90% 0%, color-mix(in srgb, var(--aura) 22%, transparent), transparent 55%),
+    linear-gradient(165deg, color-mix(in srgb, var(--bg-card) 85%, var(--parchment)), var(--bg-card));
+  box-shadow: var(--shadow-card);
+}
+.place-card-hall {
+  background:
+    radial-gradient(ellipse 70% 50% at 10% 0%, color-mix(in srgb, var(--aura) 28%, transparent), transparent 55%),
+    linear-gradient(165deg, color-mix(in srgb, var(--bg-card) 80%, #2a1a38), var(--bg-card));
+}
+
+.hall-tile {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border-radius: 1.1rem;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-card);
+  transition: border-color 0.15s, transform 0.15s;
+  min-height: 4.5rem;
+}
+.hall-tile:hover,
+.hall-tile[data-active="true"] {
+  border-color: color-mix(in srgb, var(--gold) 50%, var(--border));
+  transform: translateY(-1px);
+}
+.hall-tile[data-active="true"] {
+  background: color-mix(in srgb, var(--gold) 10%, var(--bg-card));
+}
+.hall-tile-glyph {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 9999px;
+  flex-shrink: 0;
+  font-size: 0.95rem;
+  color: var(--gold-soft);
+  border: 1px solid color-mix(in srgb, var(--gold) 40%, transparent);
+  background: color-mix(in srgb, var(--gold) 12%, transparent);
+}
+
+/* —— Rite premium step UI —— */
+.rite-progress-head {
+  padding: 0.85rem 1rem;
+  border-radius: 1.1rem;
+  border: 1px solid color-mix(in srgb, var(--border) 70%, var(--gold) 18%);
+  background: color-mix(in srgb, var(--bg-card) 92%, transparent);
+  box-shadow: var(--shadow-card);
+}
+
+.role-pick {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.85rem;
+  width: 100%;
+  padding: 1rem 1.15rem;
+  border-radius: 1.1rem;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-card);
+  transition: border-color 0.15s, background 0.15s, transform 0.15s;
+  min-height: 4.25rem;
+}
+.role-pick:hover {
+  border-color: color-mix(in srgb, var(--gold) 40%, var(--border));
+}
+.role-pick[data-active="true"] {
+  border-color: var(--gold);
+  background: color-mix(in srgb, var(--gold) 14%, var(--bg-card));
+  transform: translateY(-1px);
+}
+.role-check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.55rem;
+  height: 1.55rem;
+  border-radius: 9999px;
+  border: 1.5px solid var(--border);
+  color: #1a1408;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.role-check[data-on="true"] {
+  background: linear-gradient(180deg, var(--gold-soft), var(--gold));
+  border-color: var(--gold);
+}
+
+.rite-toggle {
+  position: relative;
+  width: 2.75rem;
+  height: 1.55rem;
+  border-radius: 9999px;
+  background: var(--border);
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+.rite-toggle::after {
+  content: "";
+  position: absolute;
+  top: 0.2rem;
+  left: 0.2rem;
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 9999px;
+  background: var(--fg-muted);
+  transition: transform 0.15s, background 0.15s;
+}
+.rite-toggle[data-on="true"] {
+  background: color-mix(in srgb, var(--gold) 70%, var(--ok));
+}
+.rite-toggle[data-on="true"]::after {
+  transform: translateX(1.15rem);
+  background: #1a1408;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* —— Scenes discovery + room —— */
+.scene-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.25rem;
+  padding: 1.15rem 1.2rem;
+  border: 1px solid color-mix(in srgb, var(--border) 65%, var(--aura) 28%);
+  background:
+    radial-gradient(ellipse 90% 70% at 80% -30%, color-mix(in srgb, var(--aura) 28%, transparent), transparent 60%),
+    radial-gradient(ellipse 40% 50% at 0% 100%, color-mix(in srgb, var(--gold) 10%, transparent), transparent 50%),
+    var(--bg-card);
+  box-shadow: var(--shadow-card);
+  min-height: 6.25rem;
+  transition: border-color 0.15s, transform 0.15s;
+}
+.scene-card:hover {
+  border-color: color-mix(in srgb, var(--gold) 45%, var(--aura));
+  transform: translateY(-1px);
+}
+.scene-card-glow {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(1px 1px at 18% 22%, var(--speckle), transparent),
+    radial-gradient(1px 1px at 72% 38%, var(--speckle), transparent),
+    radial-gradient(1.5px 1.5px at 48% 78%, var(--speckle), transparent);
+  opacity: 0.55;
+}
+
+.scene-log {
+  border-radius: 1.15rem;
+  border: 1px solid color-mix(in srgb, var(--border) 70%, var(--aura) 18%);
+  background:
+    radial-gradient(ellipse 80% 40% at 50% 0%, color-mix(in srgb, var(--aura) 14%, transparent), transparent 70%),
+    var(--bg-card);
+  padding: 1rem 1.1rem;
+  box-shadow: var(--shadow-card);
+}
+.scene-bubble {
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 55%, transparent);
+}
+.scene-bubble:last-of-type {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+/* —— Dice stage —— */
+.dice-stage {
+  background:
+    radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--aura) 28%, transparent), transparent 55%),
+    linear-gradient(180deg, color-mix(in srgb, var(--bg-card) 88%, var(--gold) 4%), var(--bg-card));
+}
+.dice-face {
+  display: flex;
+  height: 7.25rem;
+  width: 7.25rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1.35rem;
+  border: 2px solid color-mix(in srgb, var(--gold) 70%, var(--aura));
+  background:
+    radial-gradient(circle at 40% 30%, rgba(224, 195, 106, 0.22), transparent 55%),
+    var(--bg-elevated);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 2.75rem;
+  font-weight: 600;
+  color: var(--gold-soft);
+  box-shadow: var(--shadow-aura), var(--shadow-gold);
+}

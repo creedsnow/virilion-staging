@@ -76,9 +76,10 @@ export default function RitePage() {
   // One vessel lock
   if (existing) {
     return (
-      <div className="card text-center space-y-4">
-        <h1 className="text-xl font-semibold text-gold-soft">One vessel</h1>
-        <p className="text-sm text-fg-muted">
+      <div className="rite-hero text-center space-y-4">
+        <p className="section-kicker">Rite of Making</p>
+        <h1 className="font-display text-3xl font-semibold text-gold-soft">One vessel</h1>
+        <p className="text-sm text-fg-muted leading-relaxed">
           You already embody <strong className="text-fg">{existing.name}</strong>.
           Virilion is one vessel per player — no second slot.
         </p>
@@ -225,28 +226,35 @@ export default function RitePage() {
     });
   }
 
-  const stepLabel = STEPS[step];
   const peopleMeta = people && people !== "custom" ? PEOPLES.find((p) => p.id === people) : null;
+  const roleMeta = role ? ROLES.find((r) => r.id === role) : null;
+
+  const stepTitles: Record<number, string> = {
+    0: "His role",
+    1: "The Blessing",
+    2: "His People",
+    3: "His style",
+    4: "His class",
+    5: "His name",
+    6: "Review",
+  };
+  const stepHints: Record<number, string> = {
+    0: "Role comes first, so Peoples locked to a role are filtered out before you fall for one.",
+    1: "Sacred, consent-gated, never automatic. Defaults off.",
+    2: "Exactly 14 Peoples. No Veilborn. Custom → GM approval.",
+    3: "Styles filtered by People. Daddy ≠ Bear. Daddy banned for Smols only.",
+    4: "Class ties to Order Hall. Custom → GM approval.",
+    5: "Public face in the Realm — keep him clearly adult.",
+    6: "One vessel only. Confirm before you embody.",
+  };
 
   return (
     <div className="space-y-5">
-      <div className="rite-hero">
-        <p className="section-kicker mb-1">Rite of Making · Demo</p>
-        <h1 className="font-display text-3xl font-semibold text-fg">Forge your Vessel</h1>
-        <p className="text-sm text-fg-muted mt-1.5 leading-relaxed">
-          Role first. One vessel only. Adult male gay / male-attracted characters.
-          The lamps remember every name spoken here.
+      <div className="rite-progress-head">
+        <p className="section-kicker">
+          Rite of Making · Step {step + 1} of {STEPS.length}
         </p>
-      </div>
-
-      <div className="space-y-2">
-        <div className="flex items-center justify-between gap-2">
-          <p className="text-xs text-gold tracking-wide uppercase">
-            Step {step + 1} of {STEPS.length}
-          </p>
-          <p className="text-xs text-fg-muted font-medium">{stepLabel}</p>
-        </div>
-        <div className="flex gap-1.5">
+        <div className="flex gap-1.5 mt-2.5">
           {STEPS.map((s, i) => (
             <span
               key={s}
@@ -259,6 +267,15 @@ export default function RitePage() {
         </div>
       </div>
 
+      <div>
+        <h1 className="font-display text-3xl font-semibold text-fg leading-tight">
+          {stepTitles[step]}
+        </h1>
+        <p className="text-sm text-fg-muted mt-1.5 leading-relaxed">
+          {stepHints[step]}
+        </p>
+      </div>
+
       {error ? (
         <p className="text-sm text-danger border border-danger/40 rounded-lg px-3 py-2 bg-danger/5">
           {error}
@@ -266,29 +283,40 @@ export default function RitePage() {
       ) : null}
 
       {step === 0 && (
-        <div className="space-y-4">
-          <p className="gate-note">
-            <strong className="text-gold-soft">Role first</strong> filters Peoples.
-            Sorns appear for Bottom only; Serynth for Top only. Verse cannot pick either.
-          </p>
-          <div className="flex flex-wrap gap-2">
+        <div className="space-y-3">
+          <div className="space-y-2">
             {ROLES.map((r) => (
               <button
                 key={r.id}
                 type="button"
-                className="chip"
+                className="role-pick"
                 data-active={role === r.id}
                 onClick={() => onSelectRole(r.id)}
               >
-                {r.name}
+                <span className="min-w-0 text-left">
+                  <span className="font-display text-xl font-semibold text-fg block">
+                    {r.name}
+                  </span>
+                  <span className="text-sm text-fg-muted">{r.note}</span>
+                </span>
+                <span
+                  className="role-check"
+                  aria-hidden
+                  data-on={role === r.id}
+                >
+                  {role === r.id ? "✓" : ""}
+                </span>
               </button>
             ))}
           </div>
-          {role ? (
-            <p className="text-xs text-fg-muted leading-relaxed">
-              {ROLES.find((r) => r.id === role)?.note}
+          {roleMeta ? (
+            <p className="gate-note">{roleMeta.gate}</p>
+          ) : (
+            <p className="gate-note">
+              <strong className="text-gold-soft">Role first</strong> filters Peoples.
+              Sorns appear for Bottom only; Serynth for Top only. Verse cannot pick either.
             </p>
-          ) : null}
+          )}
         </div>
       )}
 
@@ -296,23 +324,31 @@ export default function RitePage() {
         <div className="space-y-3">
           {carryVisible || role === "verse" || role === "bottom" ? (
             <>
-              <label className="flex items-start gap-3 card cursor-pointer hover:border-gold/30 transition">
-                <input
-                  type="checkbox"
-                  className="mt-1.5 h-4 w-4 accent-[var(--gold)]"
-                  checked={canCarry}
-                  onChange={(e) => setCanCarry(e.target.checked)}
-                />
-                <span>
+              <label className="role-pick cursor-pointer" data-active={canCarry}>
+                <span className="min-w-0 text-left flex-1">
                   <span className="font-medium text-fg block">
                     Open to the Blessing of Continuation
                   </span>
-                  <span className="text-xs text-fg-muted leading-relaxed">
+                  <span className="text-xs text-fg-muted leading-relaxed block mt-1">
                     Sacred, consent-gated, never automatic. A Game Master may grant it in
                     story; a Sorn may bestow it through ritual. Does not grant Bearer status
                     at creation.
                   </span>
+                  <span className="text-[10px] uppercase tracking-[0.14em] text-gold mt-2 block">
+                    {canCarry ? "On · still not a Bearer" : "Off · does not make him a Bearer"}
+                  </span>
                 </span>
+                <input
+                  type="checkbox"
+                  className="sr-only"
+                  checked={canCarry}
+                  onChange={(e) => setCanCarry(e.target.checked)}
+                />
+                <span
+                  className="rite-toggle"
+                  data-on={canCarry}
+                  aria-hidden
+                />
               </label>
               <p className="text-xs text-fg-muted">
                 Hidden for Top and for Serynth. Defaults off.
@@ -428,8 +464,8 @@ export default function RitePage() {
 
       {step === 4 && (
         <div className="space-y-3">
-          <p className="text-sm text-fg-muted">
-            Class ties to Order Hall. Custom → GM approval.
+          <p className="gate-note">
+            Class ties to an Order Hall on the Map. Custom → GM approval.
           </p>
           <div className="flex flex-wrap gap-2">
             {CLASSES.map((c) => (
@@ -555,7 +591,7 @@ export default function RitePage() {
         </div>
       )}
 
-      <div className="flex gap-3 pt-2 sticky bottom-2">
+      <div className="flex gap-3 pt-2 sticky bottom-2 z-10">
         {step > 0 ? (
           <button type="button" className="btn-ghost" onClick={back}>
             Back

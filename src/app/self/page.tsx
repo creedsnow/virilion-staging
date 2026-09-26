@@ -40,10 +40,10 @@ export default function SelfPage() {
 
   return (
     <div className="space-y-4">
-      <div>
+      <div className="rite-hero">
         <p className="section-kicker mb-1">Identity</p>
         <h1 className="font-display text-3xl font-semibold text-fg">Self</h1>
-        <p className="text-sm text-fg-muted mt-1">
+        <p className="text-sm text-fg-muted mt-1.5 leading-relaxed">
           Public face = Vessel. Player = account settings. One vessel only.
         </p>
       </div>
@@ -68,10 +68,10 @@ export default function SelfPage() {
       </div>
 
       {tab === "vessel" && (
-        <div className="card space-y-3">
+        <div className="card stone-panel rounded-2xl space-y-3">
           {vessel ? (
             <>
-              <h2 className="text-lg font-medium text-gold-soft">{vessel.name}</h2>
+              <h2 className="font-display text-2xl font-semibold text-gold-soft">{vessel.name}</h2>
               <p className="text-sm text-fg capitalize">
                 {peopleLabel} ·{" "}
                 {vessel.style === "custom"

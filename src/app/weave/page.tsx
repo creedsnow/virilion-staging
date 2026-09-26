@@ -72,23 +72,25 @@ export default function WeavePage() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <p className="section-kicker mb-1">Bonds</p>
+      <div className="rite-hero">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="section-kicker mb-1">Bonds</p>
             <h1 className="font-display text-3xl font-semibold text-fg">Weave</h1>
-          <p className="text-sm text-fg-muted mt-1">
-            Connections constellation — vessel to vessel. Marriage: Coming soon.
-          </p>
+            <p className="text-sm text-fg-muted mt-1.5 leading-relaxed">
+              Connections constellation — vessel to vessel. Marriage: Coming soon.
+            </p>
+          </div>
+          <button type="button" className="btn-gold text-sm py-2 shrink-0" onClick={ask}>
+            Ask bond
+          </button>
         </div>
-        <button type="button" className="btn-gold text-sm py-2" onClick={ask}>
-          Ask bond
-        </button>
       </div>
       <ul className="space-y-2">
         {bonds.map((b) => (
-          <li key={b.id} className="card flex items-center justify-between gap-3">
+          <li key={b.id} className="card stone-panel rounded-2xl flex items-center justify-between gap-3">
             <div>
-              <p className="font-medium text-fg">{b.name}</p>
+              <p className="font-display text-lg font-semibold text-fg">{b.name}</p>
               <p className="text-xs text-fg-muted">
                 {b.kind} · {b.status}
               </p>
@@ -107,7 +109,7 @@ export default function WeavePage() {
           </li>
         ))}
       </ul>
-      <p className="text-xs text-fg-muted">
+      <p className="text-xs text-fg-muted leading-relaxed">
         Guild founding (master + co-master): Coming soon. Wisp is not shown on Weave.
       </p>
     </div>
