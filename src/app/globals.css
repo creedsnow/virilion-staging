@@ -3541,3 +3541,71 @@ button.scene-call-hint:hover {
     0 0 8px color-mix(in srgb, var(--gold) 38%, transparent),
     0 0 14px color-mix(in srgb, var(--gold) 16%, transparent);
 }
+
+/* Enter fireflies — Design parity */
+.firefly-field {
+  --firefly-min-opacity: 0.24;
+  --firefly-max-opacity: 0.78;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.firefly {
+  position: absolute;
+  left: var(--firefly-left);
+  top: var(--firefly-top);
+  width: var(--firefly-size);
+  height: var(--firefly-size);
+  border-radius: 9999px;
+  background: radial-gradient(circle, #fff1b0 0 18%, #e4b94d 48%, transparent 75%);
+  box-shadow:
+    0 0 0.35rem rgba(255, 224, 126, 0.8),
+    0 0 1.1rem rgba(220, 169, 57, 0.52),
+    0 0 2rem rgba(197, 140, 46, 0.18);
+  opacity: var(--firefly-max-opacity);
+  will-change: transform, opacity, filter;
+  animation:
+    firefly-drift var(--firefly-duration) ease-in-out var(--firefly-delay) infinite alternate,
+    firefly-glow 4.8s ease-in-out var(--firefly-delay) infinite;
+}
+
+@keyframes firefly-drift {
+  0%,
+  100% {
+    transform: translate3d(calc(var(--firefly-drift-x) * -0.45), var(--firefly-drift-y), 0) scale(0.86);
+  }
+  50% {
+    transform: translate3d(var(--firefly-drift-x), calc(var(--firefly-drift-y) * -0.65), 0) scale(1.08);
+  }
+}
+
+@keyframes firefly-glow {
+  0%,
+  100% {
+    opacity: var(--firefly-min-opacity);
+    filter: blur(0.15px);
+  }
+  48% {
+    opacity: var(--firefly-max-opacity);
+    filter: blur(0);
+  }
+  58% {
+    opacity: var(--firefly-max-opacity);
+    filter: blur(0.4px);
+  }
+}
+
+[data-theme="light"] .firefly-field {
+  --firefly-min-opacity: 0.12;
+  --firefly-max-opacity: 0.48;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .firefly {
+    animation: none;
+    opacity: var(--firefly-max-opacity);
+  }
+}

@@ -3,10 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { setAgeOk } from "@/lib/storage";
+import { Fireflies } from "@/components/Fireflies";
 
 export function AgeGate({ onConfirm }: { onConfirm: () => void }) {
   return (
     <div className="fixed inset-0 z-[100] night-sky age-sky flex items-center justify-center p-5">
+      <Fireflies density="soft" />
       <div className="relative z-[1] stone-panel age-panel card max-w-md w-full text-center rounded-2xl px-6 py-8 space-y-5">
         <div className="flex justify-center">
           <div className="relative">

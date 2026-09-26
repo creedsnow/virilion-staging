@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
 import { clearSession, getPlayer, getVessel, setPlayer } from "@/lib/storage";
+import { Fireflies } from "@/components/Fireflies";
 
 export default function EnterPage() {
   const router = useRouter();
@@ -44,6 +45,7 @@ export default function EnterPage() {
 
   return (
     <div className="night-sky enter-sky -mx-4 min-h-[100dvh] px-5 py-12 flex flex-col items-center justify-center relative">
+      <Fireflies />
       <div className="relative z-[1] w-full max-w-[20.5rem] flex flex-col items-center">
         <div className="relative mb-6">
           <div
