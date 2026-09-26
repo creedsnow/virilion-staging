@@ -116,7 +116,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const isRealm = pathname === "/";
   const subtitle =
     pathname === "/"
-      ? "The world feed"
+      ? "The World Feed"
       : pathname.startsWith("/rite")
         ? "Rite of Making"
         : pathname.startsWith("/scenes")
@@ -136,7 +136,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className={`min-h-dvh flex flex-col text-fg ${isEnter ? "" : "app-canvas"}`}>
       {!isEnter ? (
-        <header className="sticky top-0 z-30 border-b border-border/70 bg-bg/88 backdrop-blur-md">
+        <header className="shell-header sticky top-0 z-30 border-b border-border/70 bg-bg/88 backdrop-blur-md">
           <div className="mx-auto max-w-lg flex items-center justify-between gap-3 px-4 py-2.5">
             <div className="flex items-center gap-2.5 min-w-0">
               <Image

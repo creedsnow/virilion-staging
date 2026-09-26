@@ -39,12 +39,12 @@
 }
 
 [data-theme="light"] {
-  --bg: #f6efe3;
-  --bg-elevated: #fffaf2;
-  --bg-card: #fffcf6;
+  --bg: #f4ecdf;
+  --bg-elevated: #fff8ee;
+  --bg-card: #fffaf2;
   --fg: #2a2218;
   --fg-muted: #7a6a55;
-  --border: #e0d3bc;
+  --border: #ddd0b8;
   --gold: #a67c22;
   --gold-soft: #b8902e;
   --gold-deep: #7a5c16;
@@ -55,20 +55,20 @@
   --danger: #a33a3a;
   --ok: #3d7a58;
   --ok-soft: #d5eee0;
-  --parchment: #f1e6d0;
-  --stone: #ebe0cb;
-  --nav: #f0e6d2;
-  --nav-bar: #faf4e8;
-  --sky-top: #d8ccec;
-  --sky-mid: #ebe2f0;
-  --sky-bottom: #f6efe3;
+  --parchment: #efe3cb;
+  --stone: #e8dcc6;
+  --nav: #efe4d0;
+  --nav-bar: #faf3e6;
+  --sky-top: #d4c6e8;
+  --sky-mid: #ebe0ef;
+  --sky-bottom: #f5ecd8;
   --shadow-soft: 0 14px 44px rgba(80, 55, 25, 0.12);
-  --shadow-card: 0 6px 22px rgba(80, 55, 25, 0.08);
-  --shadow-gold: 0 8px 28px rgba(166, 124, 34, 0.24);
+  --shadow-card: 0 6px 22px rgba(80, 55, 25, 0.09);
+  --shadow-gold: 0 10px 32px rgba(166, 124, 34, 0.28);
   --shadow-aura: 0 0 44px rgba(139, 107, 184, 0.48);
   --ring: color-mix(in srgb, var(--gold) 40%, transparent);
-  --speckle: rgba(70, 50, 30, 0.14);
-  --vessel-wash: linear-gradient(165deg, #f3e8d4, #efe2cb 55%, #ebe0c8);
+  --speckle: rgba(70, 50, 30, 0.16);
+  --vessel-wash: linear-gradient(165deg, #f4e9d5, #efe2cb 55%, #e9dcc4);
 }
 
 @theme inline {
@@ -136,9 +136,17 @@ body {
 .display-title {
   font-family: var(--font-display), Georgia, serif;
   font-weight: 600;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--gold);
+}
+.display-title-enter {
+  font-size: clamp(1.85rem, 7vw, 2.15rem);
+  letter-spacing: 0.24em;
+  color: var(--gold-deep);
+}
+[data-theme="dark"] .display-title-enter {
+  color: var(--gold-soft);
 }
 
 .display-italic {
@@ -281,7 +289,80 @@ body {
 }
 
 [data-theme="light"] .enter-sky {
-  /* cream + lavender stardust matches login.png */
+  /* cream + lavender stardust — login.png / review_signup */
+}
+
+[data-theme="light"] .night-sky.enter-sky,
+[data-theme="light"] .night-sky.age-sky {
+  background:
+    radial-gradient(ellipse 90% 50% at 50% -8%, color-mix(in srgb, var(--aura) 42%, transparent) 0%, transparent 58%),
+    radial-gradient(circle at 18% 32%, rgba(200, 180, 230, 0.35), transparent 30%),
+    radial-gradient(circle at 82% 18%, color-mix(in srgb, var(--plum) 18%, transparent), transparent 34%),
+    radial-gradient(circle at 50% 88%, rgba(232, 200, 120, 0.18), transparent 42%),
+    linear-gradient(180deg, #d8ccec 0%, #ebe2f0 38%, #f5ecd8 100%);
+}
+
+[data-theme="light"] .enter-input {
+  background: color-mix(in srgb, var(--parchment) 72%, #fffaf2);
+  border-color: color-mix(in srgb, var(--border) 78%, var(--gold) 18%);
+  box-shadow: inset 0 1px 2px rgba(80, 55, 25, 0.06);
+}
+
+[data-theme="light"] .btn-enter.btn-gold {
+  box-shadow: var(--shadow-gold), 0 4px 14px rgba(166, 124, 34, 0.22);
+}
+
+[data-theme="light"] .age-panel {
+  background:
+    linear-gradient(180deg, #fffaf2, color-mix(in srgb, var(--parchment) 60%, #fffcf6));
+  border-color: color-mix(in srgb, var(--border) 70%, var(--gold) 22%);
+  box-shadow: var(--shadow-soft), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+/* Shell header / cards — parchment intentional in light */
+[data-theme="light"] .shell-header {
+  background: color-mix(in srgb, var(--nav-bar) 92%, transparent);
+  border-bottom-color: color-mix(in srgb, var(--border) 88%, transparent);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.55) inset;
+}
+
+[data-theme="light"] .card:not(.vessel-card):not(.stone-panel) {
+  background: linear-gradient(180deg, #fffaf2, color-mix(in srgb, var(--parchment) 35%, #fffcf6));
+}
+
+[data-theme="light"] .event-card {
+  background:
+    linear-gradient(
+      165deg,
+      #fffaf2,
+      color-mix(in srgb, var(--parchment) 45%, #fffcf6)
+    );
+}
+
+[data-theme="light"] .codex-card {
+  background: linear-gradient(180deg, #fffaf2, color-mix(in srgb, var(--parchment) 50%, #fffcf6));
+}
+
+[data-theme="light"] .walk-avatar {
+  border-color: color-mix(in srgb, var(--border) 70%, var(--gold) 18%);
+  box-shadow: var(--shadow-card), 0 0 12px color-mix(in srgb, var(--aura) 12%, transparent);
+}
+
+[data-theme="light"] .nav-shell {
+  background: color-mix(in srgb, #fffaf0 94%, transparent);
+  border-color: color-mix(in srgb, var(--border) 80%, var(--gold) 12%);
+  box-shadow: var(--shadow-soft), 0 0 0 1px rgba(255, 255, 255, 0.55) inset;
+}
+
+[data-theme="light"] .seg-control {
+  background: color-mix(in srgb, var(--parchment) 65%, #fffaf2);
+}
+
+.page-header {
+  margin-bottom: 0.15rem;
+}
+.page-header .section-kicker {
+  margin-bottom: 0.35rem;
 }
 
 .btn-ghost {

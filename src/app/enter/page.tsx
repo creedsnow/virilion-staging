@@ -30,34 +30,34 @@ export default function EnterPage() {
   }
 
   return (
-    <div className="night-sky enter-sky -mx-4 min-h-[100dvh] px-5 py-10 flex flex-col items-center justify-center relative">
-      <div className="relative z-[1] w-full max-w-[22rem] flex flex-col items-center">
-        <div className="relative mb-6">
+    <div className="night-sky enter-sky -mx-4 min-h-[100dvh] px-5 py-12 flex flex-col items-center justify-center relative">
+      <div className="relative z-[1] w-full max-w-[21.5rem] flex flex-col items-center">
+        <div className="relative mb-7">
           <div
-            className="absolute -inset-8 rounded-full blur-3xl opacity-80"
+            className="absolute -inset-9 rounded-full blur-3xl opacity-75"
             style={{
               background:
-                "radial-gradient(circle, color-mix(in srgb, var(--aura) 60%, transparent), transparent 68%)",
+                "radial-gradient(circle, color-mix(in srgb, var(--aura) 58%, transparent), transparent 68%)",
             }}
             aria-hidden
           />
-          <div className="relative rounded-[1.25rem] overflow-hidden border border-gold/20 shadow-[0_0_48px_rgba(123,94,167,0.4)]">
+          <div className="relative rounded-[1.2rem] overflow-hidden border border-gold/25 shadow-[0_0_48px_rgba(123,94,167,0.38)]">
             <Image
               src="/virilion-logo.png"
               alt="Virilion"
-              width={108}
-              height={108}
+              width={104}
+              height={104}
               className="block"
               priority
             />
           </div>
         </div>
 
-        <h1 className="display-title text-[1.85rem] mb-1.5 tracking-[0.22em]">
-          Virilion
-        </h1>
-        <p className="display-italic text-[1.15rem] mb-2">Enter Virilion</p>
-        <p className="text-[11px] tracking-[0.12em] uppercase text-fg-muted/90 text-center mb-8 leading-relaxed max-w-[18rem]">
+        <h1 className="display-title display-title-enter mb-1.5">Virilion</h1>
+        <p className="display-italic text-[1.2rem] mb-2.5 text-gold-soft">
+          Enter Virilion
+        </p>
+        <p className="text-[11px] tracking-[0.14em] uppercase text-fg-muted/90 text-center mb-9 leading-relaxed max-w-[17.5rem]">
           Adult queer mythic fantasy · one vessel · in-app home
         </p>
 
@@ -95,7 +95,7 @@ export default function EnterPage() {
             <div className="flex justify-end mt-1.5">
               <button
                 type="button"
-                className="text-[12px] font-display italic text-fg-muted hover:text-gold-soft"
+                className="text-[12px] font-display italic text-fg-muted hover:text-gold-soft underline underline-offset-2 decoration-border/80"
                 onClick={() => enter()}
               >
                 Forgot password?
@@ -103,14 +103,14 @@ export default function EnterPage() {
             </div>
           </div>
 
-          <button type="submit" className="btn-gold btn-enter w-full mt-2">
+          <button type="submit" className="btn-gold btn-enter w-full mt-3">
             Log in
           </button>
-          <p className="text-center text-[11px] text-fg-muted -mt-0.5 leading-relaxed">
+          <p className="text-center text-[11px] text-gold/80 -mt-0.5 leading-relaxed tracking-wide">
             Demo mode — no password needed
           </p>
 
-          <div className="flex items-center gap-3 pt-4">
+          <div className="flex items-center gap-3 pt-5">
             <span className="h-px flex-1 bg-border/80" />
             <span className="text-[10px] tracking-[0.16em] uppercase text-fg-muted whitespace-nowrap">
               New to Virilion?
@@ -127,8 +127,9 @@ export default function EnterPage() {
           </button>
         </form>
 
-        <p className="mt-9 text-[11px] text-fg-muted/80 text-center max-w-xs leading-relaxed">
-          RP chat and voice live here. Fields are cosmetic — this build is labeled Demo.
+        <p className="mt-10 text-[11px] text-fg-muted/80 text-center max-w-xs leading-relaxed">
+          RP chat and voice live here. Fields are cosmetic — this build is labeled
+          Demo.
         </p>
       </div>
     </div>

@@ -5,8 +5,8 @@ import { setAgeOk } from "@/lib/storage";
 
 export function AgeGate({ onConfirm }: { onConfirm: () => void }) {
   return (
-    <div className="fixed inset-0 z-[100] night-sky flex items-center justify-center p-5">
-      <div className="relative z-[1] stone-panel card max-w-md w-full text-center rounded-2xl px-6 py-8 space-y-5">
+    <div className="fixed inset-0 z-[100] night-sky age-sky flex items-center justify-center p-5">
+      <div className="relative z-[1] stone-panel age-panel card max-w-md w-full text-center rounded-2xl px-6 py-8 space-y-5">
         <div className="flex justify-center">
           <div className="relative">
             <div
@@ -22,7 +22,7 @@ export function AgeGate({ onConfirm }: { onConfirm: () => void }) {
               alt=""
               width={68}
               height={68}
-              className="relative rounded-xl"
+              className="relative rounded-xl border border-gold/20"
               priority
             />
           </div>
@@ -30,7 +30,7 @@ export function AgeGate({ onConfirm }: { onConfirm: () => void }) {
 
         <div>
           <p className="demo-badge mb-3">Adult portal · 18+</p>
-          <h1 className="font-display text-3xl font-semibold text-gold-soft tracking-wide">
+          <h1 className="font-display text-[1.85rem] sm:text-3xl font-semibold text-gold-soft tracking-wide leading-tight">
             Enter with consent
           </h1>
         </div>
@@ -71,7 +71,7 @@ export function AgeGate({ onConfirm }: { onConfirm: () => void }) {
 
         <button
           type="button"
-          className="btn-gold w-full"
+          className="btn-gold btn-enter w-full"
           onClick={() => {
             setAgeOk();
             onConfirm();

@@ -15,6 +15,8 @@ const WALKING = [
   { name: "Ryven", status: "open", hue: "#6b3d4a", pip: "#6b8f71" },
   { name: "Auren", status: "social", hue: "#3d6b58", pip: "#a78bfa" },
   { name: "Halvard", status: "questing", hue: "#6b5a3d", pip: "#e4a574" },
+  { name: "Brogar", status: "looking for party", hue: "#4a3d6b", pip: "#c9784a" },
+  { name: "Sen", status: "in scene", hue: "#3d5a58", pip: "#8b6bb8" },
 ];
 
 const COMING_UP = [
@@ -25,21 +27,21 @@ const COMING_UP = [
     accent: "#c9784a",
   },
   {
-    when: "Tomorrow · dusk",
-    title: "Border watch at Velkrath Wood",
-    place: "Velkrath · lycan welcome",
-    accent: "#b86b9a",
+    when: "Tonight · 9:30 PM",
+    title: "Moonrise Duel — fourth bout",
+    place: "Cassanova · arena night",
+    accent: "#b84a5a",
   },
   {
-    when: "Sat · twilight",
-    title: "Moonmarket stalls reopen",
-    place: "Virelios · lower coil",
+    when: "Tomorrow · 7 PM",
+    title: "Ashfall watch — session circle",
+    place: "Velkrath Wood · border lamps",
     accent: "#5a8fc4",
   },
   {
-    when: "Coming soon",
-    title: "Marriage rites open to any two vessels",
-    place: "Eligibility locked · venues later",
+    when: "Tomorrow · 10 PM",
+    title: "Night hunt under the black canopy",
+    place: "Velkrath Wood",
     accent: "#8b6bb8",
   },
 ];
@@ -87,7 +89,8 @@ export default function RealmPage() {
 
   return (
     <div className="space-y-7 -mt-0.5">
-      <div className="realm-hero-glow">
+      <div className="realm-hero-glow page-header">
+        <p className="section-kicker mb-2">World feed</p>
         <h1 className="display-hero">
           The lamps of Virelios are lit, {firstName}.
         </h1>
@@ -231,6 +234,9 @@ export default function RealmPage() {
             </article>
           ))}
         </div>
+        <p className="text-[10px] text-fg-muted/70 tracking-wide">
+          Demo calendar rhythm — venues may move as Map settles
+        </p>
       </section>
 
       {/* Codex stub */}
