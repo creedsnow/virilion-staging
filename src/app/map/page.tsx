@@ -5,7 +5,6 @@ import Link from "next/link";
 import { ORDER_HALLS, type OrderHall } from "@/lib/canon/orderHalls";
 import { MAP_REGIONS, hallsForRegion, type MapRegion } from "@/lib/canon/mapRegions";
 import { CLASSES } from "@/lib/canon/classes";
-import { EmptyState } from "@/components/EmptyState";
 import { SceneRoom } from "@/components/SceneRoom";
 import { sceneForHall, sceneForPlace, type SceneInfo } from "@/lib/scenes";
 import { getVessel } from "@/lib/storage";
@@ -115,7 +114,7 @@ export default function MapPage() {
         </h1>
         <p className="text-sm text-fg-muted mt-1.5 leading-relaxed">
           Tap a region or Order Hall pin, then Enter. Colour marks whose homeland
-          it is. Wisp stays off the map.
+          it is.
         </p>
       </div>
 
@@ -350,8 +349,7 @@ export default function MapPage() {
           {hallsOpen || filter === "halls" ? (
             <div className="mt-3">
               <p className="text-xs text-fg-muted mb-3 leading-relaxed">
-                Class clubhouses open to any People, plus the Blood Hideaway for
-                vampires. Mix of hub/city attach and standalone landmarks.
+                Class clubhouses · Blood Hideaway for vampires.
               </p>
               <ul className="grid gap-2 sm:grid-cols-2">
                 {ORDER_HALLS.map((h) => {
@@ -388,10 +386,14 @@ export default function MapPage() {
         </div>
       ) : null}
 
-      <EmptyState
-        title="Border Pass"
-        body="Each vessel earns access separately. Staging lets you Preview homeland rooms; live passport checks come later."
-      />
+      <div className="map-lock-strip" role="note">
+        <span className="map-lock-chip" data-state="open">Open</span>
+        <span className="map-lock-chip" data-state="preview">Preview</span>
+        <span className="map-lock-chip" data-state="locked">Locked</span>
+        <span className="text-[10px] text-fg-muted tracking-wide">
+          Border Pass · states on cards
+        </span>
+      </div>
     </div>
   );
 }
@@ -412,18 +414,15 @@ function PlaceCard({
   const heat = demoHeat(region.id);
   const isHub = region.kind === "hub";
   const isWastes = region.kind === "wastes";
-  const accessLabel = isHub
-    ? "Open"
-    : isWastes
-      ? "Preview"
-      : "Preview · Border Pass later";
+  const accessState = isHub ? "open" : "preview";
+  const accessLabel = isHub ? "Open" : "Preview";
   const status = isHub
-    ? "Open to all · world capital · every People, no pass"
+    ? "Open · all Peoples · no pass"
     : isWastes
-      ? "Wild holding · enter as Preview (demo)"
+      ? "Preview · wild holding"
       : region.culture
-        ? `Homeland of the ${region.culture} · Border Pass later · Preview open`
-        : "Homeland · Border Pass later · Preview open";
+        ? `Preview · ${region.culture} homeland · Border Pass later`
+        : "Preview · homeland · Border Pass later";
 
   return (
     <article className="place-card place-card-arrive" data-arrive="true">
@@ -443,8 +442,13 @@ function PlaceCard({
             {region.label}
           </h2>
         </div>
-        <span className="place-heat shrink-0" title="Demo cast">
-          demo · {heat} here
+        <span className="place-heat shrink-0" title="Demo heat stub" data-heat={heat}>
+          <span className="place-heat-pips" aria-hidden>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <i key={i} data-on={i < heat ? "true" : "false"} />
+            ))}
+          </span>
+          <span>{heat}</span>
         </span>
       </div>
       <div
@@ -456,8 +460,11 @@ function PlaceCard({
         aria-hidden
       />
       <p className="relative z-[1] text-sm text-fg-muted leading-relaxed">{region.note}</p>
-      <div className="place-status relative z-[1]" data-kind={region.kind}>
-        {status}
+      <div className="place-status relative z-[1]" data-kind={region.kind} data-state={accessState}>
+        <span className="place-state-pill" data-state={accessState}>
+          {accessLabel}
+        </span>
+        <span>{status}</span>
       </div>
       <div className="relative z-[1] mt-3.5 flex flex-wrap gap-2 items-center">
         {vessel ? (
@@ -469,7 +476,6 @@ function PlaceCard({
             Rite first
           </Link>
         )}
-        <span className="demo-badge">{accessLabel}</span>
       </div>
       {halls.length > 0 ? (
         <div className="relative z-[1] mt-3 pt-3 border-t border-border/60 space-y-1.5">
@@ -522,16 +528,32 @@ function HallCard({
             {hall.name}
           </h2>
         </div>
-        <span className="place-heat shrink-0" title="Demo cast">
-          demo · {heat} here
+        <span className="place-heat shrink-0" title="Demo heat stub" data-heat={heat}>
+          <span className="place-heat-pips" aria-hidden>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <i key={i} data-on={i < heat ? "true" : "false"} />
+            ))}
+          </span>
+          <span>{heat}</span>
         </span>
       </div>
       <p className="relative z-[1] text-sm text-fg-muted mt-2 leading-relaxed">
-        {hall.mapPlace}. Access is class-gated
-        {vampire ? " (vampirism affliction)" : ""} — not Border Pass.
+        {hall.mapPlace}
+        {vampire ? " · vampirism gate" : " · class-gated"}
+        {" · not Border Pass"}
       </p>
-      <div className="place-status relative z-[1]" data-kind={gate.enterable ? "hall" : "locked"}>
-        {gate.enterable ? gate.reason : `${gate.label} · ${gate.reason}`}
+      <div
+        className="place-status relative z-[1]"
+        data-kind={gate.enterable ? "hall" : "locked"}
+        data-state={gate.enterable ? "open" : "locked"}
+      >
+        <span
+          className="place-state-pill"
+          data-state={gate.enterable ? "open" : "locked"}
+        >
+          {gate.enterable ? "Open" : gate.label}
+        </span>
+        <span>{gate.reason}</span>
       </div>
       <div className="relative z-[1] mt-3.5 flex flex-wrap gap-2 items-center">
         {gate.enterable ? (
@@ -539,7 +561,10 @@ function HallCard({
             Enter hall
           </button>
         ) : vessel ? (
-          <span className="btn-ghost text-sm py-2 px-4 !min-h-0 opacity-70 cursor-not-allowed inline-flex">
+          <span
+            className="place-locked-cta"
+            title={gate.reason}
+          >
             Locked
           </span>
         ) : (
@@ -547,10 +572,9 @@ function HallCard({
             Rite first
           </Link>
         )}
-        <span className="demo-badge">
-          {hall.placement === "standalone" ? "Standalone landmark" : "In / attached to place"}
+        <span className="text-[10px] uppercase tracking-wide text-fg-muted">
+          {hall.placement === "standalone" ? "Standalone" : "Attached"} · {hall.hallLabel}
         </span>
-        <span className="text-xs text-fg-muted">{hall.hallLabel}</span>
       </div>
       {host ? (
         <button

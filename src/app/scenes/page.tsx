@@ -65,10 +65,6 @@ export default function ScenesPage() {
         </p>
       </div>
 
-      <p className="text-[10px] text-fg-muted/75 tracking-wide">
-        This-browser demo until shared backend.
-      </p>
-
       <ul className="space-y-3">
         {DEMO_SCENES.map((s) => (
           <li key={s.id}>

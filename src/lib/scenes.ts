@@ -16,6 +16,8 @@ export interface SceneMessage {
   vesselId: string;
   text: string;
   at: string;
+  /** speak (default) · cast · system */
+  kind?: "speak" | "cast" | "system";
 }
 
 export interface VoicePresence {
@@ -95,6 +97,10 @@ export function postSceneMessage(
     text: text.trim(),
     at: new Date().toISOString(),
   };
+  return pushSceneMessage(sceneId, msg);
+}
+
+function pushSceneMessage(sceneId: string, msg: SceneMessage): SceneMessage {
   const all = JSON.parse(localStorage.getItem(SCENES_KEY) || "{}") as Record<
     string,
     SceneMessage[]
@@ -105,6 +111,23 @@ export function postSceneMessage(
   localStorage.setItem(SCENES_KEY, JSON.stringify(all));
   window.dispatchEvent(new CustomEvent("virilion-scene-msg", { detail: sceneId }));
   return msg;
+}
+
+/** Stamp a scene-visibility d20 cast into the room feed. */
+export function postSceneCast(
+  sceneId: string,
+  vessel: Vessel,
+  value: number
+): SceneMessage {
+  return pushSceneMessage(sceneId, {
+    id: crypto.randomUUID(),
+    sceneId,
+    vesselName: vessel.name,
+    vesselId: vessel.id,
+    text: `Cast the d20 · scene · ${value}`,
+    at: new Date().toISOString(),
+    kind: "cast",
+  });
 }
 
 export function getVoicePresence(sceneId: string): VoicePresence[] {

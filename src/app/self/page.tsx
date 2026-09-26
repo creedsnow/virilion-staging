@@ -320,6 +320,18 @@ export default function SelfPage() {
                     <span className="section-kicker block mb-0.5">Lore</span>
                     <span className="font-display text-base text-fg">Codex</span>
                   </Link>
+                  <Link href="/guilds" className="realm-ask-chip">
+                    <span className="section-kicker block mb-0.5">Founding</span>
+                    <span className="font-display text-base text-fg">Guilds</span>
+                  </Link>
+                  <Link href="/shop" className="realm-ask-chip">
+                    <span className="section-kicker block mb-0.5">Moonmarket</span>
+                    <span className="font-display text-base text-fg">Shop</span>
+                  </Link>
+                  <Link href="/wisp" className="realm-ask-chip">
+                    <span className="section-kicker block mb-0.5">Companion</span>
+                    <span className="font-display text-base text-fg">Wisp</span>
+                  </Link>
                 </div>
               </section>
 
@@ -332,11 +344,11 @@ export default function SelfPage() {
                   </li>
                   <li className="flex gap-2">
                     <span className="text-gold shrink-0">✦</span>
-                    <span>Wisp companion: pet panel later — not on Map, Scenes, or showcase.</span>
+                    <span>Wisp: shell mote → pet panel. Not on Map, Scenes, showcase, or roster.</span>
                   </li>
                   <li className="flex gap-2">
                     <span className="text-gold shrink-0">✦</span>
-                    <span>Marriage: Coming soon — any two vessels, eligibility locked.</span>
+                    <span>Marriage: Coming soon — any two vessels.</span>
                   </li>
                 </ul>
               </section>
@@ -366,8 +378,7 @@ export default function SelfPage() {
               <span className="demo-badge shrink-0">Demo account</span>
             </div>
             <p className="text-xs text-fg-muted leading-relaxed">
-              Demo Enter only. Real auth (magic-link shaped) ships later. RP chat and voice stay
-              in-app — this app is the home.
+              Demo Enter only. Real auth ships later. Chat and voice stay here.
             </p>
           </section>
 
@@ -408,7 +419,7 @@ export default function SelfPage() {
             <p className="section-kicker mb-1">Community</p>
             <p className="text-sm font-medium text-fg font-display text-lg">Rules · 21 locks</p>
             <p className="text-xs text-fg-muted mt-0.5">
-              In-app product rules — not Discord
+              Product rules · 21 locks
             </p>
           </Link>
 

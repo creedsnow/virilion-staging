@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState, type ReactNode } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { AgeGate } from "./AgeGate";
@@ -113,11 +114,17 @@ export function AppShell({ children }: { children: ReactNode }) {
                         ? "Safety"
                         : pathname.startsWith("/calendar")
                           ? "Coming up"
-                          : pathname.startsWith("/rules")
-                            ? "Community rules"
-                            : pathname.startsWith("/admin")
-                              ? "Demo GM"
-                              : "Staging demo";
+                          : pathname.startsWith("/guilds")
+                            ? "Guilds"
+                            : pathname.startsWith("/shop")
+                              ? "Moonmarket"
+                              : pathname.startsWith("/wisp")
+                                ? "Companion"
+                                : pathname.startsWith("/rules")
+                                  ? "Community rules"
+                                  : pathname.startsWith("/admin")
+                                    ? "Demo GM"
+                                    : "Staging demo";
 
   return (
     <div className={`min-h-dvh flex flex-col text-fg ${isEnter ? "" : "app-canvas"}`}>
@@ -151,6 +158,17 @@ export function AppShell({ children }: { children: ReactNode }) {
                 >
                   Rules
                 </a>
+              ) : null}
+              {showNav ? (
+                <Link
+                  href="/wisp"
+                  className="wisp-mote"
+                  aria-label="Open Wisp companion"
+                  title="Wisp"
+                >
+                  <span className="wisp-mote-glow" aria-hidden />
+                  <span className="wisp-mote-core" aria-hidden />
+                </Link>
               ) : null}
               <button
                 type="button"

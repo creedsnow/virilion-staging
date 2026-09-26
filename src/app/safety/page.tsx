@@ -6,13 +6,12 @@ export default function SafetyPage() {
   return (
     <div className="space-y-5">
       <div>
-        <p className="section-kicker mb-1">Care · In-app</p>
+        <p className="section-kicker mb-1">Care</p>
         <h1 className="font-display text-3xl font-semibold text-fg leading-tight">
           Safety
         </h1>
         <p className="text-sm text-fg-muted mt-1.5 leading-relaxed max-w-md">
-          Consent first. Report and Block live on vessel messages. This app is the home —
-          not Discord.
+          Consent first. Report and Block live on vessel messages in scene rooms.
         </p>
       </div>
 
@@ -51,7 +50,7 @@ export default function SafetyPage() {
         <p className="section-kicker mb-1">Community</p>
         <p className="font-display text-xl font-semibold text-fg">Rules · 21 locks</p>
         <p className="text-xs text-fg-muted mt-0.5">
-          Product rules in-app — age, one vessel, consent, no Discord-as-home
+          Age · one vessel · consent · in-app home
         </p>
       </Link>
 

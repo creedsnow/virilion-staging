@@ -247,7 +247,7 @@ export default function WeavePage() {
       </section>
 
       <p className="text-xs text-fg-muted leading-relaxed text-center pt-1">
-        Marriage · Coming soon · Guild founding later · Wisp stays off Weave
+        Marriage · Coming soon · Guild founding later
       </p>
     </div>
   );

@@ -40,7 +40,7 @@ const DEMO_MESSAGES = [
   },
   {
     from: "thorne" as const,
-    text: "Yes. Soft voices, in-app only — no Discord for this.",
+    text: "Yes. Soft voices by the Coil lamps.",
     when: "8:15 PM",
   },
 ];

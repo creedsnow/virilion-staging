@@ -6,6 +6,7 @@ import {
   blockVessel,
   getBlocked,
   getSceneMessages,
+  postSceneCast,
   postSceneMessage,
   reportStub,
   type SceneInfo,
@@ -45,6 +46,7 @@ export function SceneRoom({
   const [voiceOpen, setVoiceOpen] = useState(autoJoinVoice);
   const [menuId, setMenuId] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
+  const [casting, setCasting] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -85,6 +87,31 @@ export function SceneRoom({
     setText("");
     reload();
     inputRef.current?.focus();
+  }
+
+  function castHere() {
+    if (casting) return;
+    setCasting(true);
+    const duration = 520 + Math.random() * 280;
+    const start = performance.now();
+    const tick = (now: number) => {
+      if (now - start < duration) {
+        requestAnimationFrame(tick);
+        return;
+      }
+      const value = 1 + Math.floor(Math.random() * 20);
+      postSceneCast(scene.id, vessel, value);
+      setCasting(false);
+      reload();
+      setToast(
+        value === 20
+          ? "Natural 20 · stamped in this chamber"
+          : value === 1
+            ? "Natural 1 · stamped in this chamber"
+            : `Cast ${value} · scene · this chamber`
+      );
+    };
+    requestAnimationFrame(tick);
   }
 
   const initial = vessel.name.trim().charAt(0).toUpperCase() || "V";
@@ -135,13 +162,24 @@ export function SceneRoom({
               </div>
             </div>
           </div>
-          <button
-            type="button"
-            className="btn-gold text-xs py-2 px-3 shrink-0 !min-h-0 !rounded-xl"
-            onClick={() => setVoiceOpen(true)}
-          >
-            Join call
-          </button>
+          <div className="flex flex-col gap-1.5 shrink-0 items-stretch">
+            <button
+              type="button"
+              className="btn-gold text-xs py-2 px-3 !min-h-0 !rounded-xl"
+              onClick={() => setVoiceOpen(true)}
+            >
+              Join call
+            </button>
+            <button
+              type="button"
+              className="btn-ghost text-[10px] py-1.5 px-2.5 !min-h-0 !rounded-xl tracking-wide uppercase"
+              onClick={castHere}
+              disabled={casting}
+              title="Cast d20 into this room feed"
+            >
+              {casting ? "Casting…" : "Cast here"}
+            </button>
+          </div>
         </div>
       </header>
 
@@ -153,8 +191,8 @@ export function SceneRoom({
               ✦
             </span>
             <p>
-              The lamps are lit. Speak as your Vessel. This-browser demo · Join call opens
-              voice in this room.
+              The lamps are lit. Speak as your Vessel. Cast here stamps a scene roll into
+              this feed.
             </p>
           </div>
 
@@ -187,6 +225,28 @@ export function SceneRoom({
           ) : (
             <ul className="space-y-0">
               {messages.map((m) => {
+                if (m.kind === "cast" || m.kind === "system") {
+                  return (
+                    <li key={m.id} className="story-cast-line">
+                      <span className="story-cast-mark" aria-hidden>
+                        {m.kind === "cast" ? "⚄" : "✦"}
+                      </span>
+                      <div className="min-w-0">
+                        <p className="story-cast-text">
+                          <span className="text-gold-soft font-medium">{m.vesselName}</span>
+                          {" · "}
+                          {m.text}
+                        </p>
+                        <time
+                          className="text-[10px] text-fg-muted/70 tabular-nums"
+                          dateTime={m.at}
+                        >
+                          {formatSpeakTime(m.at)}
+                        </time>
+                      </div>
+                    </li>
+                  );
+                }
                 const mine = m.vesselId === vessel.id;
                 const hue = hueForVessel(m.vesselId);
                 const seal = m.vesselName.trim().charAt(0).toUpperCase() || "·";

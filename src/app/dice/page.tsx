@@ -107,7 +107,8 @@ export default function DicePage() {
           Witnessed under the lamps
         </p>
         <p className="text-sm text-fg-muted mt-2 leading-relaxed">
-          Premium d20 ritual. Staging rolls client-side; social fairness authority later.
+          Client-only ritual for staging. From a scene room, Cast here stamps scene rolls
+          into that chamber.
         </p>
       </div>
 

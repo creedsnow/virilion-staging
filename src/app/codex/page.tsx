@@ -141,7 +141,7 @@ export default function CodexPage() {
               Rules · 21 locks
             </span>
             <span className="text-sm text-fg-muted mt-0.5 block">
-              Community product rules — in-app, not Discord.
+              Community product rules · 21 locks.
             </span>
           </span>
         </Link>

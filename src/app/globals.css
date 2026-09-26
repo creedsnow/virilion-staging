@@ -2519,3 +2519,211 @@ button.scene-call-hint:hover {
   color: inherit;
   display: block;
 }
+
+/* —— Cycle 3: Wisp mote / Map heat+locks / scene cast —— */
+.wisp-mote {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.85rem;
+  height: 1.85rem;
+  border-radius: 9999px;
+  border: 1px solid color-mix(in srgb, var(--aura) 40%, var(--border));
+  background: color-mix(in srgb, var(--aura) 12%, transparent);
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+}
+.wisp-mote:hover {
+  border-color: color-mix(in srgb, var(--gold) 45%, var(--aura));
+  box-shadow: 0 0 14px color-mix(in srgb, var(--aura) 45%, transparent);
+  transform: translateY(-1px);
+}
+.wisp-mote-glow {
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: radial-gradient(circle, color-mix(in srgb, var(--aura) 45%, transparent), transparent 70%);
+  opacity: 0.7;
+  pointer-events: none;
+}
+.wisp-mote-core {
+  position: relative;
+  z-index: 1;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 9999px;
+  background: radial-gradient(circle at 35% 30%, #e8d9ff, #7b5ea7 55%, #3d2a5c);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--aura) 70%, transparent);
+}
+
+.wisp-chamber {
+  border-color: color-mix(in srgb, var(--aura) 35%, var(--border));
+  min-height: 12rem;
+}
+.wisp-chamber-glow {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 50% 40% at 50% 42%, color-mix(in srgb, var(--aura) 28%, transparent), transparent 70%),
+    radial-gradient(1px 1px at 20% 30%, var(--speckle), transparent),
+    radial-gradient(1px 1px at 70% 60%, var(--speckle), transparent);
+  pointer-events: none;
+}
+.wisp-orb {
+  position: relative;
+  width: 4.5rem;
+  height: 4.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.wisp-orb-core {
+  width: 1.65rem;
+  height: 1.65rem;
+  border-radius: 9999px;
+  background: radial-gradient(circle at 35% 28%, #f0e6ff, #9b7fd4 45%, #4a3578 85%);
+  box-shadow:
+    0 0 22px color-mix(in srgb, var(--aura) 65%, transparent),
+    0 0 48px color-mix(in srgb, var(--aura) 35%, transparent);
+  animation: wisp-breathe 3.2s ease-in-out infinite;
+}
+.wisp-orb-trail {
+  position: absolute;
+  bottom: 0.15rem;
+  width: 0.85rem;
+  height: 1.6rem;
+  border-radius: 9999px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--aura) 55%, transparent), transparent);
+  filter: blur(3px);
+  opacity: 0.7;
+  animation: wisp-breathe 3.2s ease-in-out infinite 0.2s;
+}
+@keyframes wisp-breathe {
+  0%, 100% { transform: translateY(0) scale(1); opacity: 0.95; }
+  50% { transform: translateY(-3px) scale(1.06); opacity: 1; }
+}
+
+.map-lock-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem 0.65rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: 0.95rem;
+  border: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
+  background: color-mix(in srgb, var(--bg-card) 88%, transparent);
+}
+.map-lock-chip {
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.28rem 0.55rem;
+  border-radius: 9999px;
+  border: 1px solid var(--border);
+}
+.map-lock-chip[data-state="open"] {
+  color: var(--ok);
+  border-color: color-mix(in srgb, var(--ok) 40%, var(--border));
+  background: color-mix(in srgb, var(--ok) 12%, transparent);
+}
+.map-lock-chip[data-state="preview"] {
+  color: var(--gold-soft);
+  border-color: color-mix(in srgb, var(--gold) 35%, var(--border));
+  background: color-mix(in srgb, var(--gold) 10%, transparent);
+}
+.map-lock-chip[data-state="locked"] {
+  color: #c4a090;
+  border-color: color-mix(in srgb, var(--danger) 30%, var(--border));
+  background: color-mix(in srgb, var(--danger) 8%, transparent);
+}
+
+.place-heat {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.place-heat-pips {
+  display: inline-flex;
+  gap: 2px;
+  align-items: center;
+}
+.place-heat-pips i {
+  display: block;
+  width: 4px;
+  height: 8px;
+  border-radius: 1px;
+  background: color-mix(in srgb, var(--border) 70%, transparent);
+}
+.place-heat-pips i[data-on="true"] {
+  background: color-mix(in srgb, var(--aura) 75%, var(--gold) 15%);
+  box-shadow: 0 0 4px color-mix(in srgb, var(--aura) 50%, transparent);
+}
+
+.place-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem 0.65rem;
+}
+.place-state-pill {
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.22rem 0.5rem;
+  border-radius: 9999px;
+  border: 1px solid currentColor;
+  flex-shrink: 0;
+}
+.place-state-pill[data-state="open"] {
+  color: var(--ok);
+  background: color-mix(in srgb, var(--ok) 12%, transparent);
+}
+.place-state-pill[data-state="preview"] {
+  color: var(--gold-soft);
+  background: color-mix(in srgb, var(--gold) 10%, transparent);
+}
+.place-state-pill[data-state="locked"] {
+  color: #c4a090;
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
+}
+
+.place-locked-cta {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  border: 1px solid color-mix(in srgb, var(--danger) 32%, var(--border));
+  color: #c4a090;
+  background: color-mix(in srgb, var(--danger) 8%, var(--bg-elevated));
+  cursor: not-allowed;
+  opacity: 0.92;
+  min-height: 0;
+}
+
+.story-cast-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding: 0.65rem 0.85rem;
+  margin: 0.35rem 0;
+  border-radius: 0.85rem;
+  border: 1px dashed color-mix(in srgb, var(--gold) 32%, var(--border));
+  background: color-mix(in srgb, var(--gold) 6%, transparent);
+}
+.story-cast-mark {
+  color: var(--gold);
+  font-size: 0.95rem;
+  line-height: 1.4;
+  flex-shrink: 0;
+}
+.story-cast-text {
+  font-size: 0.8rem;
+  color: var(--fg-muted);
+  line-height: 1.45;
+}
