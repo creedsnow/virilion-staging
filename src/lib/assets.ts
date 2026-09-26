@@ -111,11 +111,11 @@ export function uiIcon(name: string): string | null {
 
 /** Moonmarket dice skins shipped in Batch A4 (filename slug → label). */
 export const MOONMARKET_SKINS = [
-  { id: "night-court", label: "Night Court", blurb: "Obsidian dice skin" },
-  { id: "starveil", label: "Starveil", blurb: "Dice skin" },
-  { id: "gilded-coil", label: "Gilded Coil", blurb: "Dice skin" },
-  { id: "parchment-bone", label: "Parchment Bone", blurb: "Dice skin" },
-  { id: "mosswood", label: "Mosswood", blurb: "Dice skin" },
+  { id: "night-court", label: "Night Court", blurb: "Obsidian set under velvet lamps" },
+  { id: "starveil", label: "Starveil", blurb: "Starlit resin · soft aurora edge" },
+  { id: "gilded-coil", label: "Gilded Coil", blurb: "Brass & emerald coil · Virelios seal" },
+  { id: "parchment-bone", label: "Parchment Bone", blurb: "Bone ivory · script-ready faces" },
+  { id: "mosswood", label: "Mosswood", blurb: "Living wood · grove-touched grain" },
 ] as const;
 
 /** Moonmarket single-shape die shots. */

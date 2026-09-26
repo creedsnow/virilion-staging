@@ -3,11 +3,13 @@
 # Source of truth: /workspace/virilion-app/public/assets
 #
 # Usage:
-#   scripts/sync-assets.sh                 # icons + codex *-card-sm + moonmarket UI + wisps UI
+#   scripts/sync-assets.sh                 # icons + codex cards + logo + news + moonmarket + wisps
 #   scripts/sync-assets.sh --icons-only
 #   scripts/sync-assets.sh --moonmarket     # moonmarket UI only (also keeps prior packs)
 #   scripts/sync-assets.sh --wisps          # wisps UI only
 #   scripts/sync-assets.sh --dry-run
+#
+# Ship sizes only — never masters/raws/contact sheets/Batch B. Real files, never symlink.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -25,7 +27,7 @@ for arg in "$@"; do
     --moonmarket) ONLY_MOON=1 ;;
     --wisps) ONLY_WISP=1 ;;
     -h|--help)
-      sed -n '2,14p' "$0"
+      sed -n '2,16p' "$0"
       exit 0
       ;;
     *)
@@ -63,7 +65,6 @@ sync_moonmarket() {
     return 0
   fi
   mkdir -p "$dest"
-  # Remove prior UI webps so renames don't leave orphans; keep any other files alone
   find "$dest" -maxdepth 1 -name 'shop-*.webp' -type f -delete 2>/dev/null || true
   find "$src" -maxdepth 1 -name 'shop-*.webp' -type f -print0 \
     | while IFS= read -r -d '' f; do
@@ -100,6 +101,44 @@ sync_wisps() {
   [[ -f "$src/README.md" ]] && cp -f "$src/README.md" "$dest/README.md"
 }
 
+sync_logo() {
+  local src="$SRC/logo"
+  local dest="$DEST/logo"
+  if [[ ! -d "$src" ]]; then
+    echo "Skip logo (missing $src)"
+    return 0
+  fi
+  echo "Sync logo (Virilion-logo.png; skip extras)"
+  if [[ $DRY -eq 1 ]]; then
+    find "$src" -maxdepth 1 -name 'Virilion-logo.png' -type f -printf '  %f\n'
+    return 0
+  fi
+  mkdir -p "$dest"
+  if [[ -f "$src/Virilion-logo.png" ]]; then
+    cp -f "$src/Virilion-logo.png" "$dest/Virilion-logo.png"
+  fi
+}
+
+sync_news() {
+  local src="$SRC/news"
+  local dest="$DEST/news"
+  if [[ ! -d "$src" ]]; then
+    echo "Skip news (missing $src)"
+    return 0
+  fi
+  echo "Sync news heroes (webp only; skip masters)"
+  if [[ $DRY -eq 1 ]]; then
+    find "$src" -maxdepth 1 -name '*.webp' -type f -printf '  %f\n'
+    return 0
+  fi
+  mkdir -p "$dest"
+  find "$dest" -maxdepth 1 -name '*.webp' -type f -delete 2>/dev/null || true
+  find "$src" -maxdepth 1 -name '*.webp' -type f -print0 \
+    | while IFS= read -r -d '' f; do
+        cp -f "$f" "$dest/"
+      done
+}
+
 if [[ $DRY -eq 1 ]]; then
   if [[ $ONLY_MOON -eq 1 ]]; then
     sync_moonmarket
@@ -110,7 +149,9 @@ if [[ $DRY -eq 1 ]]; then
     exit 0
   fi
   echo "[dry-run] would sync icons → $DEST/icons"
-  [[ $ICONS_ONLY -eq 0 ]] && echo "[dry-run] would sync codex *-card-sm.webp → $DEST/codex/"
+  [[ $ICONS_ONLY -eq 0 ]] && echo "[dry-run] would sync codex *-card-sm.webp + *-card.webp → $DEST/codex/"
+  [[ $ICONS_ONLY -eq 0 ]] && sync_logo
+  [[ $ICONS_ONLY -eq 0 ]] && sync_news
   [[ $ICONS_ONLY -eq 0 ]] && sync_moonmarket
   [[ $ICONS_ONLY -eq 0 ]] && sync_wisps
   exit 0
@@ -136,20 +177,22 @@ if [[ -f "$SRC/README.md" ]]; then
   cp -f "$SRC/README.md" "$DEST/README.md"
 fi
 
-# icons (full tree)
+# icons (full tree — includes app favicons)
 rm -rf "$DEST/icons"
 mkdir -p "$DEST/icons"
 cp -a "$SRC/icons/." "$DEST/icons/"
 
 if [[ $ICONS_ONLY -eq 0 ]]; then
   mkdir -p "$DEST/codex"
-  # Refresh card-sm only; leave any other tracked codex files alone
-  find "$DEST/codex" -maxdepth 1 -name '*-card-sm.webp' -type f -delete 2>/dev/null || true
-  find "$SRC/codex" -maxdepth 1 -name '*-card-sm.webp' -type f -print0 \
+  # Refresh ship cards only (card-sm + full card); never masters/headers/desktop/mobile
+  find "$DEST/codex" -maxdepth 1 \( -name '*-card-sm.webp' -o -name '*-card.webp' \) -type f -delete 2>/dev/null || true
+  find "$SRC/codex" -maxdepth 1 \( -name '*-card-sm.webp' -o -name '*-card.webp' \) -type f -print0 \
     | while IFS= read -r -d '' f; do
         cp -f "$f" "$DEST/codex/"
       done
 
+  sync_logo
+  sync_news
   sync_moonmarket
   sync_wisps
 fi
@@ -158,10 +201,11 @@ echo "Synced to $DEST (real directory, not symlink)"
 du -sh "$DEST"
 du -sh "$DEST/icons" 2>/dev/null || true
 du -sh "$DEST/codex" 2>/dev/null || true
+du -sh "$DEST/logo" 2>/dev/null || true
+du -sh "$DEST/news" 2>/dev/null || true
 du -sh "$DEST/moonmarket" 2>/dev/null || true
 du -sh "$DEST/wisps" 2>/dev/null || true
 find "$DEST" -type f | wc -l | awk '{print $1 " files"}'
-# Safety: never leave a symlink at public/assets
 if [[ -L "$DEST" ]]; then
   echo "ERROR: $DEST is still a symlink" >&2
   exit 1

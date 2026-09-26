@@ -1424,22 +1424,48 @@ body {
   pointer-events: none;
   animation: cast-aura-breathe 4.2s ease-in-out infinite;
 }
-.cast-d20-svg {
+.cast-d20-art-frame {
   position: relative;
   z-index: 1;
-  filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.35)) drop-shadow(0 0 18px rgba(123, 94, 167, 0.45));
+  width: 9.4rem;
+  height: 9.4rem;
+  border-radius: 1.15rem;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--gold) 42%, transparent);
+  box-shadow:
+    0 10px 22px rgba(0, 0, 0, 0.4),
+    0 0 18px rgba(123, 94, 167, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+.cast-d20-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 42%;
+}
+.cast-d20-art-veil {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 48%, transparent 28%, rgba(8, 6, 14, 0.55) 72%),
+    linear-gradient(180deg, rgba(8, 6, 14, 0.12), transparent 35%, rgba(8, 6, 14, 0.45));
 }
 .cast-d20-value {
   position: absolute;
-  z-index: 2;
+  z-index: 3;
   font-size: 2.55rem;
   font-weight: 600;
   line-height: 1;
   color: var(--gold-soft);
-  text-shadow: 0 0 18px rgba(201, 162, 39, 0.45), 0 2px 8px rgba(0, 0, 0, 0.45);
+  text-shadow:
+    0 0 20px rgba(201, 162, 39, 0.55),
+    0 0 12px rgba(0, 0, 0, 0.85),
+    0 2px 10px rgba(0, 0, 0, 0.75);
   letter-spacing: -0.02em;
 }
-.cast-d20-rolling .cast-d20-svg {
+.cast-d20-rolling .cast-d20-art-frame {
   animation: cast-spin 0.55s ease-in-out infinite;
 }
 .cast-d20-rolling .cast-d20-value {
@@ -1469,11 +1495,12 @@ body {
     0 0 36px color-mix(in srgb, var(--aura) 36%, transparent);
   animation: cast-settle-ring 0.9s ease-out forwards;
 }
-.cast-d20-settled .cast-d20-svg {
-  filter:
-    drop-shadow(0 10px 22px rgba(0, 0, 0, 0.35))
-    drop-shadow(0 0 22px rgba(123, 94, 167, 0.55))
-    drop-shadow(0 0 16px rgba(201, 162, 39, 0.28));
+.cast-d20-settled .cast-d20-art-frame {
+  box-shadow:
+    0 10px 22px rgba(0, 0, 0, 0.4),
+    0 0 22px rgba(123, 94, 167, 0.55),
+    0 0 16px rgba(201, 162, 39, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 .cast-d20-settled .cast-d20-value {
   animation: cast-value-settle 0.55s ease-out;
@@ -1500,7 +1527,7 @@ body {
     0 0 48px color-mix(in srgb, var(--aura) 28%, transparent);
   animation-name: cast-settle-ring-nat20;
 }
-.cast-d20-nat20 .cast-d20-svg {
+.cast-d20-nat20 .cast-d20-art-frame {
   filter:
     drop-shadow(0 10px 22px rgba(0, 0, 0, 0.32))
     drop-shadow(0 0 26px rgba(201, 162, 39, 0.48))
@@ -1531,7 +1558,7 @@ body {
     0 0 28px rgba(80, 60, 120, 0.22);
   animation-name: cast-settle-ring-nat1;
 }
-.cast-d20-nat1 .cast-d20-svg {
+.cast-d20-nat1 .cast-d20-art-frame {
   filter:
     drop-shadow(0 10px 22px rgba(0, 0, 0, 0.4))
     drop-shadow(0 0 16px rgba(123, 94, 167, 0.38));
@@ -4009,6 +4036,134 @@ button.scene-call-hint:hover {
     animation: none;
     opacity: var(--firefly-max-opacity);
   }
+}
+
+/* —— Casting Bowl moonmarket skin + shape strip —— */
+.cast-skin-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  justify-content: center;
+  max-width: 22rem;
+  padding: 0 0.5rem;
+}
+.cast-skin-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  width: 3.35rem;
+  padding: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--fg-muted);
+}
+.cast-skin-chip:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.cast-skin-chip-img {
+  width: 2.55rem;
+  height: 2.55rem;
+  border-radius: 0.65rem;
+  object-fit: cover;
+  border: 1px solid color-mix(in srgb, var(--border) 60%, var(--gold) 20%);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--aura) 12%, transparent);
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+}
+.cast-skin-chip[data-active="true"] .cast-skin-chip-img {
+  border-color: color-mix(in srgb, var(--gold) 70%, transparent);
+  box-shadow:
+    0 0 14px color-mix(in srgb, var(--gold) 35%, transparent),
+    0 0 18px color-mix(in srgb, var(--aura) 28%, transparent);
+  transform: translateY(-1px);
+}
+.cast-skin-chip-label {
+  font-size: 0.52rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 1.15;
+  max-width: 3.3rem;
+}
+.cast-skin-chip[data-active="true"] .cast-skin-chip-label {
+  color: var(--gold-soft);
+}
+
+.cast-shape-strip {
+  padding: 0.15rem 0.1rem 0.35rem;
+}
+.cast-shape-row {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+.cast-shape-tile {
+  flex: 0 0 auto;
+  width: 4.5rem;
+  scroll-snap-align: start;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+.cast-shape-img {
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 0.85rem;
+  object-fit: cover;
+  border: 1px solid color-mix(in srgb, var(--border) 55%, var(--aura) 25%);
+  box-shadow: var(--shadow-card);
+}
+.cast-shape-tile span {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+.cast-shape-tile:hover .cast-shape-img {
+  border-color: color-mix(in srgb, var(--gold) 50%, transparent);
+}
+
+.moonmarket-featured {
+  position: relative;
+}
+.moonmarket-featured-frame {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  max-height: 22rem;
+  margin-inline: auto;
+  overflow: hidden;
+  border-radius: 1.25rem;
+  border: 1px solid color-mix(in srgb, var(--border) 50%, var(--gold) 32%);
+  background: #0a0810;
+  box-shadow:
+    var(--shadow-card),
+    0 0 28px color-mix(in srgb, var(--gold) 14%, transparent),
+    0 0 36px color-mix(in srgb, var(--aura) 16%, transparent);
+}
+.moonmarket-featured-veil {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, transparent 42%, rgba(8, 6, 14, 0.82) 92%),
+    radial-gradient(ellipse 70% 40% at 50% 0%, color-mix(in srgb, var(--gold) 12%, transparent), transparent 60%);
+}
+.moonmarket-featured-caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  padding: 1.1rem 1.15rem 1.2rem;
 }
 
 /* —— Moonmarket product cards + Wisp pet media —— */

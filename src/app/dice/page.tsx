@@ -1,10 +1,27 @@
 "use client";
 
+import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
+import {
+  MOONMARKET_SKINS,
+  moonmarketDie,
+  moonmarketSkin,
+} from "@/lib/assets";
 
 type Visibility = "private" | "scene" | "public";
 
-function CastingD20({ value, rolling }: { value: number | null; rolling: boolean }) {
+type SkinId = (typeof MOONMARKET_SKINS)[number]["id"];
+
+function CastingD20({
+  value,
+  rolling,
+  skinId,
+}: {
+  value: number | null;
+  rolling: boolean;
+  skinId: SkinId;
+}) {
   const settled = value != null && !rolling;
   const className = [
     "cast-d20",
@@ -16,51 +33,30 @@ function CastingD20({ value, rolling }: { value: number | null; rolling: boolean
     .filter(Boolean)
     .join(" ");
 
+  const skin = MOONMARKET_SKINS.find((s) => s.id === skinId) || MOONMARKET_SKINS[2];
+
   return (
     <div className={className} aria-live="polite">
       <span className="cast-d20-aura" aria-hidden />
-      <svg
-        className="cast-d20-svg"
-        viewBox="0 0 120 120"
-        width="132"
-        height="132"
-        aria-hidden
-      >
-        <defs>
-          <linearGradient id="d20Face" x1="18%" y1="8%" x2="85%" y2="92%">
-            <stop offset="0%" stopColor="#d8b85a" stopOpacity="0.55" />
-            <stop offset="42%" stopColor="#1c1828" />
-            <stop offset="100%" stopColor="#100e18" />
-          </linearGradient>
-          <linearGradient id="d20Edge" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#e4c86a" />
-            <stop offset="100%" stopColor="#c9a227" stopOpacity="0.75" />
-          </linearGradient>
-        </defs>
-        <polygon
-          points="60,8 108,36 108,84 60,112 12,84 12,36"
-          fill="url(#d20Face)"
-          stroke="url(#d20Edge)"
-          strokeWidth="2.2"
-          strokeLinejoin="round"
+      <div className="cast-d20-art-frame" aria-hidden>
+        <Image
+          src={moonmarketSkin(skin.id)}
+          alt=""
+          width={800}
+          height={800}
+          className="cast-d20-art"
+          sizes="168px"
+          priority
         />
-        <path
-          d="M60 8 L108 36 L60 52 Z M60 8 L12 36 L60 52 Z M12 36 L12 84 L60 52 Z M108 36 L108 84 L60 52 Z M12 84 L60 112 L60 52 Z M108 84 L60 112 L60 52 Z"
-          fill="none"
-          stroke="#c9a227"
-          strokeWidth="1.1"
-          opacity="0.55"
-        />
-        <path
-          d="M60 8 L60 52 M12 36 L108 36 M12 84 L60 52 L108 84"
-          fill="none"
-          stroke="#7b5ea7"
-          strokeWidth="0.9"
-          opacity="0.5"
-        />
-      </svg>
-      <span className="cast-d20-value font-display">
-        {value ?? "—"}
+        <span className="cast-d20-art-veil" />
+      </div>
+      <span className="cast-d20-value font-display">{value ?? "—"}</span>
+      <span className="sr-only">
+        {rolling
+          ? "Casting"
+          : value == null
+            ? `Ready · ${skin.label} skin`
+            : `Cast ${value} · ${skin.label}`}
       </span>
     </div>
   );
@@ -70,8 +66,9 @@ export default function DicePage() {
   const [rolling, setRolling] = useState(false);
   const [value, setValue] = useState<number | null>(null);
   const [visibility, setVisibility] = useState<Visibility>("private");
+  const [skinId, setSkinId] = useState<SkinId>("gilded-coil");
   const [history, setHistory] = useState<
-    { value: number; visibility: Visibility; at: string }[]
+    { value: number; visibility: Visibility; skinId: SkinId; at: string }[]
   >([]);
 
   function roll() {
@@ -89,7 +86,12 @@ export default function DicePage() {
         setRolling(false);
         setHistory((h) =>
           [
-            { value: final, visibility, at: new Date().toISOString() },
+            {
+              value: final,
+              visibility,
+              skinId,
+              at: new Date().toISOString(),
+            },
             ...h,
           ].slice(0, 8)
         );
@@ -107,6 +109,9 @@ export default function DicePage() {
           ? "Natural 1"
           : null;
 
+  const activeSkin =
+    MOONMARKET_SKINS.find((s) => s.id === skinId) || MOONMARKET_SKINS[2];
+
   return (
     <div className="space-y-5">
       <div className="rite-hero">
@@ -118,23 +123,61 @@ export default function DicePage() {
           Witnessed under the lamps
         </p>
         <p className="text-sm text-fg-muted mt-2 leading-relaxed">
-          Client-only ritual for staging. From a scene room, Cast here stamps scene rolls
-          into that chamber.
+          Client-only ritual for staging. Moonmarket skin art sits in the bowl —
+          blank faces, number overlaid. From a scene room, Cast here stamps scene
+          rolls into that chamber.
         </p>
       </div>
 
       <div className="card dice-stage rounded-2xl flex flex-col items-center py-9 gap-5 relative overflow-hidden">
         <span className="dice-stage-speckle" aria-hidden />
-        <CastingD20 value={value} rolling={rolling} />
+        <CastingD20 value={value} rolling={rolling} skinId={skinId} />
         {naturalLabel ? (
           <p className="section-kicker -mt-1 tracking-[0.18em]">{naturalLabel}</p>
         ) : (
           <p className="text-[11px] text-fg-muted -mt-1 tracking-wide">
-            {rolling ? "The bowl turns…" : value == null ? "Ready when you are" : "Cast settles"}
+            {rolling
+              ? "The bowl turns…"
+              : value == null
+                ? `Ready · ${activeSkin.label}`
+                : "Cast settles"}
           </p>
         )}
 
-        <div className="flex gap-2 flex-wrap justify-center px-1" role="group" aria-label="Witnessed by">
+        <div
+          className="cast-skin-row"
+          role="group"
+          aria-label="Dice skin in the bowl"
+        >
+          {MOONMARKET_SKINS.map((s) => (
+            <button
+              key={s.id}
+              type="button"
+              className="cast-skin-chip"
+              data-active={skinId === s.id}
+              aria-pressed={skinId === s.id}
+              title={s.label}
+              onClick={() => setSkinId(s.id)}
+              disabled={rolling}
+            >
+              <Image
+                src={moonmarketSkin(s.id)}
+                alt=""
+                width={64}
+                height={64}
+                className="cast-skin-chip-img"
+                sizes="40px"
+              />
+              <span className="cast-skin-chip-label">{s.label}</span>
+            </button>
+          ))}
+        </div>
+
+        <div
+          className="flex gap-2 flex-wrap justify-center px-1"
+          role="group"
+          aria-label="Witnessed by"
+        >
           {(["private", "scene", "public"] as Visibility[]).map((v) => (
             <button
               key={v}
@@ -158,28 +201,73 @@ export default function DicePage() {
         </button>
       </div>
 
+      <section className="cast-shape-strip" aria-label="Moonmarket die shapes">
+        <div className="flex items-end justify-between gap-2 mb-2.5">
+          <div>
+            <p className="section-kicker mb-0.5">Shapes at the stall</p>
+            <p className="text-xs text-fg-muted leading-snug">
+              No d20 product shot yet — bowl uses skin sets. Shapes live in
+              Moonmarket.
+            </p>
+          </div>
+          <Link
+            href="/shop"
+            className="text-[10px] font-semibold tracking-[0.14em] uppercase text-gold hover:text-gold-soft shrink-0"
+          >
+            Stall →
+          </Link>
+        </div>
+        <div className="cast-shape-row">
+          {(["d4", "d6", "d8", "d10", "d12", "dpercent"] as const).map((id) => (
+            <Link
+              key={id}
+              href="/shop"
+              className="cast-shape-tile"
+              title={id === "dpercent" ? "d%" : id}
+            >
+              <Image
+                src={moonmarketDie(id)}
+                alt=""
+                width={200}
+                height={200}
+                className="cast-shape-img"
+                sizes="72px"
+              />
+              <span>{id === "dpercent" ? "d%" : id}</span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
       {history.length > 0 ? (
         <div className="card stone-panel rounded-2xl">
           <p className="section-kicker mb-2.5">Your table</p>
           <ul className="space-y-2.5">
-            {history.map((h, i) => (
-              <li
-                key={`${h.at}-${i}`}
-                className="flex items-baseline justify-between gap-3 border-b border-border/50 pb-2 last:border-0 last:pb-0"
-              >
-                <span className="text-sm text-fg-muted capitalize">
-                  {h.visibility}
-                  <span className="text-fg-muted/60"> · witnessed</span>
-                </span>
-                <span
-                  className={`font-display text-xl font-semibold tabular-nums ${
-                    h.value === 20 || h.value === 1 ? "text-gold" : "text-gold-soft"
-                  }`}
+            {history.map((h, i) => {
+              const skinLabel =
+                MOONMARKET_SKINS.find((s) => s.id === h.skinId)?.label ||
+                h.skinId;
+              return (
+                <li
+                  key={`${h.at}-${i}`}
+                  className="flex items-baseline justify-between gap-3 border-b border-border/50 pb-2 last:border-0 last:pb-0"
                 >
-                  {h.value}
-                </span>
-              </li>
-            ))}
+                  <span className="text-sm text-fg-muted capitalize min-w-0">
+                    {h.visibility}
+                    <span className="text-fg-muted/60"> · {skinLabel}</span>
+                  </span>
+                  <span
+                    className={`font-display text-xl font-semibold tabular-nums shrink-0 ${
+                      h.value === 20 || h.value === 1
+                        ? "text-gold"
+                        : "text-gold-soft"
+                    }`}
+                  >
+                    {h.value}
+                  </span>
+                </li>
+              );
+            })}
           </ul>
         </div>
       ) : null}
