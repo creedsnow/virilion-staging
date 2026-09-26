@@ -1,10 +1,12 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { PEOPLES } from "@/lib/canon/peoples";
 import { CLASSES } from "@/lib/canon/classes";
 import { ORDER_HALLS } from "@/lib/canon/orderHalls";
 import { MAP_REGIONS } from "@/lib/canon/mapRegions";
+import { codexClassCardSm, codexPeopleCardSm, peopleIcon } from "@/lib/assets";
 
 export default function CodexPage() {
   const playableClasses = CLASSES.filter((c) => c.id !== "custom");
@@ -45,28 +47,34 @@ export default function CodexPage() {
           <h2 className="section-serif">Fourteen Peoples</h2>
           <p className="text-[10px] uppercase tracking-wide text-fg-muted">No Veilborn</p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <div className="codex-people-grid">
           {PEOPLES.map((p) => (
-            <div key={p.id} className="people-tile people-tile-rich people-tile-tome">
-              <div className="people-tile-accent" aria-hidden />
-              <div className="relative z-[1]">
-                <div className="flex items-start justify-between gap-2">
-                  <p className="text-base font-medium text-fg font-display">{p.name}</p>
-                  <span
-                    className="h-2.5 w-2.5 rounded-full shrink-0 mt-1.5 border border-border/40"
-                    style={{ background: p.mapColor }}
-                    aria-hidden
-                  />
+            <article key={p.id} className="codex-art-card">
+              <div className="codex-art-frame">
+                <Image
+                  src={codexPeopleCardSm(p.id)}
+                  alt=""
+                  width={480}
+                  height={600}
+                  className="codex-art-img"
+                  sizes="(max-width: 640px) 50vw, 240px"
+                />
+                <div className="codex-art-veil" aria-hidden />
+                <span className="codex-art-badge" aria-hidden>
+                  <img src={peopleIcon(p.id)} alt="" width={28} height={28} />
+                </span>
+                <div className="codex-art-caption">
+                  <p className="codex-art-title">{p.name}</p>
+                  <p className="codex-art-sub">
+                    {p.cultureName} · {p.homeland}
+                  </p>
                 </div>
-                <p className="text-[11px] text-fg-muted mt-0.5">
-                  {p.cultureName} · {p.homeland}
-                </p>
-                <p className="text-xs text-fg-muted/90 mt-1.5 leading-snug">
-                  {p.racialAbility}
-                  {p.roleNote ? ` · ${p.roleNote}` : ""}
-                </p>
               </div>
-            </div>
+              <p className="codex-art-blurb">
+                {p.racialAbility}
+                {p.roleNote ? ` · ${p.roleNote}` : ""}
+              </p>
+            </article>
           ))}
         </div>
       </section>
@@ -83,8 +91,18 @@ export default function CodexPage() {
             const hall = ORDER_HALLS.find((h) => h.name === c.orderHall);
             return (
               <li key={c.id}>
-                <div className="codex-class-row">
+                <div className="codex-class-row codex-class-row-art">
                   <div className="codex-class-accent" aria-hidden />
+                  <div className="codex-class-thumb" aria-hidden>
+                    <Image
+                      src={codexClassCardSm(c.id)}
+                      alt=""
+                      width={96}
+                      height={120}
+                      className="codex-class-thumb-img"
+                      sizes="72px"
+                    />
+                  </div>
                   <div className="min-w-0 flex-1 relative z-[1]">
                     <p className="font-display text-lg font-semibold text-fg">{c.name}</p>
                     <p className="text-xs text-fg-muted mt-0.5 leading-snug">{c.blurb}</p>
