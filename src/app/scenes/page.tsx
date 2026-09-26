@@ -56,8 +56,8 @@ export default function ScenesPage() {
         </p>
       </div>
 
-      <p className="text-[11px] leading-relaxed text-fg-muted border border-border/70 rounded-xl px-3 py-2 bg-bg/40">
-        Chat is a <strong className="text-fg">this-browser demo</strong> (localStorage) until a shared backend ships.
+      <p className="text-[10px] text-fg-muted/75 tracking-wide">
+        Text rooms stay in this browser until shared backend.
       </p>
 
       <ul className="space-y-3">

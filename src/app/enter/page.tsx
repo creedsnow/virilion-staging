@@ -108,7 +108,7 @@ export default function EnterPage() {
             Log in
           </button>
           <p className="text-center text-[11px] text-gold/80 -mt-0.5 leading-relaxed tracking-wide">
-            Demo mode — no password needed
+            Demo — no password needed
           </p>
 
           <div className="flex items-center gap-3 pt-5">
@@ -126,14 +126,10 @@ export default function EnterPage() {
           >
             Create account
           </button>
-          <p className="text-center text-[11px] text-fg-muted/85 -mt-1 leading-relaxed">
-            Demo only — screen name stays in this browser. Email is not stored on a server.
-          </p>
         </form>
 
         <p className="mt-10 text-[11px] text-fg-muted/80 text-center max-w-xs leading-relaxed">
-          Adult portal · present as your Vessel. RP chat and voice live here. Fields are
-          cosmetic — this build is labeled Demo.
+          Adult portal · present as your Vessel. RP chat and voice live here.
         </p>
       </div>
     </div>

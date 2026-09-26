@@ -14,6 +14,7 @@ export default function MapPage() {
   const [filter, setFilter] = useState<Filter>("all");
   const [sel, setSel] = useState<Selection>({ kind: "region", id: "virelios" });
   const [hoverId, setHoverId] = useState<string | null>(null);
+  const [hallsOpen, setHallsOpen] = useState(false);
 
   const region = useMemo(
     () => MAP_REGIONS.find((r) => r.id === (sel.kind === "region" ? sel.id : "")),
@@ -68,14 +69,17 @@ export default function MapPage() {
             type="button"
             className="chip text-xs"
             data-active={filter === id}
-            onClick={() => setFilter(id)}
+            onClick={() => {
+              setFilter(id);
+              if (id === "halls") setHallsOpen(true);
+            }}
           >
             {label}
           </button>
         ))}
       </div>
 
-      <div className="map-stage card p-0 overflow-hidden stone-panel rounded-2xl">
+      <div className="map-stage map-stage-hero card p-0 overflow-hidden stone-panel rounded-2xl">
         <svg
           viewBox="0 0 360 270"
           className="w-full h-auto map-svg"
@@ -225,44 +229,58 @@ export default function MapPage() {
       ) : null}
 
       {filter === "halls" || filter === "all" ? (
-        <div>
-          <div className="flex items-end justify-between gap-2 mb-2">
-            <h2 className="section-serif text-lg">Order Halls</h2>
-            <p className="text-[10px] uppercase tracking-wide text-fg-muted">
-              Class-gated · not Border Pass
-            </p>
-          </div>
-          <p className="text-xs text-fg-muted mb-3 leading-relaxed">
-            Class clubhouses open to any People, plus the Blood Hideaway for
-            vampires. Mix of hub/city attach and standalone landmarks.
-          </p>
-          <ul className="grid gap-2 sm:grid-cols-2">
-            {ORDER_HALLS.map((h) => (
-              <li key={h.id}>
-                <button
-                  type="button"
-                  className="hall-tile w-full text-left"
-                  data-active={sel.kind === "hall" && sel.id === h.id}
-                  onClick={() => selectHall(h.id)}
-                >
-                  <span className="hall-tile-glyph" aria-hidden>
-                    {h.glyph}
-                  </span>
-                  <span className="min-w-0">
-                    <span className="block text-[10px] uppercase tracking-[0.14em] text-gold">
-                      Order Hall · {h.tiedTo}
-                    </span>
-                    <span className="font-display text-base font-semibold text-fg block truncate">
-                      {h.name}
-                    </span>
-                    <span className="text-[11px] text-fg-muted block truncate">
-                      {h.mapPlace}
-                    </span>
-                  </span>
-                </button>
-              </li>
-            ))}
-          </ul>
+        <div className="map-halls-secondary">
+          <button
+            type="button"
+            className="map-halls-toggle w-full text-left"
+            aria-expanded={hallsOpen || filter === "halls"}
+            onClick={() => setHallsOpen((v) => !v)}
+          >
+            <span className="min-w-0">
+              <span className="section-serif text-lg text-fg block">Order Halls</span>
+              <span className="text-[10px] uppercase tracking-wide text-fg-muted">
+                Class-gated · not Border Pass · {ORDER_HALLS.length} holdings
+              </span>
+            </span>
+            <span className="text-fg-muted text-sm shrink-0" aria-hidden>
+              {hallsOpen || filter === "halls" ? "▾" : "▸"}
+            </span>
+          </button>
+          {hallsOpen || filter === "halls" ? (
+            <div className="mt-3">
+              <p className="text-xs text-fg-muted mb-3 leading-relaxed">
+                Class clubhouses open to any People, plus the Blood Hideaway for
+                vampires. Mix of hub/city attach and standalone landmarks.
+              </p>
+              <ul className="grid gap-2 sm:grid-cols-2">
+                {ORDER_HALLS.map((h) => (
+                  <li key={h.id}>
+                    <button
+                      type="button"
+                      className="hall-tile w-full text-left"
+                      data-active={sel.kind === "hall" && sel.id === h.id}
+                      onClick={() => selectHall(h.id)}
+                    >
+                      <span className="hall-tile-glyph" aria-hidden>
+                        {h.glyph}
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block text-[10px] uppercase tracking-[0.14em] text-gold">
+                          Order Hall · {h.tiedTo}
+                        </span>
+                        <span className="font-display text-base font-semibold text-fg block truncate">
+                          {h.name}
+                        </span>
+                        <span className="text-[11px] text-fg-muted block truncate">
+                          {h.mapPlace}
+                        </span>
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
         </div>
       ) : null}
 

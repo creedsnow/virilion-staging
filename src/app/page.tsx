@@ -221,9 +221,6 @@ export default function RealmPage() {
             </div>
           ))}
         </div>
-        <p className="text-[10px] text-fg-muted/70 tracking-wide">
-          Presence stubs · demo cast — not live world data
-        </p>
       </section>
 
       {/* Coming up */}
@@ -254,9 +251,6 @@ export default function RealmPage() {
             </article>
           ))}
         </div>
-        <p className="text-[10px] text-fg-muted/70 tracking-wide">
-          Demo calendar rhythm — venues may move as Map settles
-        </p>
       </section>
 
       {/* Codex stub */}
@@ -290,7 +284,7 @@ export default function RealmPage() {
       </Link>
 
       <p className="text-[11px] text-fg-muted/75 text-center pt-1">
-        Player {player?.screenName || "Traveler"} · Demo stubs · in-app home
+        Player {player?.screenName || "Traveler"} · in-app home
       </p>
     </div>
   );

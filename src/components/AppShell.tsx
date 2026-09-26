@@ -11,35 +11,6 @@ import { getAgeOk, getPlayer, getVessel } from "@/lib/storage";
 
 const PUBLIC = new Set(["/enter", "/rules"]);
 
-function IconBell() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path
-        d="M6.5 9.5a5.5 5.5 0 0 1 11 0c0 4.2 1.5 5.8 1.5 5.8H5s1.5-1.6 1.5-5.8Z"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M10 18.5a2 2 0 0 0 4 0"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function IconSliders() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path d="M4 8h10M18 8h2M4 16h2M10 16h10" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-      <circle cx="16" cy="8" r="2.25" stroke="currentColor" strokeWidth="1.6" />
-      <circle cx="8" cy="16" r="2.25" stroke="currentColor" strokeWidth="1.6" />
-    </svg>
-  );
-}
-
 function IconMoon() {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
@@ -119,7 +90,6 @@ export function AppShell({ children }: { children: ReactNode }) {
   const showNav =
     hasPlayer && pathname !== "/enter" && !pathname.startsWith("/rite");
   const isEnter = pathname === "/enter";
-  const isRealm = pathname === "/";
   const subtitle =
     pathname === "/"
       ? "The World Feed"
@@ -175,34 +145,6 @@ export function AppShell({ children }: { children: ReactNode }) {
                 >
                   Rules
                 </a>
-              ) : null}
-              {showNav && isRealm ? (
-                <span className="pill-ok" title="Demo cast — not live world count">
-                  <span className="h-1.5 w-1.5 rounded-full bg-ok animate-pulse" />
-                  Demo cast
-                </span>
-              ) : null}
-              {showNav ? (
-                <>
-                  <button
-                    type="button"
-                    className="header-icon-btn opacity-50 cursor-not-allowed"
-                    aria-label="Filters · Coming soon"
-                    title="Filters · Coming soon"
-                    disabled
-                  >
-                    <IconSliders />
-                  </button>
-                  <button
-                    type="button"
-                    className="header-icon-btn relative opacity-50 cursor-not-allowed"
-                    aria-label="Notifications · Coming soon"
-                    title="Notifications · Coming soon"
-                    disabled
-                  >
-                    <IconBell />
-                  </button>
-                </>
               ) : null}
               <button
                 type="button"

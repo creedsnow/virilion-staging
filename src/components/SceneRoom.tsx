@@ -83,8 +83,8 @@ export function SceneRoom({
             <p className="text-[10px] uppercase tracking-[0.12em] text-fg-muted mt-1.5">
               In-app text · Join call = voice here · 18+ · present as Vessel
             </p>
-            <p className="text-[11px] text-fg-muted mt-1.5 leading-relaxed">
-              Chat is a <strong className="text-fg">this-browser demo</strong> until shared backend.
+            <p className="text-[10px] text-fg-muted/75 mt-1.5 tracking-wide">
+              Chat stays in this browser until shared backend.
             </p>
           </div>
           <button

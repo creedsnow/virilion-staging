@@ -1590,9 +1590,35 @@ body {
     0 0 40px color-mix(in srgb, var(--aura) 18%, transparent),
     inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
+.map-stage-hero {
+  min-height: 17.5rem;
+}
+.map-stage-hero .map-svg {
+  min-height: 17.5rem;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 360 / 270;
+}
 .map-svg {
   background: #0a0812;
   display: block;
+}
+.map-halls-secondary {
+  border-top: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
+  padding-top: 0.85rem;
+  opacity: 0.96;
+}
+.map-halls-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.35rem 0.15rem;
+  border-radius: 0.65rem;
+  transition: background 0.15s;
+}
+.map-halls-toggle:hover {
+  background: color-mix(in srgb, var(--fg) 4%, transparent);
 }
 
 .scene-seat {
