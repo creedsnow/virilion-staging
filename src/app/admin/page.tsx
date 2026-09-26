@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import {
   approvePendingVessel,
   getPendingVessels,
   getVessel,
+  rejectPendingVessel,
   setVessel,
 } from "@/lib/storage";
 import type { Vessel } from "@/lib/types";
@@ -26,6 +28,18 @@ export default function AdminPage() {
     if (approved && current && current.id === id) {
       setVessel(approved);
     }
+    reload();
+  }
+
+  function reject(id: string) {
+    if (
+      !confirm(
+        "Reject / clear this pending vessel? Demo only — removes it from the queue and wipes it if it is your active vessel so they can re-Rite."
+      )
+    ) {
+      return;
+    }
+    rejectPendingVessel(id);
     reload();
   }
 
@@ -66,24 +80,42 @@ export default function AdminPage() {
                   {v.classCustom ? ` (${v.classCustom})` : ""}
                 </p>
               </div>
-              <button
-                type="button"
-                className="btn-gold text-xs py-2 shrink-0"
-                onClick={() => approve(v.id)}
-              >
-                Approve
-              </button>
+              <div className="flex flex-col gap-1.5 shrink-0">
+                <button
+                  type="button"
+                  className="btn-gold text-xs py-2"
+                  onClick={() => approve(v.id)}
+                >
+                  Approve
+                </button>
+                <button
+                  type="button"
+                  className="btn-ghost text-xs py-1.5 text-danger border-danger/40"
+                  onClick={() => reject(v.id)}
+                  title="Demo stub — clears queue entry"
+                >
+                  Reject / clear
+                </button>
+              </div>
             </li>
           ))}
         </ul>
       )}
 
-      <div className="stub-panel px-4 py-4">
-        <p className="section-kicker mb-1">Coming soon</p>
+      <div className="stub-panel px-4 py-4 space-y-2">
+        <p className="section-kicker mb-1">Reject path</p>
+        <p className="text-xs text-fg-muted leading-relaxed">
+          Reject / clear is a demo stub: drops the pending entry and wipes the local vessel if it
+          matched, so the player can re-Rite. No email, no appeal queue.
+        </p>
+        <p className="section-kicker mb-1 pt-2">Coming soon</p>
         <p className="font-display text-base text-fg">Reports · place gates · live GM tools</p>
         <p className="text-xs text-fg-muted mt-1.5 leading-relaxed">
           Honest stubs only. No invented features in this staging shell.
         </p>
+        <Link href="/self" className="text-xs text-gold hover:text-gold-soft inline-block pt-1">
+          ← Self status
+        </Link>
       </div>
     </div>
   );

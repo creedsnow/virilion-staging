@@ -205,7 +205,7 @@ export default function RitePage() {
     };
     setVessel(vessel);
     if (pending) addPendingVessel(vessel);
-    router.replace("/");
+    router.replace(pending ? "/self?pending=1" : "/");
   }
 
   function copyPrompt() {
@@ -570,8 +570,9 @@ export default function RitePage() {
             />
             {bio ? <Row label="Bio" value={bio} /> : null}
             {needsGmApproval(people, style, classId) ? (
-              <p className="text-gold text-xs pt-2 border-t border-border/60">
-                Custom selection → status pending_gm until a GM approves (see Self / Admin).
+              <p className="text-gold text-xs pt-2 border-t border-border/60 leading-relaxed">
+                Custom selection → <strong>pending_gm</strong>. After submit you&apos;ll land on Self
+                with links to status and <strong>/admin</strong> Approve (or Reject / clear).
               </p>
             ) : (
               <p className="text-ok text-xs pt-2 border-t border-border/60">

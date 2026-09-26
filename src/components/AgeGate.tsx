@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { setAgeOk } from "@/lib/storage";
 
 export function AgeGate({ onConfirm }: { onConfirm: () => void }) {
@@ -64,8 +65,11 @@ export function AgeGate({ onConfirm }: { onConfirm: () => void }) {
             </li>
           </ul>
           <p className="text-xs text-fg-muted/90 border-t border-border/70 pt-3">
-            Full community rules live in the Codex. This gate asks only that you are an
-            adult and will honor consent.
+            Full community rules live in-app under{" "}
+            <Link href="/rules" className="text-gold hover:text-gold-soft">
+              Rules
+            </Link>
+            . This gate asks only that you are an adult and will honor consent.
           </p>
         </div>
 

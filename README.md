@@ -50,32 +50,18 @@ npm start       # serve production build
 
 ## Staging deploy (Vercel)
 
-Prefer Vercel free hobby:
+**Live:** https://virilion-staging.vercel.app
+
+CLI deploy works (project linked; `npx vercel whoami` as Creed). From repo root:
 
 ```bash
-# from repo root, logged into Vercel CLI / linked project
-npx vercel --yes
-npx vercel --prod --yes   # when ready to promote
+npm run build
+npx vercel --yes --prod
 ```
 
-Or connect the GitHub repo (`creedsnow/virilion-staging`) in the Vercel dashboard → Import → Deploy.
+**GitHub Import / auto-deploy** is optional until the Vercel GitHub App is granted access to `creedsnow/virilion-staging`. Until then, ship with CLI after each push.
 
 Environment: none required for this demo slice.
-
-### Deploy blocker (box state 2026-09-26)
-
-Vercel CLI on this box is **logged out** (`npx vercel whoami` → Logged out). Device login was started but cannot be completed unattended.
-
-**Parent / Creed — pick one:**
-
-1. **Dashboard (easiest):** open https://vercel.com/new → Import `creedsnow/virilion-staging` (GitHub already connected via `gh`) → Deploy. Staging URL appears in the project.
-2. **CLI on a machine where Creed can approve OAuth:**
-   ```bash
-   cd virilion-staging
-   npx vercel login
-   npx vercel --yes
-   npx vercel --prod --yes
-   ```
 
 ## Fix loop (for Creed)
 
@@ -99,7 +85,8 @@ Canon questions → Virilion GM / Launch Planner — developers do not invent lo
 | `/weave` | Bonds |
 | `/dice` | d20 ritual |
 | `/self` | Vessel \| Player |
-| `/admin` | Approve pending_gm vessels |
+| `/rules` | Community rules (21) in-app |
+| `/admin` | Approve / reject pending_gm vessels |
 
 ## Non-goals (this slice)
 

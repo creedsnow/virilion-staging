@@ -1,7 +1,8 @@
 export interface OrderHall {
   id: string;
   name: string;
-  channel: string;
+  /** In-app hall place label (not a Discord channel). */
+  hallLabel: string;
   tiedTo: string;
   mapPlace: string;
   /** From DESIGN_ORDER_HALLS_MAP.md — hub/city attach vs standalone landmark. */
@@ -16,7 +17,7 @@ export const ORDER_HALLS: OrderHall[] = [
   {
     id: "dawns-chapel",
     name: "Dawn's Chapel",
-    channel: "#dawns-chapel",
+    hallLabel: "Hall · Dawn's Chapel",
     tiedTo: "Priest",
     mapPlace: "Virelios (faith quarter)",
     placement: "hub",
@@ -26,7 +27,7 @@ export const ORDER_HALLS: OrderHall[] = [
   {
     id: "crusaders-hall",
     name: "Crusaders' Hall",
-    channel: "#crusaders-hall",
+    hallLabel: "Hall · Crusaders' Hall",
     tiedTo: "Paladin",
     mapPlace: "War Colleges region — own hall",
     placement: "standalone",
@@ -36,7 +37,7 @@ export const ORDER_HALLS: OrderHall[] = [
   {
     id: "hall-of-the-elements",
     name: "Hall of the Elements",
-    channel: "#hall-of-the-elements",
+    hallLabel: "Hall · Hall of the Elements",
     tiedTo: "Shaman",
     mapPlace: "High Mountains — peak shrine",
     placement: "standalone",
@@ -46,7 +47,7 @@ export const ORDER_HALLS: OrderHall[] = [
   {
     id: "thieves-hall",
     name: "Thieves' Hall",
-    channel: "#thieves-hall",
+    hallLabel: "Hall · Thieves' Hall",
     tiedTo: "Rogue",
     mapPlace: "The Undercity (Virelios)",
     placement: "hub",
@@ -56,7 +57,7 @@ export const ORDER_HALLS: OrderHall[] = [
   {
     id: "the-mead-halls",
     name: "The Mead Halls",
-    channel: "#the-mead-halls",
+    hallLabel: "Hall · The Mead Halls",
     tiedTo: "Warrior",
     mapPlace: "War Colleges region — feast campus",
     placement: "standalone",
@@ -66,7 +67,7 @@ export const ORDER_HALLS: OrderHall[] = [
   {
     id: "the-arcane-academy",
     name: "The Arcane Academy",
-    channel: "#the-arcane-academy",
+    hallLabel: "Hall · The Arcane Academy",
     tiedTo: "Mage",
     mapPlace: "Virelios (near Bardwook)",
     placement: "hub",
@@ -76,7 +77,7 @@ export const ORDER_HALLS: OrderHall[] = [
   {
     id: "the-secret-wilds",
     name: "The Secret Wilds",
-    channel: "#the-secret-wilds",
+    hallLabel: "Hall · The Secret Wilds",
     tiedTo: "Druid",
     mapPlace: "Deep Grove — own wilds",
     placement: "standalone",
@@ -86,7 +87,7 @@ export const ORDER_HALLS: OrderHall[] = [
   {
     id: "bell-hall-ruins",
     name: "Bell Hall Ruins",
-    channel: "#bell-hall-ruins",
+    hallLabel: "Hall · Bell Hall Ruins",
     tiedTo: "Warlock",
     mapPlace: "The Wastes — own ruin",
     placement: "standalone",
@@ -96,7 +97,7 @@ export const ORDER_HALLS: OrderHall[] = [
   {
     id: "the-sacred-crypts",
     name: "The Sacred Crypts",
-    channel: "#the-sacred-crypts",
+    hallLabel: "Hall · The Sacred Crypts",
     tiedTo: "Necromancer",
     mapPlace: "Stone Halls mountains — crypt campus",
     placement: "standalone",
@@ -106,7 +107,7 @@ export const ORDER_HALLS: OrderHall[] = [
   {
     id: "golem-university",
     name: "Golem University",
-    channel: "#golem-university",
+    hallLabel: "Hall · Golem University",
     tiedTo: "Golemancer",
     mapPlace: "Stone Halls region — craft campus",
     placement: "standalone",
@@ -116,7 +117,7 @@ export const ORDER_HALLS: OrderHall[] = [
   {
     id: "the-bellsong-auditorium",
     name: "The Bellsong Auditorium",
-    channel: "#the-bellsong-auditorium",
+    hallLabel: "Hall · The Bellsong Auditorium",
     tiedTo: "Bard",
     mapPlace: "Virelios (Market/Pub)",
     placement: "hub",
@@ -126,7 +127,7 @@ export const ORDER_HALLS: OrderHall[] = [
   {
     id: "the-wolfclad-lodge",
     name: "The Wolfclad Lodge",
-    channel: "#the-wolfclad-lodge",
+    hallLabel: "Hall · The Wolfclad Lodge",
     tiedTo: "Hunter",
     mapPlace: "Velkrath Wood — lodge clearing",
     placement: "standalone",
@@ -136,7 +137,7 @@ export const ORDER_HALLS: OrderHall[] = [
   {
     id: "steamwhistle-college",
     name: "Steamwhistle College",
-    channel: "#steamwhistle-college",
+    hallLabel: "Hall · Steamwhistle College",
     tiedTo: "Tinker",
     mapPlace: "Cassanova",
     placement: "city",
@@ -146,7 +147,7 @@ export const ORDER_HALLS: OrderHall[] = [
   {
     id: "the-monastery-of-the-fist",
     name: "The Monastery of the Fist",
-    channel: "#the-monastery-of-the-fist",
+    hallLabel: "Hall · The Monastery of the Fist",
     tiedTo: "Monk",
     mapPlace: "Southern Isles — own monastery",
     placement: "standalone",
@@ -156,7 +157,7 @@ export const ORDER_HALLS: OrderHall[] = [
   {
     id: "the-blood-hideaway",
     name: "The Blood Hideaway",
-    channel: "#the-blood-hideaway",
+    hallLabel: "Hall · The Blood Hideaway",
     tiedTo: "Vampires (affliction)",
     mapPlace: "Luminara Noctis — night district",
     placement: "city",

@@ -81,7 +81,10 @@ export function SceneRoom({
               <span className="text-gold-soft font-medium">{vessel.name}</span>
             </p>
             <p className="text-[10px] uppercase tracking-[0.12em] text-fg-muted mt-1.5">
-              In-app text · Join call = voice here
+              In-app text · Join call = voice here · 18+ · present as Vessel
+            </p>
+            <p className="text-[11px] text-fg-muted mt-1.5 leading-relaxed">
+              Chat is a <strong className="text-fg">this-browser demo</strong> until shared backend.
             </p>
           </div>
           <button
@@ -181,6 +184,9 @@ export function SceneRoom({
           Send
         </button>
       </form>
+      <p className="text-[10px] text-fg-muted/80 mt-1.5 text-center">
+        On another vessel&apos;s message, tap ··· for Report or Block (saved locally in this demo).
+      </p>
 
       {voiceOpen ? (
         <VoicePanel

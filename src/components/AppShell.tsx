@@ -9,7 +9,7 @@ import { DemoBadge } from "./DemoBadge";
 import { useTheme } from "./ThemeProvider";
 import { getAgeOk, getPlayer, getVessel } from "@/lib/storage";
 
-const PUBLIC = new Set(["/enter"]);
+const PUBLIC = new Set(["/enter", "/rules"]);
 
 function IconBell() {
   return (
@@ -91,7 +91,13 @@ export function AppShell({ children }: { children: ReactNode }) {
       router.replace("/enter");
       return;
     }
-    if (hasPlayer && !hasVessel && pathname !== "/rite" && pathname !== "/enter") {
+    if (
+      hasPlayer &&
+      !hasVessel &&
+      pathname !== "/rite" &&
+      pathname !== "/enter" &&
+      pathname !== "/rules"
+    ) {
       router.replace("/rite");
     }
   }, [ready, ageOk, hasPlayer, hasVessel, pathname, router]);
@@ -131,7 +137,11 @@ export function AppShell({ children }: { children: ReactNode }) {
                   ? "Bonds · Constellation"
                   : pathname.startsWith("/codex")
                     ? "The World Codex"
-                    : "Staging demo";
+                    : pathname.startsWith("/rules")
+                      ? "Community rules"
+                      : pathname.startsWith("/admin")
+                        ? "Demo GM"
+                        : "Staging demo";
 
   return (
     <div className={`min-h-dvh flex flex-col text-fg ${isEnter ? "" : "app-canvas"}`}>
@@ -154,33 +164,43 @@ export function AppShell({ children }: { children: ReactNode }) {
                   {subtitle}
                 </p>
               </div>
-              <DemoBadge className="hidden xs:inline-flex sm:inline-flex" />
+              <DemoBadge className="inline-flex shrink-0" />
             </div>
             <div className="flex items-center gap-1.5 shrink-0">
+              {showNav ? (
+                <a
+                  href="/rules"
+                  className="text-[10px] tracking-[0.12em] uppercase text-fg-muted hover:text-gold-soft px-1.5 hidden sm:inline"
+                  title="Community rules"
+                >
+                  Rules
+                </a>
+              ) : null}
               {showNav && isRealm ? (
-                <span className="pill-ok">
+                <span className="pill-ok" title="Demo cast — not live world count">
                   <span className="h-1.5 w-1.5 rounded-full bg-ok animate-pulse" />
-                  147 walking
+                  Demo cast
                 </span>
               ) : null}
               {showNav ? (
                 <>
                   <button
                     type="button"
-                    className="header-icon-btn"
-                    aria-label="Filters"
-                    title="Filters · soon"
+                    className="header-icon-btn opacity-50 cursor-not-allowed"
+                    aria-label="Filters · Coming soon"
+                    title="Filters · Coming soon"
+                    disabled
                   >
                     <IconSliders />
                   </button>
                   <button
                     type="button"
-                    className="header-icon-btn relative"
-                    aria-label="Notifications"
-                    title="5 · demo"
+                    className="header-icon-btn relative opacity-50 cursor-not-allowed"
+                    aria-label="Notifications · Coming soon"
+                    title="Notifications · Coming soon"
+                    disabled
                   >
                     <IconBell />
-                    <span className="notif-badge">5</span>
                   </button>
                 </>
               ) : null}

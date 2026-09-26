@@ -56,6 +56,10 @@ export default function ScenesPage() {
         </p>
       </div>
 
+      <p className="text-[11px] leading-relaxed text-fg-muted border border-border/70 rounded-xl px-3 py-2 bg-bg/40">
+        Chat is a <strong className="text-fg">this-browser demo</strong> (localStorage) until a shared backend ships.
+      </p>
+
       <ul className="space-y-3">
         {DEMO_SCENES.map((s) => (
           <li key={s.id}>

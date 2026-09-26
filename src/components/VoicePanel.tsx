@@ -196,6 +196,9 @@ export function VoicePanel({
             <p className="text-[11px] text-fg-muted mt-1">
               Stays in Virilion · never Discord-as-home
             </p>
+            <p className="text-[11px] text-gold-soft mt-1.5 leading-relaxed">
+              Voice is a <strong>this-browser demo</strong> until shared backend.
+            </p>
           </div>
           <button type="button" className="btn-ghost text-xs py-1.5 px-2.5 !min-h-0" onClick={leave}>
             Close

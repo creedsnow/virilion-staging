@@ -369,7 +369,7 @@ function HallCard({ hall, onRegion }: { hall: OrderHall; onRegion: () => void })
         <span className="demo-badge">
           {hall.placement === "standalone" ? "Standalone landmark" : "In / attached to place"}
         </span>
-        <span className="text-xs text-fg-muted">{hall.channel}</span>
+        <span className="text-xs text-fg-muted">{hall.hallLabel}</span>
       </div>
       {host ? (
         <button

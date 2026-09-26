@@ -5,6 +5,12 @@ import { PEOPLES } from "@/lib/canon/peoples";
 
 const SECTIONS = [
   {
+    href: "/rules",
+    title: "Rules · 21 locks",
+    blurb: "Community product rules — in-app.",
+    glyph: "☾",
+  },
+  {
     href: "/map",
     title: "World & places",
     blurb: "One vast world — map colour regions.",

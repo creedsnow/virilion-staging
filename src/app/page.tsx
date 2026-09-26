@@ -143,6 +143,23 @@ export default function RealmPage() {
           </div>
         </div>
 
+        {vessel.status === "pending_gm" ? (
+          <div className="relative z-[1] border-t border-gold/30 pt-3 space-y-2">
+            <p className="text-sm text-gold-soft font-medium">Awaiting GM approval</p>
+            <p className="text-xs text-fg-muted leading-relaxed">
+              Custom People / Style / Class needs a demo approve. Check status on Self, then open Admin.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <Link href="/self" className="btn-ghost text-xs py-1.5 px-3 !min-h-0">
+                Self status
+              </Link>
+              <Link href="/admin" className="btn-gold text-xs py-1.5 px-3 !min-h-0">
+                Open /admin
+              </Link>
+            </div>
+          </div>
+        ) : null}
+
         {vessel.bio ? (
           <p className="text-sm text-fg-muted leading-relaxed border-t border-border/55 pt-3 relative z-[1]">
             {vessel.bio}
@@ -213,8 +230,11 @@ export default function RealmPage() {
       <section className="space-y-3 feed-panel">
         <div className="flex items-baseline justify-between gap-3">
           <h2 className="section-serif text-fg">Coming up</h2>
-          <span className="text-[10px] font-semibold tracking-[0.14em] uppercase text-gold/80">
-            Calendar →
+          <span
+            className="text-[10px] font-semibold tracking-[0.14em] uppercase text-fg-muted/80"
+            title="Calendar ships later"
+          >
+            Coming soon
           </span>
         </div>
         <div className="h-scroll">

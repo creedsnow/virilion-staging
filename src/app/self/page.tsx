@@ -158,6 +158,19 @@ export default function SelfPage() {
                     </p>
                   </div>
                 </div>
+
+                {vessel.status === "pending_gm" ? (
+                  <div className="relative z-[1] border-t border-gold/30 pt-3 space-y-2">
+                    <p className="text-sm text-gold-soft font-medium">Next step · GM approve</p>
+                    <p className="text-xs text-fg-muted leading-relaxed">
+                      Custom selection is waiting. Open demo Admin to Approve (embodies the vessel)
+                      or Reject / clear (demo stub — re-Rite after).
+                    </p>
+                    <Link href="/admin" className="btn-gold text-xs py-2 px-3 inline-flex !min-h-0">
+                      Open /admin
+                    </Link>
+                  </div>
+                ) : null}
               </section>
 
               <section className="card stone-panel rounded-2xl space-y-2.5">
@@ -233,10 +246,18 @@ export default function SelfPage() {
             </div>
           </section>
 
+          <Link href="/rules" className="card stone-panel block rounded-2xl hover:border-gold/40 transition">
+            <p className="section-kicker mb-1">Community</p>
+            <p className="text-sm font-medium text-fg font-display text-lg">Rules · 21 locks</p>
+            <p className="text-xs text-fg-muted mt-0.5">
+              In-app product rules — not Discord
+            </p>
+          </Link>
+
           <Link href="/admin" className="card stone-panel block rounded-2xl hover:border-gold/40 transition">
             <p className="section-kicker mb-1">GM tools</p>
             <p className="text-sm font-medium text-fg font-display text-lg">Demo admin</p>
-            <p className="text-xs text-fg-muted mt-0.5">Approve pending custom vessels</p>
+            <p className="text-xs text-fg-muted mt-0.5">Approve or Reject / clear pending vessels</p>
           </Link>
 
           <div className="pt-1 space-y-2">

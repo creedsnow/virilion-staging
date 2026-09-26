@@ -108,6 +108,17 @@ export function approvePendingVessel(id: string): Vessel | null {
   return approved;
 }
 
+/** Demo reject = clear from queue. If it is the active vessel, wipe so they can re-Rite. */
+export function rejectPendingVessel(id: string): void {
+  if (!canUseStorage()) return;
+  const list = getPendingVessels().filter((v) => v.id !== id);
+  localStorage.setItem(KEYS.pending, JSON.stringify(list));
+  const current = getVessel();
+  if (current && current.id === id) {
+    localStorage.removeItem(KEYS.vessel);
+  }
+}
+
 export function clearSession(): void {
   if (!canUseStorage()) return;
   localStorage.removeItem(KEYS.player);
