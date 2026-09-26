@@ -16,6 +16,7 @@ import {
   wipeVesselForDemo,
   subscribeVessel,
 } from "@/lib/storage";
+import { logoutSession } from "@/lib/auth-client";
 import type { DemoPlayer, PresenceMode, Vessel } from "@/lib/types";
 import { usePresence } from "@/hooks/usePresence";
 
@@ -58,8 +59,11 @@ export default function SelfPage() {
   }, []);
 
   function logout() {
-    clearSession();
-    router.replace("/enter");
+    void (async () => {
+      await logoutSession();
+      clearSession();
+      router.replace("/enter");
+    })();
   }
 
   const peopleMeta =
@@ -323,10 +327,6 @@ export default function SelfPage() {
                   <Link href="/guilds" className="realm-ask-chip">
                     <span className="section-kicker block mb-0.5">Founding</span>
                     <span className="font-display text-base text-fg">Guilds</span>
-                  </Link>
-                  <Link href="/shop" className="realm-ask-chip">
-                    <span className="section-kicker block mb-0.5">Moonmarket</span>
-                    <span className="font-display text-base text-fg">Shop</span>
                   </Link>
                 </div>
               </section>

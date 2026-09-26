@@ -437,6 +437,23 @@ body {
   line-height: 1.4;
 }
 
+.enter-demo-btn {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  padding: 0.35rem 0.25rem;
+  font: inherit;
+}
+.enter-demo-btn:hover {
+  color: var(--gold-soft);
+}
+.enter-demo-btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
 .enter-divider {
   margin-top: 1.75rem;
   display: flex;

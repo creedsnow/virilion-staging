@@ -10,7 +10,7 @@ import { DemoBadge } from "./DemoBadge";
 import { UiAssetIcon } from "./UiAssetIcon";
 import { useTheme } from "./ThemeProvider";
 import { clearSession, getAgeOk, getPlayer, getVessel, subscribeVessel } from "@/lib/storage";
-import { wispStill } from "@/lib/assets";
+import { logoutSession } from "@/lib/auth-client";
 
 const PUBLIC = new Set(["/enter", "/rules"]);
 
@@ -99,11 +99,14 @@ export function AppShell({ children }: { children: ReactNode }) {
   }, [menuOpen]);
 
   function logout() {
-    clearSession();
-    setHasPlayer(false);
-    setHasVessel(false);
-    setMenuOpen(false);
-    router.replace("/enter");
+    void (async () => {
+      await logoutSession();
+      clearSession();
+      setHasPlayer(false);
+      setHasVessel(false);
+      setMenuOpen(false);
+      router.replace("/enter");
+    })();
   }
 
   useEffect(() => {
@@ -167,15 +170,11 @@ export function AppShell({ children }: { children: ReactNode }) {
                           ? "Coming up"
                           : pathname.startsWith("/guilds")
                             ? "Guilds"
-                            : pathname.startsWith("/shop")
-                              ? "Moonmarket"
-                              : pathname.startsWith("/wisp")
-                                ? "Companion"
-                                : pathname.startsWith("/rules")
-                                  ? "Community rules"
-                                  : pathname.startsWith("/admin")
-                                    ? "Demo GM"
-                                    : "Staging demo";
+                            : pathname.startsWith("/rules")
+                              ? "Community rules"
+                              : pathname.startsWith("/admin")
+                                ? "Demo GM"
+                                : "Staging demo";
 
   return (
     <div className={`min-h-dvh flex flex-col text-fg ${isEnter ? "" : "app-canvas"}`}>
@@ -209,27 +208,6 @@ export function AppShell({ children }: { children: ReactNode }) {
                 >
                   Rules
                 </a>
-              ) : null}
-              {showNav &&
-              !pathname.startsWith("/map") &&
-              !pathname.startsWith("/scenes") &&
-              !pathname.startsWith("/self") ? (
-                <Link
-                  href="/wisp"
-                  className="wisp-mote"
-                  aria-label="Wisp"
-                  title="Wisp"
-                >
-                  <span className="wisp-mote-glow" aria-hidden />
-                  <img
-                    src={wispStill(128)}
-                    alt=""
-                    width={22}
-                    height={22}
-                    className="wisp-mote-still"
-                    draggable={false}
-                  />
-                </Link>
               ) : null}
               {hasPlayer ? (
                 <div className="relative" ref={menuRef}>

@@ -25,6 +25,7 @@ import {
   setVessel,
   wipeVesselForDemo,
 } from "@/lib/storage";
+import { saveVesselToServer } from "@/lib/auth-client";
 import { codexClassCardSm, codexPeopleCardSm } from "@/lib/assets";
 import type { ClassId, PeopleId, RoleId, StyleId, Vessel } from "@/lib/types";
 
@@ -294,6 +295,8 @@ export default function RitePage() {
     };
     setVessel(vessel);
     if (pending) addPendingVessel(vessel);
+    // Real accounts: mirror vessel into Neon when a session cookie is present.
+    void saveVesselToServer(vessel);
     try {
       sessionStorage.setItem(
         "virilion_threshold",
