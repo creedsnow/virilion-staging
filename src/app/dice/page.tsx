@@ -39,13 +39,14 @@ export default function DicePage() {
   return (
     <div className="space-y-5">
       <div>
+        <p className="section-kicker mb-1">Ritual</p>
         <h1 className="text-2xl font-semibold text-fg">d20</h1>
         <p className="text-sm text-fg-muted mt-1">
           Premium dice ritual. Staging rolls client-side; social fairness authority later.
         </p>
       </div>
 
-      <div className="card flex flex-col items-center py-10 gap-4">
+      <div className="card stone-panel rounded-2xl flex flex-col items-center py-10 gap-4">
         <div
           className={`flex h-28 w-28 items-center justify-center rounded-2xl border-2 border-gold bg-bg-elevated text-4xl font-semibold text-gold-soft shadow-[0_0_40px_rgba(201,162,39,0.25)] ${
             rolling ? "animate-pulse" : ""

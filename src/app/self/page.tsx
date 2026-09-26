@@ -42,6 +42,7 @@ export default function SelfPage() {
   return (
     <div className="space-y-4">
       <div>
+        <p className="section-kicker mb-1">Identity</p>
         <h1 className="text-2xl font-semibold text-fg">Self</h1>
         <p className="text-sm text-fg-muted mt-1">
           Public face = Vessel. Player = account settings. One vessel only.
@@ -114,8 +115,8 @@ export default function SelfPage() {
               <span className="demo-badge ml-2">Demo account</span>
             </h2>
             <p className="text-xs text-fg-muted">
-              Demo Enter only. Magic-link / Discord OAuth optional later — Discord OAuth is
-              not required for the RP spine.
+              Demo Enter only. Real auth (magic-link shaped) ships later. RP chat and voice
+              stay in-app.
             </p>
           </div>
           <div className="card space-y-2">

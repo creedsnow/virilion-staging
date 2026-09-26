@@ -226,41 +226,49 @@ export default function RitePage() {
   }
 
   const stepLabel = STEPS[step];
+  const peopleMeta = people && people !== "custom" ? PEOPLES.find((p) => p.id === people) : null;
 
   return (
     <div className="space-y-5">
       <div>
-        <p className="text-xs uppercase tracking-widest text-gold mb-1">
-          Rite of Making · Demo
-        </p>
+        <p className="section-kicker mb-1">Rite of Making · Demo</p>
         <h1 className="text-2xl font-semibold text-fg">Forge your Vessel</h1>
         <p className="text-sm text-fg-muted mt-1">
-          Step {step + 1} of {STEPS.length}: {stepLabel}. One vessel only. Adult male gay /
-          male-attracted characters.
+          Role first. One vessel only. Adult male gay / male-attracted characters.
         </p>
       </div>
 
-      <div className="flex gap-1 flex-wrap">
-        {STEPS.map((s, i) => (
-          <span
-            key={s}
-            className={`h-1.5 flex-1 min-w-6 rounded-full ${
-              i <= step ? "bg-gold" : "bg-border"
-            }`}
-          />
-        ))}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between gap-2">
+          <p className="text-xs text-gold tracking-wide uppercase">
+            Step {step + 1} of {STEPS.length}
+          </p>
+          <p className="text-xs text-fg-muted font-medium">{stepLabel}</p>
+        </div>
+        <div className="flex gap-1.5">
+          {STEPS.map((s, i) => (
+            <span
+              key={s}
+              title={s}
+              className={`h-1.5 flex-1 rounded-full transition-colors ${
+                i < step ? "bg-gold/70" : i === step ? "bg-gold" : "bg-border"
+              }`}
+            />
+          ))}
+        </div>
       </div>
 
       {error ? (
-        <p className="text-sm text-danger border border-danger/40 rounded-lg px-3 py-2">
+        <p className="text-sm text-danger border border-danger/40 rounded-lg px-3 py-2 bg-danger/5">
           {error}
         </p>
       ) : null}
 
       {step === 0 && (
-        <div className="space-y-3">
-          <p className="text-sm text-fg-muted">
-            Role first filters Peoples (Sorns = Bottom-only; Serynth = Top-only).
+        <div className="space-y-4">
+          <p className="gate-note">
+            <strong className="text-gold-soft">Role first</strong> filters Peoples.
+            Sorns appear for Bottom only; Serynth for Top only. Verse cannot pick either.
           </p>
           <div className="flex flex-wrap gap-2">
             {ROLES.map((r) => (
@@ -276,7 +284,7 @@ export default function RitePage() {
             ))}
           </div>
           {role ? (
-            <p className="text-xs text-fg-muted">
+            <p className="text-xs text-fg-muted leading-relaxed">
               {ROLES.find((r) => r.id === role)?.note}
             </p>
           ) : null}
@@ -287,10 +295,10 @@ export default function RitePage() {
         <div className="space-y-3">
           {carryVisible || role === "verse" || role === "bottom" ? (
             <>
-              <label className="flex items-start gap-3 card cursor-pointer">
+              <label className="flex items-start gap-3 card cursor-pointer hover:border-gold/30 transition">
                 <input
                   type="checkbox"
-                  className="mt-1"
+                  className="mt-1.5 h-4 w-4 accent-[var(--gold)]"
                   checked={canCarry}
                   onChange={(e) => setCanCarry(e.target.checked)}
                 />
@@ -310,15 +318,25 @@ export default function RitePage() {
               </p>
             </>
           ) : (
-            <p className="text-sm text-fg-muted">Can carry does not apply to Top.</p>
+            <p className="gate-note">Can carry does not apply to Top.</p>
           )}
         </div>
       )}
 
       {step === 2 && (
         <div className="space-y-3">
-          <p className="text-sm text-fg-muted">
-            Exactly 14 Peoples. No Veilborn. Custom → GM approval.
+          <p className="gate-note">
+            Exactly <strong className="text-fg">14 Peoples</strong>. No Veilborn. Custom → GM
+            approval.
+            {role === "bottom" ? (
+              <> <strong className="text-gold-soft">Sorns</strong> available (Bottom-only).</>
+            ) : null}
+            {role === "top" ? (
+              <> <strong className="text-gold-soft">Serynth</strong> available (Top-only).</>
+            ) : null}
+            {role === "verse" ? (
+              <> Sorns and Serynth are locked out for Verse.</>
+            ) : null}
           </p>
           <div className="flex flex-wrap gap-2">
             {allowedPeople.map((id) => {
@@ -337,13 +355,18 @@ export default function RitePage() {
               );
             })}
           </div>
-          {people && people !== "custom" ? (
-            <p className="text-xs text-fg-muted">
-              {PEOPLES.find((p) => p.id === people)?.racialAbility} ·{" "}
-              {PEOPLES.find((p) => p.id === people)?.homeland}
-              {PEOPLES.find((p) => p.id === people)?.roleNote
-                ? ` · ${PEOPLES.find((p) => p.id === people)?.roleNote}`
-                : ""}
+          {peopleMeta ? (
+            <p className="text-xs text-fg-muted leading-relaxed">
+              {peopleMeta.racialAbility} · {peopleMeta.homeland}
+              {peopleMeta.roleNote ? ` · ${peopleMeta.roleNote}` : ""}
+            </p>
+          ) : null}
+          {people === "sorns" ? (
+            <p className="gate-warn">Sorns are Bottom-only — hard lock honored.</p>
+          ) : null}
+          {people === "serynth" ? (
+            <p className="gate-warn">
+              Serynth are Top-only — Can carry stays off.
             </p>
           ) : null}
           {people === "custom" ? (
@@ -359,8 +382,9 @@ export default function RitePage() {
 
       {step === 3 && people && (
         <div className="space-y-3">
-          <p className="text-sm text-fg-muted">
-            Styles filtered by People. Daddy ≠ Bear; Daddy banned for Smols only.
+          <p className="gate-note">
+            Styles filtered by People. <strong className="text-fg">Daddy ≠ Bear</strong>.
+            Daddy banned for Smols only; Bear bans unchanged (Smols, Trahgs, Kaelir, Serynth).
           </p>
           <div className="flex flex-wrap gap-2">
             {STYLES.map((s) => {
@@ -384,6 +408,12 @@ export default function RitePage() {
               );
             })}
           </div>
+          {people === "smols" ? (
+            <p className="gate-warn">Daddy is banned for Smols — chips are disabled.</p>
+          ) : null}
+          {style && !allowedStyles.includes(style) ? (
+            <p className="text-sm text-danger">{styleBlockedReason(people, style)}</p>
+          ) : null}
           {style === "custom" ? (
             <input
               className="input"
@@ -397,6 +427,9 @@ export default function RitePage() {
 
       {step === 4 && (
         <div className="space-y-3">
+          <p className="text-sm text-fg-muted">
+            Class ties to Order Hall. Custom → GM approval.
+          </p>
           <div className="flex flex-wrap gap-2">
             {CLASSES.map((c) => (
               <button
@@ -410,13 +443,9 @@ export default function RitePage() {
               </button>
             ))}
           </div>
-          {kaelirWarn ? (
-            <p className="text-xs text-gold border border-gold/30 rounded-lg px-3 py-2">
-              {kaelirWarn}
-            </p>
-          ) : null}
+          {kaelirWarn ? <p className="gate-warn">{kaelirWarn}</p> : null}
           {classId && classId !== "custom" ? (
-            <p className="text-xs text-fg-muted">
+            <p className="text-xs text-fg-muted leading-relaxed">
               {CLASSES.find((c) => c.id === classId)?.blurb} Order Hall:{" "}
               {CLASSES.find((c) => c.id === classId)?.orderHall}
             </p>
@@ -465,7 +494,7 @@ export default function RitePage() {
 
       {step === 6 && role && people && style && classId && (
         <div className="space-y-4">
-          <div className="card space-y-2 text-sm">
+          <div className="card stone-panel rounded-2xl space-y-2 text-sm">
             <Row label="Name" value={name} />
             <Row label="Role" value={role} />
             <Row
@@ -504,11 +533,13 @@ export default function RitePage() {
             />
             {bio ? <Row label="Bio" value={bio} /> : null}
             {needsGmApproval(people, style, classId) ? (
-              <p className="text-gold text-xs pt-2">
+              <p className="text-gold text-xs pt-2 border-t border-border/60">
                 Custom selection → status pending_gm until a GM approves (see Self / Admin).
               </p>
             ) : (
-              <p className="text-ok text-xs pt-2">Ready to embody — no GM gate needed.</p>
+              <p className="text-ok text-xs pt-2 border-t border-border/60">
+                Ready to embody — no GM gate needed.
+              </p>
             )}
           </div>
           <div className="flex flex-wrap gap-2">
@@ -523,7 +554,7 @@ export default function RitePage() {
         </div>
       )}
 
-      <div className="flex gap-3 pt-2">
+      <div className="flex gap-3 pt-2 sticky bottom-2">
         {step > 0 ? (
           <button type="button" className="btn-ghost" onClick={back}>
             Back

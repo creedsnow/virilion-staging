@@ -64,17 +64,18 @@ export function SceneRoom({
     <div className="flex flex-col h-[calc(100dvh-8rem)]">
       <div className="flex items-start justify-between gap-2 mb-3">
         <div>
-          <button type="button" className="text-xs text-gold mb-1" onClick={onBack}>
+          <button type="button" className="text-xs text-gold mb-1 hover:text-gold-soft" onClick={onBack}>
             ← Scenes
           </button>
           <h1 className="text-lg font-semibold text-fg">{scene.title}</h1>
           <p className="text-xs text-fg-muted">
-            {scene.place} · Speak as <span className="text-gold-soft">{vessel.name}</span>
+            {scene.place} · Present as{" "}
+            <span className="text-gold-soft font-medium">{vessel.name}</span>
           </p>
         </div>
         <button
           type="button"
-          className="btn-gold text-xs py-2 px-3"
+          className="btn-gold text-xs py-2 px-3 shrink-0"
           onClick={() => setVoiceOpen(true)}
         >
           Join call
@@ -92,18 +93,28 @@ export function SceneRoom({
             <div key={m.id} className="relative group">
               <div className="flex items-baseline justify-between gap-2">
                 <span className="text-sm font-medium text-gold-soft">{m.vesselName}</span>
-                <button
-                  type="button"
-                  className="text-[10px] text-fg-muted opacity-60 hover:opacity-100"
-                  onClick={() => setMenuId(menuId === m.id ? null : m.id)}
-                >
-                  ···
-                </button>
+                <div className="flex items-center gap-2">
+                  <time
+                    className="text-[10px] text-fg-muted tabular-nums"
+                    dateTime={m.at}
+                    title={new Date(m.at).toLocaleString()}
+                  >
+                    {new Date(m.at).toLocaleTimeString([], {
+                      hour: "numeric",
+                      minute: "2-digit",
+                    })}
+                  </time>
+                  <button
+                    type="button"
+                    className="text-[10px] text-fg-muted opacity-60 hover:opacity-100 px-1 min-h-[28px]"
+                    onClick={() => setMenuId(menuId === m.id ? null : m.id)}
+                    aria-label="Message actions"
+                  >
+                    ···
+                  </button>
+                </div>
               </div>
-              <p className="text-sm text-fg whitespace-pre-wrap">{m.text}</p>
-              <p className="text-[10px] text-fg-muted">
-                {new Date(m.at).toLocaleTimeString()}
-              </p>
+              <p className="text-sm text-fg whitespace-pre-wrap mt-0.5">{m.text}</p>
               {menuId === m.id && m.vesselId !== vessel.id ? (
                 <div className="absolute right-0 top-5 z-10 card py-2 px-2 space-y-1 shadow-lg text-xs">
                   <button

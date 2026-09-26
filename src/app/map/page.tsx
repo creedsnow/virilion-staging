@@ -28,14 +28,15 @@ export default function MapPage() {
   return (
     <div className="space-y-4">
       <div>
+        <p className="section-kicker mb-1">World</p>
         <h1 className="text-2xl font-semibold text-fg">Map</h1>
-        <p className="text-sm text-fg-muted mt-1">
-          One vast world. Color regions. Tap a place card. No Google-Maps chrome. Wisp stays
-          off the map.
+        <p className="text-sm text-fg-muted mt-1 leading-relaxed">
+          One vast world. Color regions — tap a place. No Google-Maps chrome. Wisp stays off
+          the map.
         </p>
       </div>
 
-      <div className="card p-0 overflow-hidden">
+      <div className="card p-0 overflow-hidden stone-panel rounded-2xl">
         <svg viewBox="0 0 360 220" className="w-full h-auto bg-[#0a0812]" aria-label="World sketch">
           <rect width="360" height="220" fill="#0a0812" />
           {PEOPLES.map((p, i) => {
@@ -84,7 +85,7 @@ export default function MapPage() {
         </svg>
       </div>
 
-      <div className="card space-y-2">
+      <div className="card space-y-2 stone-panel rounded-2xl">
         <h2 className="font-medium text-gold-soft">{place.name}</h2>
         <p className="text-sm text-fg-muted leading-relaxed">{place.note}</p>
       </div>

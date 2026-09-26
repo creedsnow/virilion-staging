@@ -204,8 +204,7 @@ export function VoicePanel({
         )}
         {status === "error" && (
           <p className="text-sm text-danger">
-            {error}. Allow mic access to join the voice shell. This is in-app WebRTC demo —
-            not Discord.
+            {error}. Allow mic access to join the in-app voice shell (WebRTC demo).
           </p>
         )}
         {status === "live" && (
@@ -269,8 +268,7 @@ export function VoicePanel({
           </button>
         </div>
         <p className="text-[11px] text-fg-muted leading-relaxed">
-          Staging voice: local mic + WebRTC loopback + shared presence. Multi-browser mesh
-          signaling ships next; never Discord.
+          Staging voice: local mic + WebRTC loopback + shared presence. Multi-browser mesh signaling ships next — still in-app.
         </p>
       </div>
     </div>

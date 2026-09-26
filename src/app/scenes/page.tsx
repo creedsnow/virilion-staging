@@ -33,10 +33,11 @@ export default function ScenesPage() {
   return (
     <div className="space-y-4">
       <div>
+        <p className="section-kicker mb-1">In-app RP</p>
         <h1 className="text-2xl font-semibold text-fg">Scenes</h1>
-        <p className="text-sm text-fg-muted mt-1">
-          Discover live RP → open <strong className="text-fg">in-app</strong> scene rooms.
-          Voice is in-app Join call. Discord is not the RP home.
+        <p className="text-sm text-fg-muted mt-1 leading-relaxed">
+          Discover live rooms → open text RP here. Join call opens in-app voice —
+          never leaves Virilion.
         </p>
       </div>
       <ul className="space-y-3">
@@ -44,16 +45,16 @@ export default function ScenesPage() {
           <li key={s.id}>
             <button
               type="button"
-              className="card w-full text-left hover:border-gold/50 transition"
+              className="card w-full text-left hover:border-gold/50 transition stone-panel rounded-2xl min-h-[5.5rem]"
               onClick={() => setActive(s)}
             >
-              <div className="flex justify-between gap-2 items-start">
-                <div>
+              <div className="flex justify-between gap-3 items-start">
+                <div className="min-w-0">
                   <h2 className="font-medium text-fg">{s.title}</h2>
-                  <p className="text-xs text-fg-muted mt-0.5">{s.place}</p>
-                  <p className="text-sm text-fg-muted mt-2">{s.vibe}</p>
+                  <p className="text-xs text-gold/90 mt-0.5 tracking-wide">{s.place}</p>
+                  <p className="text-sm text-fg-muted mt-2 leading-relaxed">{s.vibe}</p>
                 </div>
-                <span className="text-[10px] uppercase tracking-wide text-ok border border-ok/40 rounded-full px-2 py-0.5">
+                <span className="shrink-0 text-[10px] uppercase tracking-wide text-ok border border-ok/40 rounded-full px-2 py-0.5">
                   {s.seats}
                 </span>
               </div>
