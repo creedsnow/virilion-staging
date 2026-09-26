@@ -3,39 +3,42 @@
 :root,
 [data-theme="dark"] {
   color-scheme: dark;
-  --bg: #0b0a12;
-  --bg-elevated: #15131f;
-  --bg-card: #1c1828;
-  --fg: #f3ebdd;
+  /* Claude Design demo identity (dark / Moonlight) */
+  --bg: #0c0a12;
+  --bg-elevated: #14121c;
+  --bg-card: #1a1724;
+  --fg: #f2ece2;
   --fg-muted: #a89986;
   --border: #322c42;
-  --gold: #c9a227;
-  --gold-soft: #e4c86a;
-  --gold-deep: #8a6e14;
-  --plum: #6b3d6e;
-  --jewel: #4a6fa5;
-  --aura: #7b5ea7;
+  --gold: #c9a35b;
+  --gold-soft: #e8c887;
+  --gold-deep: #a67c3a;
+  --title: #f6e2b8;
+  --plum: #3a2a3c;
+  --jewel: #59a7ee;
+  --aura: #8f6bff;
   --moon: #c8d4e8;
+  --storm: #a8d4ff;
   --danger: #b84a4a;
   --ok: #4a8f6a;
   --ok-soft: #2d5a42;
   --parchment: #1f1c28;
   --stone: #16141e;
   --nav: #100e18;
-  --nav-bar: #16131f;
+  --nav-bar: #14121c;
   --sky-top: #0a0816;
-  --sky-mid: #1a1030;
-  --sky-bottom: #0b0a12;
+  --sky-mid: #161028;
+  --sky-bottom: #0c0a12;
   --shadow-soft: 0 12px 40px rgba(0, 0, 0, 0.5);
   --shadow-card: 0 8px 28px rgba(0, 0, 0, 0.35);
-  --shadow-gold: 0 8px 32px rgba(201, 162, 39, 0.3);
-  --shadow-aura: 0 0 42px rgba(123, 94, 167, 0.6);
+  --shadow-gold: 0 10px 34px rgba(201, 163, 91, 0.3);
+  --shadow-aura: 0 0 70px rgba(143, 107, 255, 0.5);
   --ring: color-mix(in srgb, var(--gold) 55%, transparent);
   --speckle: rgba(232, 210, 140, 0.28);
   --vessel-wash: linear-gradient(
-    165deg,
-    color-mix(in srgb, var(--bg-card) 80%, #2a2038),
-    color-mix(in srgb, var(--bg-card) 92%, #120e18)
+    135deg,
+    color-mix(in srgb, var(--bg) 92%, transparent) 0%,
+    color-mix(in srgb, var(--bg) 88%, #1a1428) 70%
   );
 }
 
@@ -50,6 +53,8 @@
   --gold: #a67c22;
   --gold-soft: #b8902e;
   --gold-deep: #7a5c16;
+  --title: #5e3b0e;
+  --storm: #255a92;
   --plum: #6b3d6e;
   --jewel: #3d5a80;
   --aura: #8b6bb8;
@@ -123,39 +128,49 @@ body {
 }
 
 .font-display {
-  font-family: var(--font-display), "Cormorant Garamond", Georgia, serif;
+  font-family: var(--font-display), Spectral, Georgia, serif;
 }
 
 .display-hero {
-  font-family: var(--font-display), Georgia, serif;
-  font-weight: 600;
-  font-size: clamp(1.7rem, 5.6vw, 2.2rem);
-  line-height: 1.22;
-  letter-spacing: -0.01em;
+  font-family: var(--font-display), Spectral, Georgia, serif;
+  font-weight: 500;
+  font-size: 1.53125rem; /* demo Feed greeting ~24.5px */
+  line-height: 1.16;
+  letter-spacing: 0.01em;
   color: var(--fg);
 }
 
 .display-title {
-  font-family: var(--font-display), Georgia, serif;
+  font-family: var(--font-display), Spectral, Georgia, serif;
   font-weight: 600;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--title, var(--gold-soft));
 }
 .display-title-enter {
-  font-size: clamp(1.85rem, 7vw, 2.15rem);
+  font-size: 2.03125rem; /* demo ~32.5px */
   letter-spacing: 0.24em;
-  color: var(--gold-deep);
+  color: var(--title, var(--gold-soft));
+  margin-top: 1.35rem;
+  padding-left: 0.24em; /* optical center with tracking */
 }
 [data-theme="dark"] .display-title-enter {
-  color: var(--gold-soft);
+  color: var(--title, #f6e2b8);
+}
+[data-theme="light"] .display-title-enter {
+  color: var(--title, #5e3b0e);
 }
 
 .display-italic {
-  font-family: var(--font-display), Georgia, serif;
+  font-family: var(--font-display), Spectral, Georgia, serif;
   font-style: italic;
   font-weight: 500;
   color: var(--gold-soft);
+}
+.display-italic-enter {
+  font-size: 1.125rem; /* demo 18px */
+  color: var(--gold-soft);
+  margin-top: 0.25rem;
 }
 
 .section-kicker {
@@ -167,21 +182,26 @@ body {
 }
 
 .section-serif {
-  font-family: var(--font-display), Georgia, serif;
-  font-weight: 600;
-  font-size: 1.3rem;
-  color: var(--fg);
+  font-family: var(--font-display), Spectral, Georgia, serif;
+  font-weight: 500;
+  font-size: 0.96875rem; /* ~15.5px demo Walking now */
+  color: var(--gold-soft);
+}
+.section-serif-lg {
+  font-family: var(--font-display), Spectral, Georgia, serif;
+  font-weight: 500;
+  font-size: 1.0625rem; /* ~17px Coming up / News */
+  color: var(--gold-soft);
 }
 
 /* Magical night / parchment sky */
 .night-sky {
   position: relative;
   background:
-    radial-gradient(ellipse 95% 55% at 50% -5%, color-mix(in srgb, var(--aura) 55%, transparent) 0%, transparent 58%),
-    radial-gradient(circle at 18% 28%, rgba(200, 212, 232, 0.08), transparent 28%),
-    radial-gradient(circle at 82% 16%, color-mix(in srgb, var(--plum) 35%, transparent), transparent 32%),
-    radial-gradient(circle at 50% 78%, rgba(201, 162, 39, 0.07), transparent 42%),
-    linear-gradient(180deg, var(--sky-top), var(--sky-mid) 40%, var(--sky-bottom));
+    radial-gradient(90% 55% at 50% -8%, rgba(143, 107, 255, 0.34), transparent 70%),
+    radial-gradient(55% 40% at 88% 22%, rgba(89, 167, 238, 0.16), transparent 70%),
+    radial-gradient(70% 45% at 12% 104%, rgba(201, 163, 91, 0.2), transparent 70%),
+    linear-gradient(180deg, var(--sky-top), var(--sky-mid) 42%, var(--sky-bottom));
   overflow: hidden;
 }
 .night-sky::before {
@@ -227,8 +247,10 @@ body {
 
 .vessel-card {
   background: var(--vessel-wash);
-  border: 1px solid color-mix(in srgb, var(--border) 70%, var(--gold) 22%);
-  box-shadow: var(--shadow-card), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(201, 163, 91, 0.26);
+  border-radius: 1.25rem; /* 20px demo */
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
 }
 
 .btn-gold {
@@ -278,24 +300,79 @@ body {
   background: color-mix(in srgb, var(--gold) 12%, transparent);
 }
 
-/* Enter page: ceremonial, light chrome, one primary path */
+/* Enter page: demo-identical ceremony (keep floating field labels Creed liked) */
+.enter-shell {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 25rem; /* demo ~400px */
+  margin: 0 auto;
+  padding: 3.5rem 1.5rem 2.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100dvh;
+  box-sizing: border-box;
+}
+
+.enter-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.enter-logo-wrap {
+  position: relative;
+}
+.enter-logo-aura {
+  position: absolute;
+  inset: -2.75rem;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(143, 107, 255, 0.5), transparent 68%);
+  filter: blur(28px);
+  opacity: 0.9;
+  pointer-events: none;
+}
+.enter-logo {
+  position: relative;
+  display: block;
+  width: 7.375rem; /* 118px */
+  height: 7.375rem;
+  object-fit: contain;
+  border-radius: 1.75rem; /* 28px */
+  box-shadow:
+    0 0 0 1px rgba(201, 163, 91, 0.4),
+    0 0 70px rgba(143, 107, 255, 0.5);
+}
+
 .btn-enter {
-  border-radius: 0.85rem !important;
-  letter-spacing: 0.14em;
+  border-radius: 0.9375rem !important; /* 15px */
+  letter-spacing: 0.2em !important;
+  font-size: 0.8125rem !important;
+  font-weight: 600 !important;
+  padding: 1rem !important;
+  min-height: 3.25rem !important;
+  border: 1px solid rgba(232, 200, 135, 0.8) !important;
+  background: linear-gradient(100deg, #c9a35b, #e8c887) !important;
+  color: #1a1208 !important;
+  box-shadow: 0 10px 34px rgba(201, 163, 91, 0.3) !important;
 }
 
 .enter-form {
   display: flex;
   flex-direction: column;
   gap: 0;
+  margin-top: 2rem;
+  width: 100%;
 }
 
 .enter-fields {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  margin-bottom: 1.4rem;
-  padding: 0.1rem 0.05rem 0.2rem;
+  gap: 0.875rem; /* 14px */
+  margin-bottom: 0;
+  padding: 0;
   border: none;
   border-radius: 0;
   background: transparent;
@@ -304,41 +381,103 @@ body {
 
 .enter-label {
   display: block;
-  font-family: var(--font-display), Georgia, serif;
+  font-family: var(--font-display), Spectral, Georgia, serif;
   font-style: italic;
-  font-size: 0.82rem;
+  font-size: 0.9rem;
   font-weight: 500;
   letter-spacing: 0.02em;
   text-transform: none;
-  color: color-mix(in srgb, var(--gold-soft) 78%, var(--fg-muted));
-  margin-bottom: 0.35rem;
+  color: color-mix(in srgb, var(--gold-soft) 88%, var(--fg-muted));
+  margin-bottom: 0.45rem;
 }
 
 .enter-input {
-  border-radius: 0.85rem !important;
-  min-height: 44px !important;
-  padding: 0.72rem 0.95rem !important;
-  background: color-mix(in srgb, var(--bg) 48%, transparent) !important;
-  border-color: color-mix(in srgb, var(--border) 32%, var(--gold) 8%) !important;
-  box-shadow: 0 1px 0 color-mix(in srgb, var(--gold) 6%, transparent) !important;
+  border-radius: 0.8125rem !important; /* 13px */
+  min-height: 2.875rem !important;
+  padding: 0.8125rem 0.875rem !important;
+  background: color-mix(in srgb, var(--bg) 65%, transparent) !important;
+  border: 1px solid rgba(201, 163, 91, 0.3) !important;
+  box-shadow: none !important;
+  font-size: 0.90625rem !important;
 }
 
 .enter-input:focus {
-  border-color: color-mix(in srgb, var(--gold) 48%, var(--border)) !important;
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--gold) 14%, transparent) !important;
+  border-color: rgba(201, 163, 91, 0.55) !important;
+  box-shadow: 0 0 0 2px rgba(201, 163, 91, 0.14) !important;
+}
+
+.enter-forgot {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -0.15rem;
+  margin-bottom: 0.15rem;
+}
+.enter-forgot button {
+  border: 0;
+  background: none;
+  padding: 0.125rem 0;
+  color: color-mix(in srgb, var(--fg) 74%, transparent);
+  font-size: 0.75rem;
+  cursor: pointer;
+  border-bottom: 1px dotted color-mix(in srgb, var(--fg) 40%, transparent);
+}
+.enter-forgot button:hover {
+  color: var(--gold-soft);
+  border-bottom-color: color-mix(in srgb, var(--gold) 55%, transparent);
 }
 
 .enter-demo-note {
   text-align: center;
-  font-size: 0.68rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: color-mix(in srgb, var(--gold) 70%, var(--fg-muted));
-  margin-top: 0.55rem;
-  margin-bottom: 0.15rem;
+  font-size: 0.71875rem; /* 11.5px */
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: color-mix(in srgb, var(--fg) 62%, transparent);
+  margin-top: 0.625rem;
+  margin-bottom: 0;
   line-height: 1.4;
 }
 
+.enter-divider {
+  margin-top: 1.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.enter-divider span:first-child,
+.enter-divider span:last-child {
+  flex: 1;
+  height: 1px;
+  background: rgba(201, 163, 91, 0.22);
+}
+.enter-divider span:nth-child(2) {
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--fg) 62%, transparent);
+  white-space: nowrap;
+}
+
+.enter-create {
+  margin-top: 0.875rem;
+  width: 100%;
+  padding: 0.875rem;
+  border-radius: 0.9375rem;
+  border: 1px solid rgba(201, 163, 91, 0.45);
+  background: color-mix(in srgb, var(--bg) 50%, transparent);
+  color: var(--title, var(--gold-soft));
+  font-size: 0.78125rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+.enter-create:hover {
+  border-color: rgba(201, 163, 91, 0.7);
+  background: color-mix(in srgb, var(--gold) 8%, transparent);
+}
+
+/* legacy secondary link kept for threshold / light overrides */
 .enter-secondary {
   display: block;
   width: 100%;
@@ -346,7 +485,7 @@ body {
   padding: 0.55rem 0.5rem;
   background: transparent;
   border: none;
-  font-family: var(--font-display), Georgia, serif;
+  font-family: var(--font-display), Spectral, Georgia, serif;
   font-style: italic;
   font-size: 0.95rem;
   font-weight: 500;
@@ -385,7 +524,7 @@ body {
 
 [data-theme="light"] .enter-input {
   background: color-mix(in srgb, #fffaf2 70%, transparent) !important;
-  border-color: color-mix(in srgb, var(--border) 42%, var(--gold) 10%) !important;
+  border-color: rgba(166, 124, 34, 0.35) !important;
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.45) !important;
 }
 
@@ -394,7 +533,12 @@ body {
 }
 
 [data-theme="light"] .btn-enter.btn-gold {
-  box-shadow: var(--shadow-gold), 0 4px 14px rgba(166, 124, 34, 0.22);
+  box-shadow: 0 10px 34px rgba(166, 124, 34, 0.28) !important;
+}
+
+[data-theme="light"] .enter-create {
+  background: color-mix(in srgb, #fffaf2 55%, transparent);
+  color: var(--title, var(--gold-deep));
 }
 
 [data-theme="light"] .age-panel {
@@ -796,27 +940,25 @@ body {
 
 .walk-card {
   flex: 0 0 auto;
-  width: 5.6rem;
+  width: 4.625rem; /* 74px demo */
   scroll-snap-align: start;
 }
 .walk-avatar {
-  aspect-ratio: 3 / 4;
-  border-radius: 0.95rem;
+  width: 4.625rem;
+  height: 5.75rem; /* 92px */
+  aspect-ratio: auto;
+  border-radius: 0.8125rem; /* 13px */
   background:
     radial-gradient(circle at 32% 22%, color-mix(in srgb, var(--gold) 32%, transparent), transparent 48%),
     linear-gradient(160deg, color-mix(in srgb, var(--aura) 48%, #1a1028), #0e0c14 72%);
   border: 1px solid color-mix(in srgb, var(--gold) 42%, var(--border));
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  padding: 0.45rem 0.35rem;
+  display: block;
+  padding: 0;
   position: relative;
   overflow: hidden;
   box-shadow:
-    var(--shadow-card),
-    0 0 18px color-mix(in srgb, var(--aura) 24%, transparent),
-    0 0 14px color-mix(in srgb, var(--gold) 12%, transparent),
-    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    0 0 0 1px color-mix(in srgb, var(--gold) 28%, transparent),
+    0 0 14px color-mix(in srgb, var(--aura) 18%, transparent);
 }
 .walk-avatar::before {
   content: "";
@@ -843,10 +985,11 @@ body {
 }
 .walk-pip {
   position: absolute;
-  top: 0.45rem;
-  left: 0.45rem;
-  width: 0.45rem;
-  height: 0.45rem;
+  top: 0.375rem;
+  right: 0.375rem;
+  left: auto;
+  width: 0.4375rem;
+  height: 0.4375rem;
   border-radius: 9999px;
   z-index: 2;
 }
@@ -864,14 +1007,18 @@ body {
   padding-bottom: 0.8rem;
 }
 .walk-name {
-  position: relative;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.375rem;
   z-index: 1;
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: #f5efe4;
+  font-size: 0.78125rem; /* 12.5px */
+  font-weight: 500;
+  color: var(--fg);
   text-align: center;
-  line-height: 1.2;
-  font-family: var(--font-display), Georgia, serif;
+  line-height: 1.1;
+  padding: 0 0.25rem;
+  font-family: var(--font-display), Spectral, Georgia, serif;
 }
 
 .event-card {
@@ -1947,17 +2094,34 @@ body {
 }
 
 .vessel-card-glow {
-  box-shadow:
-    var(--shadow-card),
-    0 0 36px color-mix(in srgb, var(--aura) 16%, transparent),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  position: relative;
+  box-shadow: var(--shadow-card);
+}
+.vessel-card-glow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(90% 120% at 100% 0%, rgba(201, 163, 91, 0.14), transparent 62%);
+  pointer-events: none;
+  z-index: 0;
 }
 
 .vessel-watermark {
   position: absolute;
+  right: -1.6rem;
+  top: -1.1rem;
+  width: 9.875rem;
+  height: auto;
+  opacity: 0.07;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+.vessel-watermark-glyph {
+  position: absolute;
   right: -0.15rem;
   bottom: -0.55rem;
-  font-family: var(--font-display), Georgia, serif;
+  font-family: var(--font-display), Spectral, Georgia, serif;
   font-size: 7.5rem;
   font-weight: 600;
   line-height: 1;
@@ -1968,8 +2132,11 @@ body {
   letter-spacing: -0.04em;
 }
 
-[data-theme="light"] .vessel-watermark {
+[data-theme="light"] .vessel-watermark-glyph {
   color: color-mix(in srgb, var(--gold) 18%, transparent);
+}
+[data-theme="light"] .vessel-watermark {
+  opacity: 0.09;
 }
 
 .feed-panel {
@@ -3451,15 +3618,18 @@ button.scene-call-hint:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-display), Georgia, serif;
+  font-family: var(--font-display), Spectral, Georgia, serif;
   font-weight: 600;
   color: var(--gold-soft);
   text-shadow: 0 0 12px color-mix(in srgb, var(--gold) 30%, transparent);
-  border: 1px solid color-mix(in srgb, var(--gold) 40%, transparent);
+  border: 1px solid rgba(201, 163, 91, 0.34);
   overflow: hidden;
-  box-shadow:
-    0 0 16px color-mix(in srgb, var(--aura) 24%, transparent),
-    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  box-shadow: none;
+}
+.vessel-medallion-portrait {
+  width: 5.5rem; /* 88px */
+  height: 7rem; /* 112px */
+  border-radius: 0.875rem; /* 14px */
 }
 .vessel-medallion::before {
   content: "";
@@ -4954,3 +5124,69 @@ button.scene-call-hint:hover {
   box-shadow: 0 4px 12px rgba(80, 60, 20, 0.12);
 }
 
+
+
+/* —— P0 look identity: Realm vessel plate + storm location (demo) —— */
+.vessel-card .seg-control {
+  margin: 0 -1.25rem -1rem;
+  width: calc(100% + 2.5rem);
+  border-radius: 0;
+  border: none;
+  border-top: 1px solid rgba(201, 163, 91, 0.16);
+  background: transparent;
+  padding: 0;
+  gap: 0;
+}
+.vessel-card .seg-control button {
+  flex: 1;
+  border-radius: 0;
+  border: none;
+  border-right: 1px solid color-mix(in srgb, var(--fg) 5%, transparent);
+  padding: 0.625rem 0.25rem;
+  font-size: 0.65625rem;
+  letter-spacing: 0.04em;
+  background: transparent;
+}
+.vessel-card .seg-control button:last-child {
+  border-right: none;
+}
+.pill-storm {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  max-width: 100%;
+  padding: 0.25rem 0.5625rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(89, 167, 238, 0.36);
+  background: rgba(89, 167, 238, 0.1);
+  font-size: 0.65625rem;
+  color: var(--storm, #a8d4ff);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.realm-subline {
+  font-size: 0.78125rem;
+  color: color-mix(in srgb, var(--fg) 66%, transparent);
+  margin-top: 0.3rem;
+  line-height: 1.5;
+}
+.realm-vessel-name {
+  font-family: var(--font-display), Spectral, Georgia, serif;
+  font-size: 1.34375rem; /* ~21.5px */
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--title, var(--gold-soft));
+}
+.realm-vessel-meta {
+  font-size: 0.71875rem;
+  color: color-mix(in srgb, var(--fg) 60%, transparent);
+  margin-top: 0.2rem;
+}
+.realm-kicker {
+  font-size: 0.59375rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(201, 163, 91, 0.8);
+  font-weight: 500;
+}

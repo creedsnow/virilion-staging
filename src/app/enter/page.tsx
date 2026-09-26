@@ -35,7 +35,10 @@ export default function EnterPage() {
       enteredAt: new Date().toISOString(),
     });
     try {
-      sessionStorage.setItem("virilion_threshold", kind === "rite" ? "enter-rite" : "enter-realm");
+      sessionStorage.setItem(
+        "virilion_threshold",
+        kind === "rite" ? "enter-rite" : "enter-realm",
+      );
     } catch {
       /* ignore */
     }
@@ -64,36 +67,27 @@ export default function EnterPage() {
   if (threshold) {
     const toRite = threshold === "rite";
     return (
-      <div className="night-sky enter-sky -mx-4 min-h-[100dvh] px-5 py-12 flex flex-col items-center justify-center relative">
+      <div className="night-sky enter-sky -mx-4 min-h-[100dvh] relative">
         <Fireflies />
-        <div className="threshold-handoff relative z-[1] w-full max-w-[20.5rem] flex flex-col items-center text-center">
-          <div className="relative mb-7">
-            <div
-              className="absolute -inset-10 rounded-full blur-3xl opacity-85 threshold-aura"
-              style={{
-                background:
-                  "radial-gradient(circle, color-mix(in srgb, var(--aura) 62%, transparent), transparent 68%)",
-              }}
-              aria-hidden
+        <div className="enter-shell threshold-handoff items-center text-center !justify-center">
+          <div className="enter-logo-wrap mb-7">
+            <div className="enter-logo-aura threshold-aura" aria-hidden />
+            <Image
+              src="/virilion-logo.png"
+              alt="Virilion"
+              width={118}
+              height={118}
+              className="enter-logo"
+              priority
             />
-            <div className="relative rounded-[1.2rem] overflow-hidden border border-gold/30 shadow-[0_0_56px_rgba(123,94,167,0.48)]">
-              <Image
-                src="/virilion-logo.png"
-                alt="Virilion"
-                width={104}
-                height={104}
-                className="block"
-                priority
-              />
-            </div>
           </div>
           <p className="section-kicker mb-2">
             {toRite ? "The threshold opens" : "The lamps remember you"}
           </p>
-          <h1 className="font-display text-[1.85rem] font-semibold text-gold-soft leading-tight">
+          <h1 className="font-display text-[1.85rem] font-semibold text-[color:var(--title)] leading-tight">
             {toRite ? "Begin the Rite of Making" : "Return to the Realm"}
           </h1>
-          <p className="display-italic text-[1.05rem] text-fg-muted mt-3 leading-relaxed max-w-[17.5rem]">
+          <p className="display-italic text-[1.05rem] text-fg-muted mt-3 leading-relaxed max-w-[17.5rem] mx-auto">
             {toRite
               ? "One vessel. Role first. Cross when you are ready."
               : "Your vessel waits under Virelios lamps."}
@@ -116,40 +110,27 @@ export default function EnterPage() {
   }
 
   return (
-    <div className="night-sky enter-sky -mx-4 min-h-[100dvh] px-5 py-12 flex flex-col items-center justify-center relative">
+    <div className="night-sky enter-sky -mx-4 min-h-[100dvh] relative">
       <Fireflies />
-      <div className="relative z-[1] w-full max-w-[20.5rem] flex flex-col items-center">
-        <div className="relative mb-6">
-          <div
-            className="absolute -inset-9 rounded-full blur-3xl opacity-75"
-            style={{
-              background:
-                "radial-gradient(circle, color-mix(in srgb, var(--aura) 58%, transparent), transparent 68%)",
-            }}
-            aria-hidden
-          />
-          <div className="relative rounded-[1.2rem] overflow-hidden border border-gold/25 shadow-[0_0_48px_rgba(123,94,167,0.38)]">
+      <div className="enter-shell">
+        <div className="enter-brand">
+          <div className="enter-logo-wrap">
+            <div className="enter-logo-aura" aria-hidden />
             <Image
               src="/virilion-logo.png"
               alt="Virilion"
-              width={104}
-              height={104}
-              className="block"
+              width={118}
+              height={118}
+              className="enter-logo"
               priority
             />
           </div>
+          <h1 className="display-title display-title-enter">Virilion</h1>
+          <p className="display-italic display-italic-enter">Enter Virilion</p>
         </div>
 
-        <h1 className="display-title display-title-enter mb-1">Virilion</h1>
-        <p className="display-italic text-[1.15rem] mb-2 text-gold-soft">
-          Enter Virilion
-        </p>
-        <p className="text-[11px] tracking-[0.14em] uppercase text-fg-muted/85 text-center mb-8 leading-relaxed max-w-[17rem]">
-          Adult queer mythic fantasy · one vessel · in-app home
-        </p>
-
         {alreadyIn ? (
-          <div className="w-full space-y-3 mb-5 text-center">
+          <div className="w-full space-y-3 mt-6 mb-1 text-center">
             <p className="text-sm text-fg-muted leading-relaxed">
               You still have a saved demo session in this browser.
             </p>
@@ -159,7 +140,7 @@ export default function EnterPage() {
           </div>
         ) : null}
 
-        <form onSubmit={enter} className="enter-form w-full">
+        <form onSubmit={enter} className="enter-form">
           <div className="enter-fields">
             <div>
               <label className="enter-label" htmlFor="email">
@@ -173,7 +154,7 @@ export default function EnterPage() {
                   setEmail(e.target.value);
                   setName(e.target.value);
                 }}
-                placeholder="Screen name or email"
+                placeholder="you@virilion"
                 autoComplete="username"
               />
             </div>
@@ -188,29 +169,33 @@ export default function EnterPage() {
                 className="input enter-input"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Optional in demo"
+                placeholder="••••••••"
                 autoComplete="current-password"
               />
             </div>
+
+            <div className="enter-forgot">
+              <button type="button" onClick={() => enter()}>
+                Forgot password?
+              </button>
+            </div>
           </div>
 
-          <button type="submit" className="btn-gold btn-enter w-full">
-            Enter Virilion
+          <button type="submit" className="btn-gold btn-enter w-full mt-5">
+            Log in
           </button>
-          <p className="enter-demo-note">Demo — no password needed</p>
+          <p className="enter-demo-note">Demo mode — no password needed</p>
 
-          <button
-            type="button"
-            className="enter-secondary"
-            onClick={createAccount}
-          >
-            New here? Begin the Rite
+          <div className="enter-divider" aria-hidden>
+            <span />
+            <span>New to Virilion?</span>
+            <span />
+          </div>
+
+          <button type="button" className="enter-create" onClick={createAccount}>
+            Create account
           </button>
         </form>
-
-        <p className="mt-9 text-[11px] text-fg-muted/75 text-center max-w-xs leading-relaxed">
-          Adult portal · present as your Vessel. RP chat and voice live here.
-        </p>
       </div>
     </div>
   );

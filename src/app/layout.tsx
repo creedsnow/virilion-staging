@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Spectral } from "next/font/google";
 import { AppShell } from "@/components/AppShell";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import "./globals.css";
@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const displaySerif = Cormorant_Garamond({
+const displaySerif = Spectral({
   variable: "--font-display",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   // Moonlight chrome by default — do NOT follow prefers-color-scheme here.
   // ThemeProvider updates theme-color when the player picks Parchment.
-  themeColor: "#0b0a10",
+  themeColor: "#0c0a12",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,

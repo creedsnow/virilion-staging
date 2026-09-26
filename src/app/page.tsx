@@ -183,37 +183,39 @@ export default function RealmPage() {
     vessel.people !== "custom" ? codexPeopleCardSm(vessel.people) : null;
 
   return (
-    <div className="space-y-6 -mt-0.5 realm-arrival">
+    <div className="space-y-5 -mt-0.5 realm-arrival">
       <div className="realm-hero-glow page-header">
-        <p className="section-kicker mb-2">
-          {justArrived ? "You have arrived" : "The Realm"}
-        </p>
         <h1 className="display-hero">
           {justArrived
             ? `Welcome under the lamps, ${firstName}.`
             : `The lamps of Virelios are lit, ${firstName}.`}
         </h1>
-        {justArrived ? (
-          <p className="text-sm text-fg-muted mt-2.5 leading-relaxed max-w-md">
-            Presence, places, and open halls — a living world under the lamps.
-          </p>
-        ) : null}
+        <p className="realm-subline">
+          {justArrived
+            ? "Presence, places, and open halls — a living world under the lamps."
+            : "Eight of your bonds walk the world tonight. Two are asking for you."}
+        </p>
       </div>
 
-      {/* 1. Who am I — Vessel */}
-      <section className="card vessel-card vessel-card-glow rounded-2xl space-y-3.5 relative overflow-hidden">
-        <span className="vessel-watermark" aria-hidden>
-          V
-        </span>
-        <div className="flex gap-3.5 items-start relative z-[1]">
+      {/* 1. Who am I — Vessel (demo plate) */}
+      <section className="card vessel-card vessel-card-glow !p-0 space-y-0 relative">
+        <Image
+          src="/virilion-logo.png"
+          alt=""
+          width={158}
+          height={158}
+          className="vessel-watermark"
+          aria-hidden
+        />
+        <div className="flex gap-[13px] items-stretch relative z-[1] p-[14px]">
           <div
-            className={`vessel-medallion h-[5.25rem] w-[5.25rem] rounded-[0.95rem] text-[1.85rem]${peopleArt ? " vessel-medallion-art" : ""}`}
+            className={`vessel-medallion vessel-medallion-portrait text-[1.85rem]${peopleArt ? " vessel-medallion-art" : ""}`}
             style={
               peopleArt
                 ? undefined
                 : {
                     background:
-                      "radial-gradient(circle at 30% 22%, rgba(232, 200, 120, 0.22), transparent 55%), linear-gradient(145deg, color-mix(in srgb, var(--aura) 42%, #1a1028), #121018 72%)",
+                      "linear-gradient(160deg, var(--plum), var(--bg))",
                   }
             }
             aria-hidden
@@ -222,10 +224,10 @@ export default function RealmPage() {
               <Image
                 src={peopleArt}
                 alt=""
-                width={120}
-                height={150}
+                width={176}
+                height={224}
                 className="vessel-medallion-img"
-                sizes="84px"
+                sizes="88px"
                 priority
               />
             ) : (
@@ -240,10 +242,10 @@ export default function RealmPage() {
               title={presenceLabel(presence)}
             />
           </div>
-          <div className="min-w-0 flex-1 pt-0.5">
-            <p className="section-kicker mb-1">Your vessel</p>
-            <div className="flex items-start justify-between gap-2">
-              <h2 className="font-display text-[1.55rem] font-semibold text-fg leading-tight">
+          <div className="min-w-0 flex-1 flex flex-col">
+            <p className="realm-kicker">Your vessel</p>
+            <div className="flex items-start justify-between gap-2 mt-[3px]">
+              <h2 className="realm-vessel-name">
                 {vessel.name}
               </h2>
               {vessel.status === "pending_gm" ? (
@@ -252,20 +254,17 @@ export default function RealmPage() {
                 </span>
               ) : null}
             </div>
-            <p className="text-sm text-fg-muted mt-0.5">
+            <p className="realm-vessel-meta">
               {peopleLabel} · {classLabel} · {styleLabel}
             </p>
-            <div className="mt-2.5 flex flex-wrap gap-2 items-center">
-              <span className="pill-jewel">✦ Virelios · The Gilded Coil</span>
-              <span className="text-[10px] uppercase tracking-[0.12em] text-fg-muted">
-                {presenceLabel(presence)}
-              </span>
+            <div className="mt-auto pt-2 flex flex-wrap gap-1.5 items-center">
+              <span className="pill-storm">● Virelios · The Gilded Coil</span>
             </div>
           </div>
         </div>
 
         {vessel.status === "pending_gm" ? (
-          <div className="relative z-[1] border-t border-gold/30 pt-3 space-y-2">
+          <div className="relative z-[1] border-t border-gold/30 px-[14px] pt-3 pb-2 space-y-2">
             <p className="text-sm text-gold-soft font-medium">Held at the gate · GM blessing</p>
             <p className="text-xs text-fg-muted leading-relaxed">
               Custom People / Style / Class waits under soft lamps. Check Self, then open Admin to approve.
@@ -282,7 +281,7 @@ export default function RealmPage() {
         ) : null}
 
         {vessel.bio ? (
-          <p className="text-sm text-fg-muted leading-relaxed border-t border-border/55 pt-3 relative z-[1]">
+          <p className="text-sm text-fg-muted leading-relaxed border-t border-[rgba(201,163,91,0.16)] px-[14px] pt-3 pb-1 relative z-[1]">
             {vessel.bio}
           </p>
         ) : null}
@@ -325,23 +324,23 @@ export default function RealmPage() {
         </Link>
         <div className="grid grid-cols-2 gap-2">
           <Link href="/map" className="realm-ask-chip">
-            <span className="section-kicker block mb-0.5">Places</span>
-            <span className="font-display text-base text-fg">Map · halls & lands</span>
+            <span className="section-kicker block mb-0.5">Where</span>
+            <span className="font-display text-base text-[color:var(--title)]">Map · Enter places</span>
           </Link>
           <Link href="/scenes" className="realm-ask-chip">
-            <span className="section-kicker block mb-0.5">Halls</span>
-            <span className="font-display text-base text-fg">Open scenes</span>
+            <span className="section-kicker block mb-0.5">Scenes</span>
+            <span className="font-display text-base text-[color:var(--title)]">Live rooms</span>
           </Link>
         </div>
       </section>
 
-      {/* Presence under the lamps */}
-      <section className="space-y-3 realm-presence-panel">
+      {/* Presence rail — demo "Walking now" */}
+      <section className="space-y-2.5 realm-presence-panel">
         <div className="flex items-baseline justify-between gap-3">
-          <h2 className="section-serif text-fg">Under the lamps</h2>
+          <h2 className="section-serif">Walking now</h2>
           <Link
             href="/weave"
-            className="text-[10px] font-semibold tracking-[0.14em] uppercase text-gold hover:text-gold-soft"
+            className="text-[11px] tracking-[0.1em] uppercase text-fg-muted hover:text-gold-soft"
           >
             The Weave →
           </Link>
@@ -416,18 +415,15 @@ export default function RealmPage() {
             </button>
           ))}
         </div>
-        <p className="text-[10px] text-fg-muted/70 tracking-wide">
-          Presence · tap a face · open a scene, place, or bond
-        </p>
       </section>
 
-      {/* Coming up — events, not empty stubs */}
-      <section className="space-y-3 realm-presence-panel">
+      {/* Coming up — demo calendar rail */}
+      <section className="space-y-2.5 realm-presence-panel">
         <div className="flex items-baseline justify-between gap-3">
-          <h2 className="section-serif text-fg">On the horizon</h2>
+          <h2 className="section-serif">Coming up</h2>
           <Link
             href="/calendar"
-            className="text-[10px] font-semibold tracking-[0.14em] uppercase text-gold hover:text-gold-soft"
+            className="text-[11px] tracking-[0.1em] uppercase text-fg-muted hover:text-gold-soft"
           >
             Calendar →
           </Link>
