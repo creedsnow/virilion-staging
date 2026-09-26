@@ -113,13 +113,19 @@ export function getVessel(): Vessel | null {
   }
 }
 
-export function setVessel(vessel: Vessel | null): void {
+/** Write vessel JSON without notifying (presence mirror only). */
+function writeVesselRaw(vessel: Vessel | null): void {
   if (!canUseStorage()) return;
   if (!vessel) {
     localStorage.removeItem(KEYS.vessel);
     return;
   }
   localStorage.setItem(KEYS.vessel, JSON.stringify(vessel));
+}
+
+export function setVessel(vessel: Vessel | null): void {
+  writeVesselRaw(vessel);
+  notifyVesselListeners();
 }
 
 export function getPendingVessels(): Vessel[] {
@@ -149,10 +155,9 @@ export function approvePendingVessel(id: string): Vessel | null {
     KEYS.pending,
     JSON.stringify(list.filter((v) => v.id !== id))
   );
-  const current = getVessel();
-  if (current && current.id === id) {
-    setVessel(approved);
-  }
+  // Always embody — GM approve is the path into Realm, even if the active
+  // vessel key was wiped / desynced from the pending queue.
+  setVessel(approved);
   return approved;
 }
 
@@ -163,7 +168,7 @@ export function rejectPendingVessel(id: string): void {
   localStorage.setItem(KEYS.pending, JSON.stringify(list));
   const current = getVessel();
   if (current && current.id === id) {
-    localStorage.removeItem(KEYS.vessel);
+    setVessel(null);
   }
 }
 
@@ -196,7 +201,7 @@ export function isQaMode(): boolean {
 
 export function wipeVesselForDemo(): void {
   if (!canUseStorage()) return;
-  localStorage.removeItem(KEYS.vessel);
+  setVessel(null);
 }
 
 function normalizePresence(raw: string | null | undefined): PresenceMode | null {
@@ -268,11 +273,21 @@ export function setPresence(mode: PresenceMode): void {
   }
   presenceSnapshot = mode;
   // Mirror onto vessel JSON so presence survives key churn / accidental key drops.
+  // Silent write — do not fire virilion-vessel (presence has its own channel).
   try {
     const vessel = getVessel();
     if (vessel && vessel.presence !== mode) {
-      setVessel({ ...vessel, presence: mode });
+      writeVesselRaw({ ...vessel, presence: mode });
     }
+  } catch {
+    /* ignore */
+  }
+}
+
+function notifyVesselListeners(): void {
+  if (!canUseStorage()) return;
+  try {
+    window.dispatchEvent(new Event("virilion-vessel"));
   } catch {
     /* ignore */
   }
@@ -281,6 +296,34 @@ export function setPresence(mode: PresenceMode): void {
 function notifyPresenceListeners(): void {
   if (!canUseStorage()) return;
   window.dispatchEvent(new Event("virilion-presence"));
+}
+
+/** Subscribe to vessel / session identity changes (approve, wipe, logout). */
+export function subscribeVessel(onStoreChange: () => void): () => void {
+  if (!canUseStorage()) return () => undefined;
+  const onCustom = () => onStoreChange();
+  const onStorage = (e: StorageEvent) => {
+    if (
+      e.key === KEYS.vessel ||
+      e.key === KEYS.player ||
+      e.key === KEYS.pending ||
+      e.key === null
+    ) {
+      onStoreChange();
+    }
+  };
+  window.addEventListener("virilion-vessel", onCustom);
+  window.addEventListener("virilion-logout", onCustom);
+  window.addEventListener("storage", onStorage);
+  window.addEventListener("pageshow", onCustom);
+  window.addEventListener("focus", onCustom);
+  return () => {
+    window.removeEventListener("virilion-vessel", onCustom);
+    window.removeEventListener("virilion-logout", onCustom);
+    window.removeEventListener("storage", onStorage);
+    window.removeEventListener("pageshow", onCustom);
+    window.removeEventListener("focus", onCustom);
+  };
 }
 
 
@@ -326,6 +369,7 @@ export function clearSession(): void {
   } catch {
     /* ignore */
   }
+  notifyVesselListeners();
   notifyPresenceListeners();
 }
 

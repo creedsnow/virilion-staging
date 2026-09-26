@@ -14,6 +14,7 @@ import {
   getVessel,
   isQaMode,
   wipeVesselForDemo,
+  subscribeVessel,
 } from "@/lib/storage";
 import type { DemoPlayer, PresenceMode, Vessel } from "@/lib/types";
 import { usePresence } from "@/hooks/usePresence";
@@ -47,9 +48,13 @@ export default function SelfPage() {
   const [presence, changePresence] = usePresence();
 
   useEffect(() => {
-    setV(getVessel());
-    setP(getPlayer());
-    setQa(isQaMode());
+    function hydrate() {
+      setV(getVessel());
+      setP(getPlayer());
+      setQa(isQaMode());
+    }
+    hydrate();
+    return subscribeVessel(hydrate);
   }, []);
 
   function logout() {

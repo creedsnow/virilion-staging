@@ -7,26 +7,29 @@ import {
   getPendingVessels,
   getVessel,
   rejectPendingVessel,
-  setVessel,
+  subscribeVessel,
 } from "@/lib/storage";
 import type { Vessel } from "@/lib/types";
 
 export default function AdminPage() {
   const [pending, setPending] = useState<Vessel[]>([]);
+  const [lastApproved, setLastApproved] = useState<Vessel | null>(null);
+  const [active, setActive] = useState<Vessel | null>(null);
 
   function reload() {
     setPending(getPendingVessels());
+    setActive(getVessel());
   }
 
   useEffect(() => {
     reload();
+    return subscribeVessel(reload);
   }, []);
 
   function approve(id: string) {
     const approved = approvePendingVessel(id);
-    const current = getVessel();
-    if (approved && current && current.id === id) {
-      setVessel(approved);
+    if (approved) {
+      setLastApproved(approved);
     }
     reload();
   }
@@ -40,6 +43,7 @@ export default function AdminPage() {
       return;
     }
     rejectPendingVessel(id);
+    setLastApproved(null);
     reload();
   }
 
@@ -52,9 +56,37 @@ export default function AdminPage() {
         </h1>
         <p className="text-sm text-fg-muted mt-1.5 leading-relaxed">
           Local approval path for Custom People / Style / Class. Staging only —
-          no invented GM tools.
+          no invented GM tools. Approve embodies the vessel in this browser so
+          the player can enter Realm.
         </p>
       </div>
+
+      {lastApproved ? (
+        <div className="stub-panel px-4 py-4 space-y-2 border border-gold/35">
+          <p className="section-kicker mb-1">Approved</p>
+          <p className="font-display text-lg text-gold-soft">
+            {lastApproved.name} is embodied
+          </p>
+          <p className="text-xs text-fg-muted leading-relaxed">
+            Status is approved in localStorage. Enter Realm as this Vessel — demo only,
+            this browser.
+          </p>
+          <div className="flex flex-wrap gap-2 pt-1">
+            <Link href="/" className="btn-gold text-xs py-2 px-3 inline-flex !min-h-0">
+              Enter Realm
+            </Link>
+            <Link href="/self" className="btn-ghost text-xs py-2 px-3 inline-flex !min-h-0">
+              Self status
+            </Link>
+          </div>
+        </div>
+      ) : null}
+
+      {active && active.status === "approved" && !lastApproved ? (
+        <p className="text-xs text-fg-muted leading-relaxed px-0.5">
+          Active vessel · <span className="text-gold-soft">{active.name}</span> · embodied
+        </p>
+      ) : null}
 
       {pending.length === 0 ? (
         <div className="stub-panel text-center py-10 px-5">

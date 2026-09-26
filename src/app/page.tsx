@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { EmptyState } from "@/components/EmptyState";
-import { getPlayer, getVessel } from "@/lib/storage";
+import { getPlayer, getVessel, subscribeVessel } from "@/lib/storage";
 import type { DemoPlayer, PresenceMode, Vessel } from "@/lib/types";
 import { usePresence } from "@/hooks/usePresence";
 import { PEOPLES } from "@/lib/canon/peoples";
@@ -112,20 +112,24 @@ export default function RealmPage() {
   const [askCount, setAskCount] = useState(2);
 
   useEffect(() => {
-    setV(getVessel());
-    setP(getPlayer());
-    try {
-      const raw = localStorage.getItem("virilion_weave");
-      if (raw) {
-        const bonds = JSON.parse(raw) as { status?: string }[];
-        const n = bonds.filter((b) => b.status === "open").length;
-        setAskCount(n > 0 ? n : 2);
-      } else {
+    function hydrate() {
+      setV(getVessel());
+      setP(getPlayer());
+      try {
+        const raw = localStorage.getItem("virilion_weave");
+        if (raw) {
+          const bonds = JSON.parse(raw) as { status?: string }[];
+          const n = bonds.filter((b) => b.status === "open").length;
+          setAskCount(n > 0 ? n : 2);
+        } else {
+          setAskCount(2);
+        }
+      } catch {
         setAskCount(2);
       }
-    } catch {
-      setAskCount(2);
     }
+    hydrate();
+    return subscribeVessel(hydrate);
   }, []);
 
   if (!vessel) {

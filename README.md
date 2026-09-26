@@ -95,6 +95,21 @@ Canon questions → Virilion GM / Launch Planner — developers do not invent lo
 | `/rules` | Community rules (21) in-app |
 | `/admin` | Approve / reject pending_gm vessels |
 
+## Demo data honesty (localStorage)
+
+This staging build is **client-local**. Vessel, presence, scene messages, voice roster, Weave bonds, reports/blocks, and pending GM queue live in **this browser’s localStorage** — not a shared server.
+
+| What works in demo | What still needs a real server later |
+|--------------------|--------------------------------------|
+| Enter → Rite → one Vessel → Realm | Real accounts / magic-link or OAuth |
+| `/admin` Approve embodies vessel here | Multi-device / multi-player GM queue |
+| Map `?place=` / `?hall=` room identity + chat persist | Shared place/scene rooms across browsers |
+| Scenes text + Join call presence (same browser / tabs) | WebRTC mesh signaling + SFU |
+| Weave ask/accept/decline persist | Cross-player bond requests |
+| Presence Open / In scene / Unseen | Server presence + Realm feed |
+
+Log out clears demo play keys (keeps 18+ age gate + QA latch) and returns to Enter. Hard-refresh alone does **not** clear storage.
+
 ## Non-goals (this slice)
 
 Payments, full moderation-at-scale, AI portrait UI, domain purchase, inventing Places beyond Order Halls locks.

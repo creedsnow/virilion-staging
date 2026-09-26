@@ -1,13 +1,14 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ORDER_HALLS, type OrderHall } from "@/lib/canon/orderHalls";
 import { MAP_REGIONS, hallsForRegion, type MapRegion } from "@/lib/canon/mapRegions";
 import { CLASSES } from "@/lib/canon/classes";
 import { SceneRoom } from "@/components/SceneRoom";
 import { sceneForHall, sceneForPlace, type SceneInfo } from "@/lib/scenes";
-import { getVessel } from "@/lib/storage";
+import { getVessel, subscribeVessel } from "@/lib/storage";
 import type { Vessel } from "@/lib/types";
 
 type Filter = "all" | "places" | "halls";
@@ -55,19 +56,73 @@ function hallGate(
   };
 }
 
-export default function MapPage() {
+function resolveRoom(
+  placeId: string | null,
+  hallId: string | null,
+  vessel: Vessel | null
+): SceneInfo | null {
+  if (hallId) {
+    const h = ORDER_HALLS.find((x) => x.id === hallId);
+    if (!h) return null;
+    const gate = hallGate(h, vessel);
+    if (!gate.enterable) return null;
+    return sceneForHall({
+      id: h.id,
+      name: h.name,
+      mapPlace: h.mapPlace,
+      tiedTo: h.tiedTo,
+    });
+  }
+  if (placeId) {
+    const r = MAP_REGIONS.find((x) => x.id === placeId);
+    if (!r) return null;
+    return sceneForPlace({
+      id: r.id,
+      label: r.label,
+      note: r.note,
+      kind: r.kind,
+    });
+  }
+  return null;
+}
+
+function MapInner() {
+  const router = useRouter();
+  const search = useSearchParams();
   const [filter, setFilter] = useState<Filter>("all");
   const [sel, setSel] = useState<Selection>({ kind: "region", id: "virelios" });
   const [hoverId, setHoverId] = useState<string | null>(null);
   const [hallsOpen, setHallsOpen] = useState(false);
-  const [vessel, setVessel] = useState<Vessel | null>(null);
-  const [active, setActive] = useState<SceneInfo | null>(null);
+  const [vessel, setVesselState] = useState<Vessel | null>(null);
   const [booted, setBooted] = useState(false);
 
+  const placeId = search.get("place");
+  const hallId = search.get("hall");
+
   useEffect(() => {
-    setVessel(getVessel());
-    setBooted(true);
+    function hydrate() {
+      setVesselState(getVessel());
+      setBooted(true);
+    }
+    hydrate();
+    return subscribeVessel(hydrate);
   }, []);
+
+  // Keep selection aligned with room identity so Back lands on the right card.
+  useEffect(() => {
+    if (hallId && ORDER_HALLS.some((h) => h.id === hallId)) {
+      setSel({ kind: "hall", id: hallId });
+      return;
+    }
+    if (placeId && MAP_REGIONS.some((r) => r.id === placeId)) {
+      setSel({ kind: "region", id: placeId });
+    }
+  }, [placeId, hallId]);
+
+  const active = useMemo(
+    () => (booted ? resolveRoom(placeId, hallId, vessel) : null),
+    [booted, placeId, hallId, vessel]
+  );
 
   const region = useMemo(
     () => MAP_REGIONS.find((r) => r.id === (sel.kind === "region" ? sel.id : "")),
@@ -89,6 +144,18 @@ export default function MapPage() {
     setSel({ kind: "hall", id });
   }
 
+  function enterPlace(id: string) {
+    router.replace(`/map?place=${encodeURIComponent(id)}`, { scroll: false });
+  }
+
+  function enterHall(id: string) {
+    router.replace(`/map?hall=${encodeURIComponent(id)}`, { scroll: false });
+  }
+
+  function leaveRoom() {
+    router.replace("/map", { scroll: false });
+  }
+
   if (!booted) {
     return <p className="text-sm text-fg-muted">Unfurling the map…</p>;
   }
@@ -98,7 +165,7 @@ export default function MapPage() {
       <SceneRoom
         scene={active}
         vessel={vessel}
-        onBack={() => setActive(null)}
+        onBack={leaveRoom}
         backLabel="← Map"
       />
     );
@@ -298,14 +365,7 @@ export default function MapPage() {
           onHall={selectHall}
           onEnter={() => {
             if (!vessel) return;
-            setActive(
-              sceneForPlace({
-                id: region.id,
-                label: region.label,
-                note: region.note,
-                kind: region.kind,
-              })
-            );
+            enterPlace(region.id);
           }}
         />
       ) : null}
@@ -319,14 +379,7 @@ export default function MapPage() {
             if (!vessel) return;
             const gate = hallGate(hall, vessel);
             if (!gate.enterable) return;
-            setActive(
-              sceneForHall({
-                id: hall.id,
-                name: hall.name,
-                mapPlace: hall.mapPlace,
-                tiedTo: hall.tiedTo,
-              })
-            );
+            enterHall(hall.id);
           }}
         />
       ) : null}
@@ -398,6 +451,15 @@ export default function MapPage() {
         </span>
       </div>
     </div>
+  );
+}
+
+
+export default function MapPage() {
+  return (
+    <Suspense fallback={<p className="text-sm text-fg-muted">Unfurling the map…</p>}>
+      <MapInner />
+    </Suspense>
   );
 }
 

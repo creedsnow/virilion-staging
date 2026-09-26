@@ -9,7 +9,7 @@ import { BottomNav } from "./BottomNav";
 import { DemoBadge } from "./DemoBadge";
 import { UiAssetIcon } from "./UiAssetIcon";
 import { useTheme } from "./ThemeProvider";
-import { clearSession, getAgeOk, getPlayer, getVessel } from "@/lib/storage";
+import { clearSession, getAgeOk, getPlayer, getVessel, subscribeVessel } from "@/lib/storage";
 import { wispStill } from "@/lib/assets";
 
 const PUBLIC = new Set(["/enter", "/rules"]);
@@ -69,6 +69,16 @@ export function AppShell({ children }: { children: ReactNode }) {
     setReady(true);
     setMenuOpen(false);
   }, [pathname]);
+
+  // Keep shell auth flags in sync after Log out / GM approve / wipe without
+  // requiring a pathname change (Enter logout stays on /enter).
+  useEffect(() => {
+    return subscribeVessel(() => {
+      setHasPlayer(!!getPlayer());
+      setHasVessel(!!getVessel());
+      setAgeOkState(getAgeOk());
+    });
+  }, []);
 
   useEffect(() => {
     if (!menuOpen) return;

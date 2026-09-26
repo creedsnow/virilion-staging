@@ -71,17 +71,40 @@ function canUse(): boolean {
   return typeof window !== "undefined";
 }
 
+function readJsonRecord<T>(key: string): Record<string, T> {
+  if (!canUse()) return {};
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw) as unknown;
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      localStorage.removeItem(key);
+      return {};
+    }
+    return parsed as Record<string, T>;
+  } catch {
+    try {
+      localStorage.removeItem(key);
+    } catch {
+      /* ignore */
+    }
+    return {};
+  }
+}
+
+function writeJsonRecord<T>(key: string, value: Record<string, T>): void {
+  if (!canUse()) return;
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    /* quota / private mode — swallow so Speak / Join never crash the room */
+  }
+}
+
 export function getSceneMessages(sceneId: string): SceneMessage[] {
   if (!canUse()) return [];
-  try {
-    const all = JSON.parse(localStorage.getItem(SCENES_KEY) || "{}") as Record<
-      string,
-      SceneMessage[]
-    >;
-    return (all[sceneId] || []).sort((a, b) => a.at.localeCompare(b.at));
-  } catch {
-    return [];
-  }
+  const all = readJsonRecord<SceneMessage[]>(SCENES_KEY);
+  return (all[sceneId] || []).sort((a, b) => a.at.localeCompare(b.at));
 }
 
 export function postSceneMessage(
@@ -101,15 +124,16 @@ export function postSceneMessage(
 }
 
 function pushSceneMessage(sceneId: string, msg: SceneMessage): SceneMessage {
-  const all = JSON.parse(localStorage.getItem(SCENES_KEY) || "{}") as Record<
-    string,
-    SceneMessage[]
-  >;
+  const all = readJsonRecord<SceneMessage[]>(SCENES_KEY);
   const list = all[sceneId] || [];
   list.push(msg);
   all[sceneId] = list.slice(-200);
-  localStorage.setItem(SCENES_KEY, JSON.stringify(all));
-  window.dispatchEvent(new CustomEvent("virilion-scene-msg", { detail: sceneId }));
+  writeJsonRecord(SCENES_KEY, all);
+  try {
+    window.dispatchEvent(new CustomEvent("virilion-scene-msg", { detail: sceneId }));
+  } catch {
+    /* ignore */
+  }
   return msg;
 }
 
@@ -132,45 +156,43 @@ export function postSceneCast(
 
 export function getVoicePresence(sceneId: string): VoicePresence[] {
   if (!canUse()) return [];
-  try {
-    const all = JSON.parse(localStorage.getItem(VOICE_KEY) || "{}") as Record<
-      string,
-      VoicePresence[]
-    >;
-    return all[sceneId] || [];
-  } catch {
-    return [];
-  }
+  const all = readJsonRecord<VoicePresence[]>(VOICE_KEY);
+  return all[sceneId] || [];
 }
 
 export function upsertVoicePresence(sceneId: string, presence: VoicePresence): void {
   if (!canUse()) return;
-  const all = JSON.parse(localStorage.getItem(VOICE_KEY) || "{}") as Record<
-    string,
-    VoicePresence[]
-  >;
+  const all = readJsonRecord<VoicePresence[]>(VOICE_KEY);
   const list = (all[sceneId] || []).filter((p) => p.vesselId !== presence.vesselId);
   list.push(presence);
   all[sceneId] = list;
-  localStorage.setItem(VOICE_KEY, JSON.stringify(all));
-  window.dispatchEvent(new CustomEvent("virilion-voice", { detail: sceneId }));
+  writeJsonRecord(VOICE_KEY, all);
+  try {
+    window.dispatchEvent(new CustomEvent("virilion-voice", { detail: sceneId }));
+  } catch {
+    /* ignore */
+  }
 }
 
 export function leaveVoice(sceneId: string, vesselId: string): void {
   if (!canUse()) return;
-  const all = JSON.parse(localStorage.getItem(VOICE_KEY) || "{}") as Record<
-    string,
-    VoicePresence[]
-  >;
+  const all = readJsonRecord<VoicePresence[]>(VOICE_KEY);
   all[sceneId] = (all[sceneId] || []).filter((p) => p.vesselId !== vesselId);
-  localStorage.setItem(VOICE_KEY, JSON.stringify(all));
-  window.dispatchEvent(new CustomEvent("virilion-voice", { detail: sceneId }));
+  writeJsonRecord(VOICE_KEY, all);
+  try {
+    window.dispatchEvent(new CustomEvent("virilion-voice", { detail: sceneId }));
+  } catch {
+    /* ignore */
+  }
 }
 
 export function getBlocked(): string[] {
   if (!canUse()) return [];
   try {
-    return JSON.parse(localStorage.getItem(BLOCKED_KEY) || "[]") as string[];
+    const raw = localStorage.getItem(BLOCKED_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw) as unknown;
+    return Array.isArray(parsed) ? (parsed as string[]) : [];
   } catch {
     return [];
   }
@@ -180,15 +202,32 @@ export function blockVessel(vesselId: string): void {
   if (!canUse()) return;
   const set = new Set(getBlocked());
   set.add(vesselId);
-  localStorage.setItem(BLOCKED_KEY, JSON.stringify([...set]));
+  try {
+    localStorage.setItem(BLOCKED_KEY, JSON.stringify([...set]));
+  } catch {
+    /* ignore */
+  }
 }
 
 export function reportStub(sceneId: string, vesselId: string, note: string): void {
   if (!canUse()) return;
   const key = "virilion_reports";
-  const list = JSON.parse(localStorage.getItem(key) || "[]") as unknown[];
+  let list: unknown[] = [];
+  try {
+    const raw = localStorage.getItem(key);
+    if (raw) {
+      const parsed = JSON.parse(raw) as unknown;
+      if (Array.isArray(parsed)) list = parsed;
+    }
+  } catch {
+    list = [];
+  }
   list.push({ sceneId, vesselId, note, at: new Date().toISOString() });
-  localStorage.setItem(key, JSON.stringify(list));
+  try {
+    localStorage.setItem(key, JSON.stringify(list));
+  } catch {
+    /* ignore */
+  }
 }
 
 

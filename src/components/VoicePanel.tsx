@@ -128,6 +128,15 @@ export function VoicePanel({
         });
         setStatus("live");
       } catch (err) {
+        // Still stamp presence so Join call is not an empty roster when mic is denied.
+        upsertVoicePresence(sceneId, {
+          vesselId: vessel.id,
+          vesselName: vessel.name,
+          muted: true,
+          deafened: false,
+          joinedAt: new Date().toISOString(),
+        });
+        setMuted(true);
         setStatus("error");
         setError(
           err instanceof Error
@@ -222,7 +231,8 @@ export function VoicePanel({
           <div className="voice-state voice-state-error relative z-[1]">
             <p className="font-display text-base text-danger mb-1">Mic unavailable</p>
             <p className="text-sm text-fg-muted leading-relaxed">
-              {error}. Allow mic access to join the staging voice shell (WebRTC demo).
+              {error}. You are still marked present in this room (muted). Allow mic
+              access and re-open Join call for the WebRTC preview — still in-app.
             </p>
           </div>
         )}
