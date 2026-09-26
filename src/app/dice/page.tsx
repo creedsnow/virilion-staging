@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
 import {
   MOONMARKET_SKINS,
@@ -123,9 +122,9 @@ export default function DicePage() {
           Witnessed under the lamps
         </p>
         <p className="text-sm text-fg-muted mt-2 leading-relaxed">
-          Client-only ritual for staging. Moonmarket skin art sits in the bowl —
-          blank faces, number overlaid. From a scene room, Cast here stamps scene
-          rolls into that chamber.
+          Client-only ritual for staging. Skin art sits in the bowl — blank faces,
+          number overlaid. From a scene room, Cast here stamps scene rolls into
+          that chamber.
         </p>
       </div>
 
@@ -201,27 +200,20 @@ export default function DicePage() {
         </button>
       </div>
 
-      <section className="cast-shape-strip" aria-label="Moonmarket die shapes">
+      <section className="cast-shape-strip" aria-label="Die shapes">
         <div className="flex items-end justify-between gap-2 mb-2.5">
           <div>
-            <p className="section-kicker mb-0.5">Shapes at the stall</p>
+            <p className="section-kicker mb-0.5">Shapes in the bowl</p>
             <p className="text-xs text-fg-muted leading-snug">
-              No d20 product shot yet — bowl uses skin sets. Shapes live in
-              Moonmarket.
+              No d20 product shot yet — bowl uses skin sets. Shop / Moonmarket
+              deferred post-launch; art kept for later.
             </p>
           </div>
-          <Link
-            href="/shop"
-            className="text-[10px] font-semibold tracking-[0.14em] uppercase text-gold hover:text-gold-soft shrink-0"
-          >
-            Stall →
-          </Link>
         </div>
         <div className="cast-shape-row">
           {(["d4", "d6", "d8", "d10", "d12", "dpercent"] as const).map((id) => (
-            <Link
+            <div
               key={id}
-              href="/shop"
               className="cast-shape-tile"
               title={id === "dpercent" ? "d%" : id}
             >
@@ -234,7 +226,7 @@ export default function DicePage() {
                 sizes="72px"
               />
               <span>{id === "dpercent" ? "d%" : id}</span>
-            </Link>
+            </div>
           ))}
         </div>
       </section>

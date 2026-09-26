@@ -1,3 +1,5 @@
+> **Deferred post-launch:** Moonmarket / Shop UI is off the player path for now. Assets kept for later re-enable.
+
 # Moonmarket product art — Batch A4
 
 Photoreal product renders for Virilion Moonmarket. Blank faces (no numerals/letters) to satisfy Codex no-text rule; UI can overlay numbers if needed.

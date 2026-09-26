@@ -146,7 +146,7 @@ export function uiIcon(name: string): string | null {
   return `/assets/icons/ui/${name}.svg`;
 }
 
-/** Moonmarket dice skins shipped in Batch A4 (filename slug → label). */
+/** Moonmarket dice skins (Batch A4). Shop UI deferred post-launch; Casting Bowl still uses these. */
 export const MOONMARKET_SKINS = [
   { id: "night-court", label: "Night Court", blurb: "Obsidian set under velvet lamps" },
   { id: "starveil", label: "Starveil", blurb: "Starlit resin · soft aurora edge" },
@@ -176,6 +176,7 @@ export function moonmarketDie(id: string, size: "full" | "800" = "800"): string 
   return `/assets/moonmarket/shop-die-${id}${suffix}.webp`;
 }
 
+/** Wisp loops — UI deferred post-launch; packs kept in public/assets/wisps/. */
 export type WispLoop = "idle" | "greet" | "notify" | "pet" | "poke";
 
 export function wispWebm(loop: WispLoop): string {

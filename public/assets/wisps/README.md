@@ -1,3 +1,5 @@
+> **Deferred post-launch:** Wisp UI is off the player path for now. Assets kept for later re-enable.
+
 # Virilion Companion Wisp — Phase 1 v2 (prettier / Creed reference)
 
 Soft Magic Fault / moon-gate residue mote for Night Court UI + parchment surfaces.

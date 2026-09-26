@@ -21,6 +21,7 @@ type Props = {
 
 /**
  * Companion wisp for /wisp pet panel only (never Map/Scenes/showcase).
+ * Deferred post-launch — /wisp soft-redirects; keep this component for re-enable.
  * WebM primary → APNG fallback → still when prefers-reduced-motion.
  */
 export function WispPet({
