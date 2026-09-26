@@ -1,6 +1,6 @@
 /** Deploy-safe public asset URLs (files under public/assets). Do not invent missing art. */
 
-/** Map canon MAP_REGIONS.id → codex-places-*-card-sm slug (only when file exists). */
+/** Map canon MAP_REGIONS.id → codex-places-*-card slug (only when file exists). */
 const PLACE_CARD_SLUG: Record<string, string> = {
   starveil: "starveil-sanctums",
   stormspire: "stormspire-aeries",
@@ -21,7 +21,7 @@ const PLACE_CARD_SLUG: Record<string, string> = {
 };
 
 /**
- * Map ORDER_HALLS.id → codex-halls-*-card-sm slug.
+ * Map ORDER_HALLS.id → codex-halls-*-card slug.
  * Card filenames drop a leading "the-" that some hall ids keep.
  */
 const HALL_CARD_SLUG: Record<string, string> = {
@@ -69,26 +69,59 @@ const UI_ICON_IDS = new Set([
   "party",
 ]);
 
+/** Full-size Codex people card (800×1000). Prefer for Codex grids + Realm medallion. */
+export function codexPeopleCard(peopleId: string): string {
+  return `/assets/codex/codex-peoples-${peopleId}-card.webp`;
+}
+
+/** Thumb / Rite tile — smaller decode. */
 export function codexPeopleCardSm(peopleId: string): string {
   return `/assets/codex/codex-peoples-${peopleId}-card-sm.webp`;
 }
 
+/** Full-size Codex class card. Prefer for Codex class rows. */
+export function codexClassCard(classId: string): string {
+  return `/assets/codex/codex-classes-${classId}-card.webp`;
+}
+
+/** Thumb / Rite tile. */
 export function codexClassCardSm(classId: string): string {
   return `/assets/codex/codex-classes-${classId}-card-sm.webp`;
 }
 
-/** Returns card-sm URL when a matching place asset exists; otherwise null. */
+/** Full place card when a matching asset exists; otherwise null. */
+export function codexPlaceCard(regionId: string): string | null {
+  const slug = PLACE_CARD_SLUG[regionId];
+  if (!slug) return null;
+  return `/assets/codex/codex-places-${slug}-card.webp`;
+}
+
+/** Thumb place card when a matching asset exists; otherwise null. */
 export function codexPlaceCardSm(regionId: string): string | null {
   const slug = PLACE_CARD_SLUG[regionId];
   if (!slug) return null;
   return `/assets/codex/codex-places-${slug}-card-sm.webp`;
 }
 
-/** Returns card-sm URL when a matching hall asset exists; otherwise null. */
+/** Full hall card when a matching asset exists; otherwise null. */
+export function codexHallCard(hallId: string): string | null {
+  const slug = HALL_CARD_SLUG[hallId];
+  if (!slug) return null;
+  return `/assets/codex/codex-halls-${slug}-card.webp`;
+}
+
+/** Thumb hall card when a matching asset exists; otherwise null. */
 export function codexHallCardSm(hallId: string): string | null {
   const slug = HALL_CARD_SLUG[hallId];
   if (!slug) return null;
   return `/assets/codex/codex-halls-${slug}-card-sm.webp`;
+}
+
+/** Realm News hero — prefer 1200×675 for phone/web. */
+export function newsVoiceVideoHero(size: "1200" | "full" = "1200"): string {
+  return size === "full"
+    ? "/assets/news/news-voice-video-live-hero.webp"
+    : "/assets/news/news-voice-video-live-hero-1200x675.webp";
 }
 
 export function peopleIcon(peopleId: string, theme: "dark" | "light" = "dark"): string {
@@ -160,15 +193,15 @@ export function wispStill(size: 128 | 256 = 256): string {
     : "/assets/wisps/wisp-still-256.webp";
 }
 
-/** Prefer hall card-sm, else place card-sm, from scene art ids. */
+/** Prefer full hall card, else full place card, from scene art ids (denser lobby thumbs). */
 export function sceneLobbyArt(opts: {
   placeId?: string;
   hallId?: string;
 }): string | null {
   if (opts.hallId) {
-    const hall = codexHallCardSm(opts.hallId);
+    const hall = codexHallCard(opts.hallId);
     if (hall) return hall;
   }
-  if (opts.placeId) return codexPlaceCardSm(opts.placeId);
+  if (opts.placeId) return codexPlaceCard(opts.placeId);
   return null;
 }

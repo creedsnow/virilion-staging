@@ -5190,3 +5190,108 @@ button.scene-call-hint:hover {
   color: rgba(201, 163, 91, 0.8);
   font-weight: 500;
 }
+
+/* —— Realm News ceremonial card (voice/video hero) —— */
+.news-card {
+  display: block;
+  overflow: hidden;
+  border-radius: 1.1rem;
+  border: 1px solid color-mix(in srgb, var(--border) 55%, var(--gold) 38%);
+  background:
+    linear-gradient(
+      165deg,
+      color-mix(in srgb, var(--bg-card) 90%, var(--parchment)),
+      var(--bg-card)
+    );
+  box-shadow:
+    var(--shadow-card),
+    0 0 22px color-mix(in srgb, var(--gold) 12%, transparent);
+  transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+}
+.news-card:hover {
+  border-color: color-mix(in srgb, var(--gold) 55%, var(--border));
+  transform: translateY(-1px);
+  box-shadow:
+    var(--shadow-card),
+    0 0 28px color-mix(in srgb, var(--gold) 18%, transparent);
+}
+.news-card-frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: color-mix(in srgb, #0b0814 80%, var(--bg-card));
+}
+.news-card-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.news-card-veil {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      180deg,
+      transparent 55%,
+      color-mix(in srgb, #0b0814 35%, transparent) 100%
+    ),
+    radial-gradient(
+      ellipse 70% 50% at 50% 0%,
+      color-mix(in srgb, var(--gold) 14%, transparent),
+      transparent 70%
+    );
+}
+.news-card-body {
+  padding: 0.85rem 1rem 1rem;
+}
+.news-card-title {
+  font-family: var(--font-display), Spectral, Georgia, serif;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--title, var(--gold-soft));
+}
+.news-card-sub {
+  margin-top: 0.4rem;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--fg) 62%, transparent);
+}
+.news-card-cta {
+  display: inline-block;
+  margin-top: 0.65rem;
+  font-size: 0.65625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 600;
+}
+.news-card:hover .news-card-cta {
+  color: var(--gold-soft);
+}
+[data-theme="light"] .news-card {
+  border-color: color-mix(in srgb, var(--gold) 42%, var(--border));
+  background:
+    linear-gradient(165deg, #fffaf2, color-mix(in srgb, var(--parchment) 40%, #fffcf6));
+}
+[data-theme="light"] .news-card-veil {
+  background:
+    linear-gradient(
+      180deg,
+      transparent 60%,
+      color-mix(in srgb, var(--parchment) 35%, transparent) 100%
+    );
+}
+[data-theme="light"] .news-card-title {
+  color: var(--title, #3a2a12);
+}
+@media (prefers-reduced-motion: reduce) {
+  .news-card,
+  .news-card:hover {
+    transition: none;
+    transform: none;
+  }
+}

@@ -12,7 +12,7 @@ import { CLASSES } from "@/lib/canon/classes";
 import { STYLES } from "@/lib/canon/styles";
 import { DEMO_SCENES } from "@/lib/scenes";
 import { COMING_UP } from "@/lib/events";
-import { codexPeopleCardSm } from "@/lib/assets";
+import { codexPeopleCard, newsVoiceVideoHero } from "@/lib/assets";
 
 const WALKING = [
   {
@@ -180,7 +180,7 @@ export default function RealmPage() {
   const initial = vessel.name.trim().charAt(0).toUpperCase() || "V";
 
   const peopleArt =
-    vessel.people !== "custom" ? codexPeopleCardSm(vessel.people) : null;
+    vessel.people !== "custom" ? codexPeopleCard(vessel.people) : null;
 
   return (
     <div className="space-y-5 -mt-0.5 realm-arrival">
@@ -224,8 +224,8 @@ export default function RealmPage() {
               <Image
                 src={peopleArt}
                 alt=""
-                width={176}
-                height={224}
+                width={320}
+                height={400}
                 className="vessel-medallion-img"
                 sizes="88px"
                 priority
@@ -446,6 +446,32 @@ export default function RealmPage() {
             </Link>
           ))}
         </div>
+      </section>
+
+
+      {/* News — voice/video live hero */}
+      <section className="space-y-2.5">
+        <h2 className="section-serif-lg">News</h2>
+        <Link href="/scenes" className="news-card group">
+          <div className="news-card-frame">
+            <Image
+              src={newsVoiceVideoHero("1200")}
+              alt=""
+              width={1200}
+              height={675}
+              className="news-card-img"
+              sizes="(max-width: 640px) 100vw, 560px"
+            />
+            <div className="news-card-veil" aria-hidden />
+          </div>
+          <div className="news-card-body">
+            <p className="news-card-title">Voice and video now live inside Virilion.</p>
+            <p className="news-card-sub">
+              Deep-links and Discord voice stay the voice path — the portal does not replace Discord RP chat.
+            </p>
+            <span className="news-card-cta">Open Scenes →</span>
+          </div>
+        </Link>
       </section>
 
       <Link href="/codex" className="codex-card group">

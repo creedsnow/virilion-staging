@@ -7,10 +7,10 @@ import { CLASSES } from "@/lib/canon/classes";
 import { ORDER_HALLS } from "@/lib/canon/orderHalls";
 import { MAP_REGIONS } from "@/lib/canon/mapRegions";
 import {
-  codexClassCardSm,
-  codexHallCardSm,
-  codexPeopleCardSm,
-  codexPlaceCardSm,
+  codexClassCard,
+  codexHallCard,
+  codexPeopleCard,
+  codexPlaceCard,
   hallIcon,
   peopleIcon,
   uiIcon,
@@ -61,10 +61,10 @@ export default function CodexPage() {
             <article key={p.id} className="codex-art-card">
               <div className="codex-art-frame">
                 <Image
-                  src={codexPeopleCardSm(p.id)}
+                  src={codexPeopleCard(p.id)}
                   alt=""
-                  width={480}
-                  height={600}
+                  width={800}
+                  height={1000}
                   className="codex-art-img"
                   sizes="(max-width: 640px) 50vw, 240px"
                 />
@@ -104,10 +104,10 @@ export default function CodexPage() {
                   <div className="codex-class-accent" aria-hidden />
                   <div className="codex-class-thumb" aria-hidden>
                     <Image
-                      src={codexClassCardSm(c.id)}
+                      src={codexClassCard(c.id)}
                       alt=""
-                      width={96}
-                      height={120}
+                      width={160}
+                      height={200}
                       className="codex-class-thumb-img"
                       sizes="72px"
                     />
@@ -149,7 +149,7 @@ export default function CodexPage() {
         </div>
         <div className="codex-place-grid">
           {MAP_REGIONS.map((r) => {
-            const art = codexPlaceCardSm(r.id);
+            const art = codexPlaceCard(r.id);
             const badge =
               (r.peopleId ? peopleIcon(r.peopleId) : null) || uiIcon("homeland");
             if (!art) {
@@ -182,8 +182,8 @@ export default function CodexPage() {
                   <Image
                     src={art}
                     alt=""
-                    width={480}
-                    height={600}
+                    width={800}
+                    height={1000}
                     className="codex-art-img"
                     sizes="(max-width: 640px) 50vw, 240px"
                   />
@@ -216,7 +216,7 @@ export default function CodexPage() {
         </div>
         <div className="codex-hall-grid">
           {ORDER_HALLS.map((h) => {
-            const art = codexHallCardSm(h.id);
+            const art = codexHallCard(h.id);
             if (!art) {
               return (
                 <article key={h.id} className="lantern-card codex-place-card">
@@ -236,8 +236,8 @@ export default function CodexPage() {
                   <Image
                     src={art}
                     alt=""
-                    width={480}
-                    height={600}
+                    width={800}
+                    height={1000}
                     className="codex-art-img"
                     sizes="(max-width: 640px) 50vw, 240px"
                   />
