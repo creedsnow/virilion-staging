@@ -7,6 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { AgeGate } from "./AgeGate";
 import { BottomNav } from "./BottomNav";
 import { DemoBadge } from "./DemoBadge";
+import { UiAssetIcon } from "./UiAssetIcon";
 import { useTheme } from "./ThemeProvider";
 import { clearSession, getAgeOk, getPlayer, getVessel } from "@/lib/storage";
 
@@ -223,7 +224,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                     title="Menu"
                     onClick={() => setMenuOpen((o) => !o)}
                   >
-                    <IconMore />
+                    <UiAssetIcon name="more" size={16} fallback={<IconMore />} />
                   </button>
                   {menuOpen ? (
                     <div
@@ -265,7 +266,11 @@ export function AppShell({ children }: { children: ReactNode }) {
                 aria-label={theme === "dark" ? "Switch to parchment light" : "Switch to moonlight dark"}
                 title={theme === "dark" ? "Parchment" : "Moonlight"}
               >
-                {theme === "dark" ? <IconLamp /> : <IconMoon />}
+                {theme === "dark" ? (
+                  <UiAssetIcon name="theme-light" size={16} fallback={<IconLamp />} />
+                ) : (
+                  <UiAssetIcon name="theme-dark" size={16} fallback={<IconMoon />} />
+                )}
               </button>
             </div>
           </div>

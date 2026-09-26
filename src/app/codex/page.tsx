@@ -6,7 +6,15 @@ import { PEOPLES } from "@/lib/canon/peoples";
 import { CLASSES } from "@/lib/canon/classes";
 import { ORDER_HALLS } from "@/lib/canon/orderHalls";
 import { MAP_REGIONS } from "@/lib/canon/mapRegions";
-import { codexClassCardSm, codexPeopleCardSm, peopleIcon } from "@/lib/assets";
+import {
+  codexClassCardSm,
+  codexHallCardSm,
+  codexPeopleCardSm,
+  codexPlaceCardSm,
+  hallIcon,
+  peopleIcon,
+  uiIcon,
+} from "@/lib/assets";
 
 export default function CodexPage() {
   const playableClasses = CLASSES.filter((c) => c.id !== "custom");
@@ -33,6 +41,7 @@ export default function CodexPage() {
           ["#peoples", "Peoples"],
           ["#classes", "Classes"],
           ["#places", "Places"],
+          ["#halls", "Halls"],
           ["#rules", "Rules"],
           ["#chronicle", "Chronicle"],
         ].map(([href, label]) => (
@@ -138,29 +147,114 @@ export default function CodexPage() {
             Open Map →
           </Link>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          {MAP_REGIONS.map((r) => (
-            <Link
-              key={r.id}
-              href="/map"
-              className="lantern-card codex-place-card"
-              style={{ ["--lantern-accent" as string]: r.color }}
-            >
-              <div className="lantern-card-accent" aria-hidden />
-              <div className="lantern-card-glow" aria-hidden />
-              <div className="relative z-[1] flex items-start justify-between gap-2">
-                <div className="min-w-0">
-                  <p className="text-sm font-medium text-fg font-display">{r.label}</p>
-                  <p className="text-[11px] text-fg-muted mt-0.5 capitalize">{r.kind}</p>
+        <div className="codex-place-grid">
+          {MAP_REGIONS.map((r) => {
+            const art = codexPlaceCardSm(r.id);
+            const badge =
+              (r.peopleId ? peopleIcon(r.peopleId) : null) || uiIcon("homeland");
+            if (!art) {
+              return (
+                <Link
+                  key={r.id}
+                  href="/map"
+                  className="lantern-card codex-place-card"
+                  style={{ ["--lantern-accent" as string]: r.color }}
+                >
+                  <div className="lantern-card-accent" aria-hidden />
+                  <div className="lantern-card-glow" aria-hidden />
+                  <div className="relative z-[1] flex items-start justify-between gap-2">
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-fg font-display">{r.label}</p>
+                      <p className="text-[11px] text-fg-muted mt-0.5 capitalize">{r.kind}</p>
+                    </div>
+                    <span
+                      className="h-2.5 w-2.5 rounded-full shrink-0 mt-1 border border-border/40"
+                      style={{ background: r.color }}
+                      aria-hidden
+                    />
+                  </div>
+                </Link>
+              );
+            }
+            return (
+              <Link key={r.id} href="/map" className="codex-art-card codex-art-card-link">
+                <div className="codex-art-frame">
+                  <Image
+                    src={art}
+                    alt=""
+                    width={480}
+                    height={600}
+                    className="codex-art-img"
+                    sizes="(max-width: 640px) 50vw, 240px"
+                  />
+                  <div className="codex-art-veil" aria-hidden />
+                  {badge ? (
+                    <span className="codex-art-badge" aria-hidden>
+                      <img src={badge} alt="" width={28} height={28} />
+                    </span>
+                  ) : null}
+                  <div className="codex-art-caption">
+                    <p className="codex-art-title">{r.label}</p>
+                    <p className="codex-art-sub capitalize">
+                      {r.kind}
+                      {r.culture ? ` · ${r.culture}` : ""}
+                    </p>
+                  </div>
                 </div>
-                <span
-                  className="h-2.5 w-2.5 rounded-full shrink-0 mt-1 border border-border/40"
-                  style={{ background: r.color }}
-                  aria-hidden
-                />
-              </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
+        </div>
+      </section>
+
+      <section id="halls" className="space-y-3">
+        <div className="flex items-end justify-between gap-2">
+          <h2 className="section-serif">Order Halls</h2>
+          <p className="text-[10px] uppercase tracking-wide text-fg-muted">
+            {ORDER_HALLS.length} · map pins
+          </p>
+        </div>
+        <div className="codex-hall-grid">
+          {ORDER_HALLS.map((h) => {
+            const art = codexHallCardSm(h.id);
+            if (!art) {
+              return (
+                <article key={h.id} className="lantern-card codex-place-card">
+                  <div className="lantern-card-accent" aria-hidden />
+                  <div className="relative z-[1]">
+                    <p className="text-sm font-medium text-fg font-display">{h.name}</p>
+                    <p className="text-[11px] text-fg-muted mt-0.5">
+                      {h.tiedTo} · {h.mapPlace}
+                    </p>
+                  </div>
+                </article>
+              );
+            }
+            return (
+              <article key={h.id} className="codex-art-card">
+                <div className="codex-art-frame">
+                  <Image
+                    src={art}
+                    alt=""
+                    width={480}
+                    height={600}
+                    className="codex-art-img"
+                    sizes="(max-width: 640px) 50vw, 240px"
+                  />
+                  <div className="codex-art-veil" aria-hidden />
+                  <span className="codex-art-badge" aria-hidden>
+                    <img src={hallIcon(h.id)} alt="" width={28} height={28} />
+                  </span>
+                  <div className="codex-art-caption">
+                    <p className="codex-art-title">{h.name}</p>
+                    <p className="codex-art-sub">
+                      {h.tiedTo} · {h.mapPlace}
+                    </p>
+                  </div>
+                </div>
+              </article>
+            );
+          })}
         </div>
       </section>
 

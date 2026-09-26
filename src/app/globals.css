@@ -3764,3 +3764,37 @@ button.scene-call-hint:hover {
 [data-theme="light"] .codex-class-thumb {
   border-color: color-mix(in srgb, var(--gold) 38%, var(--border));
 }
+
+.ui-asset-icon {
+  display: inline-block;
+  flex-shrink: 0;
+  background-color: currentColor;
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+}
+.codex-place-grid,
+.codex-hall-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+@media (min-width: 640px) {
+  .codex-place-grid,
+  .codex-hall-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.85rem;
+  }
+}
+.codex-art-card-link {
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+.codex-art-card-link:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.04);
+}

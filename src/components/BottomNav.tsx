@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { UiAssetIcon } from "./UiAssetIcon";
 
-function IconLantern(_props?: { active?: boolean }) {
+function IconLanternFallback() {
   return (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
       <path
@@ -24,7 +25,7 @@ function IconLantern(_props?: { active?: boolean }) {
   );
 }
 
-function IconMap(_props?: { active?: boolean }) {
+function IconMapFallback() {
   return (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
       <path
@@ -38,7 +39,7 @@ function IconMap(_props?: { active?: boolean }) {
   );
 }
 
-function IconDoor(_props?: { active?: boolean }) {
+function IconDoorFallback() {
   return (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
       <path
@@ -57,7 +58,7 @@ function IconDoor(_props?: { active?: boolean }) {
   );
 }
 
-function IconSelf(_props?: { active?: boolean }) {
+function IconSelfFallback() {
   return (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
       <circle cx="12" cy="8" r="3.25" stroke="currentColor" strokeWidth="1.55" />
@@ -71,7 +72,7 @@ function IconSelf(_props?: { active?: boolean }) {
   );
 }
 
-function IconD20(_props?: { active?: boolean }) {
+function IconD20Fallback() {
   return (
     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden>
       <path
@@ -102,11 +103,11 @@ function IconD20(_props?: { active?: boolean }) {
 }
 
 const ITEMS = [
-  { href: "/", label: "Realm", Icon: IconLantern },
-  { href: "/map", label: "Map", Icon: IconMap },
-  { href: "/dice", label: "d20", Icon: IconD20, center: true },
-  { href: "/scenes", label: "Scenes", Icon: IconDoor },
-  { href: "/self", label: "Self", Icon: IconSelf },
+  { href: "/", label: "Realm", icon: "realm", size: 22, Fallback: IconLanternFallback },
+  { href: "/map", label: "Map", icon: "map", size: 22, Fallback: IconMapFallback },
+  { href: "/dice", label: "d20", icon: "d20", size: 28, Fallback: IconD20Fallback, center: true },
+  { href: "/scenes", label: "Scenes", icon: "scenes", size: 22, Fallback: IconDoorFallback },
+  { href: "/self", label: "Self", icon: "self", size: 22, Fallback: IconSelfFallback },
 ] as const;
 
 export function BottomNav() {
@@ -123,7 +124,10 @@ export function BottomNav() {
             item.href === "/"
               ? pathname === "/"
               : pathname.startsWith(item.href);
-          const Icon = item.Icon;
+          const Fallback = item.Fallback;
+          const iconEl = (
+            <UiAssetIcon name={item.icon} size={item.size} fallback={<Fallback />} />
+          );
           if ("center" in item && item.center) {
             return (
               <li key={item.href} className="flex justify-center -mt-8">
@@ -134,7 +138,7 @@ export function BottomNav() {
                   aria-current={active ? "page" : undefined}
                   aria-label="Roll d20"
                 >
-                  <Icon />
+                  {iconEl}
                 </Link>
               </li>
             );
@@ -148,7 +152,7 @@ export function BottomNav() {
                 }`}
                 aria-current={active ? "page" : undefined}
               >
-                <Icon />
+                {iconEl}
                 <span className="text-[9px] font-semibold tracking-[0.15em] uppercase mt-0.5">
                   {item.label}
                 </span>
