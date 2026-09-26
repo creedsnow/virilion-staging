@@ -2314,3 +2314,208 @@ button.scene-call-hint:hover {
   background:
     linear-gradient(180deg, #fffaf2, color-mix(in srgb, var(--parchment) 50%, #fffcf6));
 }
+
+
+/* —— Cycle 2: Vessel showcase · Whispers · Rite seal · Codex —— */
+.self-showcase {
+  padding: 1.15rem 1.1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
+}
+.self-showcase-stage {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+.self-portrait-lg {
+  position: relative;
+  flex-shrink: 0;
+  width: 7.25rem;
+  height: 8.5rem;
+  border-radius: 1.15rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid color-mix(in srgb, var(--gold) 36%, transparent);
+  overflow: hidden;
+  box-shadow:
+    0 0 28px color-mix(in srgb, var(--aura) 36%, transparent),
+    0 0 14px color-mix(in srgb, var(--gold) 18%, transparent);
+}
+.self-presence-pip {
+  position: absolute;
+  bottom: 0.55rem;
+  right: 0.55rem;
+  height: 0.7rem;
+  width: 0.7rem;
+  border-radius: 9999px;
+  border: 2px solid color-mix(in srgb, var(--bg-card) 80%, #0e0c14);
+  z-index: 2;
+}
+.self-meta-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.15rem;
+  font-size: 0.82rem;
+  color: var(--fg-muted);
+  line-height: 1.35;
+}
+.self-meta-chip {
+  color: var(--fg);
+  font-weight: 500;
+}
+.self-meta-dot {
+  color: color-mix(in srgb, var(--fg-muted) 70%, transparent);
+  padding: 0 0.15rem;
+}
+.self-hall-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 9999px;
+  border: 1px solid color-mix(in srgb, var(--gold) 38%, var(--border));
+  background: color-mix(in srgb, var(--gold) 8%, var(--bg-card));
+  font-size: 0.78rem;
+  color: var(--fg-muted);
+  transition: border-color 0.15s, background 0.15s;
+}
+.self-hall-chip:hover {
+  border-color: color-mix(in srgb, var(--gold) 60%, var(--border));
+  background: color-mix(in srgb, var(--gold) 14%, var(--bg-card));
+}
+.self-access {
+  border-top: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+  padding-top: 0.85rem;
+}
+@media (max-width: 380px) {
+  .self-showcase-stage {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .self-portrait-lg {
+    width: 8.5rem;
+    height: 9.5rem;
+  }
+}
+
+.rite-choice {
+  position: relative;
+  padding-right: 1.85rem;
+}
+.rite-choice-seal {
+  position: absolute;
+  top: 0.45rem;
+  right: 0.45rem;
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 9999px;
+  border: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
+  background: color-mix(in srgb, var(--bg) 40%, transparent);
+  font-size: 0.65rem;
+  line-height: 1.15rem;
+  text-align: center;
+  color: transparent;
+}
+.rite-choice-seal[data-on="true"] {
+  border-color: color-mix(in srgb, var(--gold) 70%, transparent);
+  background: linear-gradient(145deg, var(--gold), color-mix(in srgb, var(--gold-soft) 70%, var(--aura)));
+  color: #1a1208;
+  font-weight: 700;
+  box-shadow: 0 0 10px color-mix(in srgb, var(--gold) 45%, transparent);
+}
+.rite-choice[data-active="true"] {
+  border-color: color-mix(in srgb, var(--gold) 82%, var(--aura) 12%);
+  background:
+    linear-gradient(155deg, color-mix(in srgb, var(--gold) 28%, var(--bg-card)), color-mix(in srgb, var(--aura) 14%, var(--bg-card)));
+  box-shadow:
+    var(--shadow-card),
+    0 0 22px color-mix(in srgb, var(--gold) 32%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--gold) 35%, transparent);
+}
+.rite-choice-home {
+  font-size: 0.62rem;
+  line-height: 1.25;
+  color: color-mix(in srgb, var(--fg-muted) 85%, var(--gold) 10%);
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-top: 0.1rem;
+}
+[data-theme="light"] .rite-choice[data-active="true"] {
+  background:
+    linear-gradient(155deg, color-mix(in srgb, var(--gold) 22%, #fffaf2), color-mix(in srgb, var(--parchment) 40%, #fff));
+}
+
+.whisper-row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  width: 100%;
+  text-align: left;
+  padding: 0.85rem 0.9rem;
+  border-radius: 1.1rem;
+  border: 1px solid color-mix(in srgb, var(--border) 78%, var(--aura) 12%);
+  background:
+    linear-gradient(155deg, color-mix(in srgb, var(--bg-card) 90%, var(--aura) 5%), var(--bg-card));
+  box-shadow: var(--shadow-card);
+  transition: border-color 0.15s, transform 0.15s;
+  cursor: pointer;
+}
+.whisper-row:hover {
+  border-color: color-mix(in srgb, var(--gold) 42%, var(--border));
+  transform: translateY(-1px);
+}
+.whisper-unread {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background: var(--gold);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--gold) 55%, transparent);
+  shrink: 0;
+  flex-shrink: 0;
+}
+.whisper-thread {
+  padding: 0.25rem 0;
+}
+.whisper-bubble {
+  max-width: 88%;
+  padding: 0.7rem 0.85rem;
+  border-radius: 1rem;
+  border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+}
+.whisper-theirs {
+  margin-right: auto;
+  background: color-mix(in srgb, var(--bg-card) 88%, var(--aura) 8%);
+  border-bottom-left-radius: 0.35rem;
+}
+.whisper-mine {
+  margin-left: auto;
+  background: color-mix(in srgb, var(--gold) 12%, var(--bg-card));
+  border-color: color-mix(in srgb, var(--gold) 28%, var(--border));
+  border-bottom-right-radius: 0.35rem;
+}
+
+.codex-class-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.85rem 0.95rem;
+  border-radius: 1.05rem;
+  border: 1px solid color-mix(in srgb, var(--border) 78%, var(--aura) 10%);
+  background: color-mix(in srgb, var(--bg-card) 92%, var(--aura) 4%);
+}
+.people-tile-rich {
+  padding: 0.85rem 0.9rem;
+  min-height: auto;
+}
+
+.event-card {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}

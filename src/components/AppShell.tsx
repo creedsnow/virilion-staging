@@ -107,11 +107,17 @@ export function AppShell({ children }: { children: ReactNode }) {
                   ? "Bonds · Constellation"
                   : pathname.startsWith("/codex")
                     ? "The World Codex"
-                    : pathname.startsWith("/rules")
-                      ? "Community rules"
-                      : pathname.startsWith("/admin")
-                        ? "Demo GM"
-                        : "Staging demo";
+                    : pathname.startsWith("/inbox")
+                      ? "Whispers"
+                      : pathname.startsWith("/safety")
+                        ? "Safety"
+                        : pathname.startsWith("/calendar")
+                          ? "Coming up"
+                          : pathname.startsWith("/rules")
+                            ? "Community rules"
+                            : pathname.startsWith("/admin")
+                              ? "Demo GM"
+                              : "Staging demo";
 
   return (
     <div className={`min-h-dvh flex flex-col text-fg ${isEnter ? "" : "app-canvas"}`}>

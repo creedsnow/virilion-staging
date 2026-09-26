@@ -6,12 +6,16 @@ import { useEffect, useState } from "react";
 import { PEOPLES } from "@/lib/canon/peoples";
 import { CLASSES } from "@/lib/canon/classes";
 import { STYLES } from "@/lib/canon/styles";
+import { ORDER_HALLS } from "@/lib/canon/orderHalls";
 import { useTheme } from "@/components/ThemeProvider";
 import {
   clearSession,
   getPlayer,
+  getPresence,
   getVessel,
+  setPresence as persistPresence,
   wipeVesselForDemo,
+  type PresenceMode,
 } from "@/lib/storage";
 import type { DemoPlayer, Vessel } from "@/lib/types";
 
@@ -22,16 +26,30 @@ function roleLabel(role: string) {
   return role;
 }
 
+function presenceLabel(p: PresenceMode) {
+  if (p === "scene") return "In scene";
+  if (p === "unseen") return "Unseen";
+  return "Open";
+}
+
+function presencePip(p: PresenceMode) {
+  if (p === "scene") return "#c9a227";
+  if (p === "unseen") return "#9a9488";
+  return "#6b8f71";
+}
+
 export default function SelfPage() {
   const router = useRouter();
   const { theme, setTheme } = useTheme();
   const [tab, setTab] = useState<"vessel" | "player">("vessel");
   const [vessel, setV] = useState<Vessel | null>(null);
   const [player, setP] = useState<DemoPlayer | null>(null);
+  const [presence, setPresence] = useState<PresenceMode>("open");
 
   useEffect(() => {
     setV(getVessel());
     setP(getPlayer());
+    setPresence(getPresence());
   }, []);
 
   function logout() {
@@ -39,22 +57,44 @@ export default function SelfPage() {
     router.replace("/enter");
   }
 
+  function changePresence(next: PresenceMode) {
+    setPresence(next);
+    persistPresence(next);
+  }
+
+  const peopleMeta =
+    vessel && vessel.people !== "custom"
+      ? PEOPLES.find((p) => p.id === vessel.people)
+      : undefined;
   const peopleLabel = vessel
     ? vessel.people === "custom"
       ? vessel.peopleCustom || "Custom"
-      : PEOPLES.find((p) => p.id === vessel.people)?.name || vessel.people
+      : peopleMeta?.name || vessel.people
     : "";
   const styleLabel = vessel
     ? vessel.style === "custom"
       ? vessel.styleCustom || "Custom"
       : STYLES.find((s) => s.id === vessel.style)?.name || vessel.style
     : "";
+  const classMeta =
+    vessel && vessel.classId !== "custom"
+      ? CLASSES.find((c) => c.id === vessel.classId)
+      : undefined;
   const classLabel = vessel
     ? vessel.classId === "custom"
       ? vessel.classCustom || "Custom"
-      : CLASSES.find((c) => c.id === vessel.classId)?.name || vessel.classId
+      : classMeta?.name || vessel.classId
     : "";
+  const hall =
+    classMeta?.orderHall && classMeta.orderHall !== "—"
+      ? ORDER_HALLS.find((h) => h.name === classMeta.orderHall) || {
+          name: classMeta.orderHall,
+          mapPlace: "",
+          id: "",
+        }
+      : null;
   const initial = vessel?.name.trim().charAt(0).toUpperCase() || "V";
+  const homeland = peopleMeta?.homeland;
 
   return (
     <div className="space-y-5">
@@ -91,55 +131,85 @@ export default function SelfPage() {
         <div className="space-y-3">
           {vessel ? (
             <>
-              <section className="card stone-panel self-vessel-card rounded-2xl space-y-4 relative overflow-hidden">
+              <section className="card stone-panel self-vessel-card self-showcase rounded-2xl relative overflow-hidden">
                 <span className="vessel-watermark" aria-hidden>
                   V
                 </span>
-                <div className="flex gap-4 items-start relative z-[1]">
+
+                {/* Portrait stage */}
+                <div className="self-showcase-stage relative z-[1]">
                   <div
-                    className="self-portrait"
+                    className="self-portrait-lg"
                     style={{
                       background:
-                        "linear-gradient(145deg, color-mix(in srgb, var(--aura) 48%, #1a1028), #121018 75%)",
+                        "linear-gradient(155deg, color-mix(in srgb, var(--aura) 52%, #1a1028), #0e0c14 78%)",
                     }}
                     aria-hidden
                   >
-                    <span className="relative z-[1] font-display text-[2.1rem] font-semibold text-gold-soft">
+                    <span className="relative z-[1] font-display text-[3.4rem] font-semibold text-gold-soft leading-none">
                       {initial}
                     </span>
                     <span className="self-portrait-sheen" />
+                    <span
+                      className="self-presence-pip"
+                      style={{
+                        background: presencePip(presence),
+                        boxShadow: `0 0 10px ${presencePip(presence)}`,
+                      }}
+                      title={presenceLabel(presence)}
+                    />
                   </div>
-                  <div className="min-w-0 flex-1 pt-0.5">
+                  <div className="min-w-0 flex-1 pt-1">
                     <p className="section-kicker mb-1">Your vessel</p>
-                    <h2 className="font-display text-[1.65rem] font-semibold text-gold-soft leading-tight">
+                    <h2 className="font-display text-[1.85rem] font-semibold text-gold-soft leading-tight">
                       {vessel.name}
                     </h2>
-                    <p className="text-sm text-fg-muted mt-1 leading-snug">
-                      {peopleLabel} · {styleLabel} · {classLabel} · {roleLabel(vessel.role)}
+                    <p className="text-[10px] uppercase tracking-[0.14em] text-fg-muted mt-2">
+                      {presenceLabel(presence)}
+                      {vessel.status === "pending_gm" ? " · Pending GM" : " · Embodied"}
                     </p>
-                    <div className="mt-2.5 flex flex-wrap gap-1.5">
-                      <span className="pill-jewel">✦ Virelios · The Gilded Coil</span>
-                      {vessel.status === "pending_gm" ? (
-                        <span className="text-[10px] uppercase tracking-wide text-gold border border-gold/40 rounded-full px-2 py-0.5">
-                          Pending GM
-                        </span>
-                      ) : (
-                        <span className="pill-ok">✦ Embodied</span>
-                      )}
-                    </div>
                   </div>
                 </div>
 
-                {vessel.bio ? (
-                  <p className="text-sm text-fg-muted leading-relaxed border-t border-border/55 pt-3 relative z-[1]">
-                    {vessel.bio}
-                  </p>
-                ) : (
-                  <p className="text-sm text-fg-muted/80 italic border-t border-border/55 pt-3 relative z-[1]">
-                    No public bio yet — calm presence first.
-                  </p>
-                )}
+                {/* People · Style · Class · Role */}
+                <div className="self-meta-chips relative z-[1]">
+                  <span className="self-meta-chip">{peopleLabel}</span>
+                  <span className="self-meta-dot" aria-hidden>
+                    ·
+                  </span>
+                  <span className="self-meta-chip">{styleLabel}</span>
+                  <span className="self-meta-dot" aria-hidden>
+                    ·
+                  </span>
+                  <span className="self-meta-chip">{classLabel}</span>
+                  <span className="self-meta-dot" aria-hidden>
+                    ·
+                  </span>
+                  <span className="self-meta-chip">{roleLabel(vessel.role)}</span>
+                </div>
 
+                {/* Order Hall */}
+                {hall ? (
+                  <Link
+                    href="/map"
+                    className="self-hall-chip relative z-[1]"
+                    title={hall.mapPlace || hall.name}
+                  >
+                    <span className="text-gold" aria-hidden>
+                      ✦
+                    </span>
+                    <span>
+                      Order Hall · <strong className="text-fg font-medium">{hall.name}</strong>
+                    </span>
+                    <span className="text-fg-muted text-[10px] ml-auto shrink-0">Map →</span>
+                  </Link>
+                ) : vessel.classId === "custom" ? (
+                  <p className="text-xs text-fg-muted relative z-[1]">
+                    Custom class · Order Hall after GM approve
+                  </p>
+                ) : null}
+
+                {/* Blessing / open-to */}
                 <div className="self-stat-row relative z-[1]">
                   <div>
                     <p className="label mb-0.5">Role</p>
@@ -152,11 +222,69 @@ export default function SelfPage() {
                     </p>
                   </div>
                   <div>
-                    <p className="label mb-0.5">Status</p>
-                    <p className="text-sm text-fg font-medium capitalize">
-                      {vessel.status.replace("_", " ")}
+                    <p className="label mb-0.5">Open to</p>
+                    <p className="text-sm text-fg font-medium">
+                      {presenceLabel(presence)}
                     </p>
                   </div>
+                </div>
+
+                {/* Bio */}
+                {vessel.bio ? (
+                  <p className="text-sm text-fg-muted leading-relaxed border-t border-border/55 pt-3 relative z-[1]">
+                    {vessel.bio}
+                  </p>
+                ) : (
+                  <p className="text-sm text-fg-muted/80 italic border-t border-border/55 pt-3 relative z-[1]">
+                    No public bio yet — calm presence first.
+                  </p>
+                )}
+
+                {/* Presence control */}
+                <div className="seg-control relative z-[1]" role="group" aria-label="Presence">
+                  {(
+                    [
+                      ["open", "Open"],
+                      ["scene", "In scene"],
+                      ["unseen", "Unseen"],
+                    ] as const
+                  ).map(([id, label]) => (
+                    <button
+                      key={id}
+                      type="button"
+                      data-active={presence === id}
+                      onClick={() => changePresence(id)}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Compact access notes */}
+                <div className="self-access relative z-[1]">
+                  <p className="label mb-1.5">Where he may go</p>
+                  <ul className="space-y-1 text-xs text-fg-muted leading-relaxed">
+                    <li className="flex gap-2">
+                      <span className="text-gold shrink-0">✦</span>
+                      <span>Virelios · open hub (all Peoples)</span>
+                    </li>
+                    {homeland ? (
+                      <li className="flex gap-2">
+                        <span className="text-gold shrink-0">✦</span>
+                        <span>Homeland · {homeland}</span>
+                      </li>
+                    ) : null}
+                    {hall?.mapPlace ? (
+                      <li className="flex gap-2">
+                        <span className="text-gold shrink-0">✦</span>
+                        <span>Hall · {hall.mapPlace}</span>
+                      </li>
+                    ) : null}
+                    <li className="flex gap-2">
+                      <span className="text-gold shrink-0">✦</span>
+                      <span>Border Pass · class / People gates on Map</span>
+                    </li>
+                  </ul>
                 </div>
 
                 {vessel.status === "pending_gm" ? (
@@ -171,6 +299,28 @@ export default function SelfPage() {
                     </Link>
                   </div>
                 ) : null}
+              </section>
+
+              <section className="card stone-panel rounded-2xl space-y-2.5">
+                <p className="section-kicker">World & tools</p>
+                <div className="grid grid-cols-2 gap-2">
+                  <Link href="/inbox" className="realm-ask-chip">
+                    <span className="section-kicker block mb-0.5">Whispers</span>
+                    <span className="font-display text-base text-fg">Inbox</span>
+                  </Link>
+                  <Link href="/safety" className="realm-ask-chip">
+                    <span className="section-kicker block mb-0.5">Care</span>
+                    <span className="font-display text-base text-fg">Safety</span>
+                  </Link>
+                  <Link href="/calendar" className="realm-ask-chip">
+                    <span className="section-kicker block mb-0.5">When</span>
+                    <span className="font-display text-base text-fg">Coming up</span>
+                  </Link>
+                  <Link href="/codex" className="realm-ask-chip">
+                    <span className="section-kicker block mb-0.5">Lore</span>
+                    <span className="font-display text-base text-fg">Codex</span>
+                  </Link>
+                </div>
               </section>
 
               <section className="card stone-panel rounded-2xl space-y-2.5">
@@ -245,6 +395,14 @@ export default function SelfPage() {
               </button>
             </div>
           </section>
+
+          <Link href="/safety" className="card stone-panel block rounded-2xl hover:border-gold/40 transition">
+            <p className="section-kicker mb-1">Care</p>
+            <p className="text-sm font-medium text-fg font-display text-lg">Safety & Rules</p>
+            <p className="text-xs text-fg-muted mt-0.5">
+              Report · Block · consent · 21 locks
+            </p>
+          </Link>
 
           <Link href="/rules" className="card stone-panel block rounded-2xl hover:border-gold/40 transition">
             <p className="section-kicker mb-1">Community</p>

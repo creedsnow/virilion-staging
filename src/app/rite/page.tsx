@@ -226,7 +226,6 @@ export default function RitePage() {
     });
   }
 
-  const peopleMeta = people && people !== "custom" ? PEOPLES.find((p) => p.id === people) : null;
   const roleMeta = role ? ROLES.find((r) => r.id === role) : null;
 
   const stepTitles: Record<number, string> = {
@@ -241,9 +240,9 @@ export default function RitePage() {
   const stepHints: Record<number, string> = {
     0: "Role comes first, so Peoples locked to a role are filtered out before you fall for one.",
     1: "Sacred, consent-gated, never automatic. Defaults off.",
-    2: "Exactly 14 Peoples. No Veilborn. Custom → GM approval.",
+    2: "Fourteen Peoples — lore line + homeland on each tile. No Veilborn. Custom → GM.",
     3: "Styles filtered by People. Daddy ≠ Bear. Daddy banned for Smols only.",
-    4: "Class ties to Order Hall. Custom → GM approval.",
+    4: "Tiles alone select class — each shows its Order Hall. Custom → GM.",
     5: "Public face in the Realm — keep him clearly adult.",
     6: "One vessel only. Confirm before you embody.",
   };
@@ -365,46 +364,45 @@ export default function RitePage() {
       {step === 2 && (
         <div className="space-y-3">
           <p className="gate-note">
-            Exactly <strong className="text-fg">14 Peoples</strong>. No Veilborn. Custom → GM
-            approval.
+            Fourteen Peoples. No Veilborn.
             {role === "bottom" ? (
-              <> <strong className="text-gold-soft">Sorns</strong> available (Bottom-only).</>
+              <> <strong className="text-gold-soft">Sorns</strong> · Bottom-only.</>
             ) : null}
             {role === "top" ? (
-              <> <strong className="text-gold-soft">Serynth</strong> available (Top-only).</>
+              <> <strong className="text-gold-soft">Serynth</strong> · Top-only.</>
             ) : null}
-            {role === "verse" ? (
-              <> Sorns and Serynth are locked out for Verse.</>
-            ) : null}
+            {role === "verse" ? <> Sorns & Serynth locked for Verse.</> : null}
           </p>
           <div className="rite-choice-grid">
             {allowedPeople.map((id) => {
               const p = PEOPLES.find((x) => x.id === id);
               const label = id === "custom" ? "Custom" : p?.name || id;
-              const note =
+              const lore =
                 id === "custom"
                   ? "GM approval required"
-                  : p?.homeland || "";
+                  : p
+                    ? `${p.racialAbility}`
+                    : "";
+              const home = id === "custom" ? "" : p?.homeland || "";
+              const active = people === id;
               return (
                 <button
                   key={id}
                   type="button"
                   className="rite-choice"
-                  data-active={people === id}
+                  data-active={active}
                   onClick={() => onSelectPeople(id)}
                 >
+                  <span className="rite-choice-seal" aria-hidden data-on={active}>
+                    {active ? "✓" : ""}
+                  </span>
                   <span className="rite-choice-name">{label}</span>
-                  {note ? <span className="rite-choice-note">{note}</span> : null}
+                  {lore ? <span className="rite-choice-note">{lore}</span> : null}
+                  {home ? <span className="rite-choice-home">{home}</span> : null}
                 </button>
               );
             })}
           </div>
-          {peopleMeta ? (
-            <p className="text-xs text-fg-muted leading-relaxed">
-              {peopleMeta.racialAbility} · {peopleMeta.homeland}
-              {peopleMeta.roleNote ? ` · ${peopleMeta.roleNote}` : ""}
-            </p>
-          ) : null}
           {people === "sorns" ? (
             <p className="gate-warn">Sorns are Bottom-only — hard lock honored.</p>
           ) : null}
@@ -427,8 +425,8 @@ export default function RitePage() {
       {step === 3 && people && (
         <div className="space-y-3">
           <p className="gate-note">
-            Styles filtered by People. <strong className="text-fg">Daddy ≠ Bear</strong>.
-            Daddy banned for Smols only; Bear bans unchanged (Smols, Trahgs, Kaelir, Serynth).
+            Filtered by People. <strong className="text-fg">Daddy ≠ Bear</strong> · Daddy
+            banned for Smols only.
           </p>
           <div className="rite-choice-grid">
             {STYLES.map((s) => {
@@ -450,6 +448,9 @@ export default function RitePage() {
                   }
                   onClick={() => allowed && setStyle(s.id)}
                 >
+                  <span className="rite-choice-seal" aria-hidden data-on={style === s.id}>
+                    {style === s.id ? "✓" : ""}
+                  </span>
                   <span className="rite-choice-name">{s.name}</span>
                   {note ? <span className="rite-choice-note">{note}</span> : null}
                 </button>
@@ -476,35 +477,38 @@ export default function RitePage() {
       {step === 4 && (
         <div className="space-y-3">
           <p className="gate-note">
-            Class ties to an Order Hall on the Map. Custom → GM approval.
+            Tiles select class. Each ties to an Order Hall. Custom → GM approval.
           </p>
           <div className="rite-choice-grid">
-            {CLASSES.map((c) => (
-              <button
-                key={c.id}
-                type="button"
-                className="rite-choice"
-                data-active={classId === c.id}
-                onClick={() => setClassId(c.id)}
-              >
-                <span className="rite-choice-name">{c.name}</span>
-                <span className="rite-choice-note">
-                  {c.id === "custom" ? c.blurb : c.orderHall}
-                </span>
-              </button>
-            ))}
+            {CLASSES.map((c) => {
+              const active = classId === c.id;
+              return (
+                <button
+                  key={c.id}
+                  type="button"
+                  className="rite-choice"
+                  data-active={active}
+                  onClick={() => setClassId(c.id)}
+                >
+                  <span className="rite-choice-seal" aria-hidden data-on={active}>
+                    {active ? "✓" : ""}
+                  </span>
+                  <span className="rite-choice-name">{c.name}</span>
+                  <span className="rite-choice-note">
+                    {c.id === "custom" ? c.blurb : c.orderHall}
+                  </span>
+                  {c.id !== "custom" ? (
+                    <span className="rite-choice-home">{c.blurb}</span>
+                  ) : null}
+                </button>
+              );
+            })}
           </div>
           {kaelirWarn ? <p className="gate-warn">{kaelirWarn}</p> : null}
-          {classId && classId !== "custom" ? (
-            <p className="text-xs text-fg-muted leading-relaxed">
-              {CLASSES.find((c) => c.id === classId)?.blurb} Order Hall:{" "}
-              {CLASSES.find((c) => c.id === classId)?.orderHall}
-            </p>
-          ) : null}
           {classId === "custom" ? (
             <input
               className="input"
-              placeholder="Custom class (GM)"
+              placeholder="Describe Custom Class for GM"
               value={classCustom}
               onChange={(e) => setClassCustom(e.target.value)}
             />

@@ -15,6 +15,7 @@ import { PEOPLES } from "@/lib/canon/peoples";
 import { CLASSES } from "@/lib/canon/classes";
 import { STYLES } from "@/lib/canon/styles";
 import { DEMO_SCENES } from "@/lib/scenes";
+import { COMING_UP } from "@/lib/events";
 
 const WALKING = [
   {
@@ -77,32 +78,6 @@ const WALKING = [
   },
 ];
 
-const COMING_UP = [
-  {
-    when: "Tonight · 8 PM",
-    title: "Lamps of the Coil — open tavern night",
-    place: "Virelios · The Gilded Coil",
-    accent: "#c9784a",
-  },
-  {
-    when: "Tonight · 9:30 PM",
-    title: "Moonrise Duel — fourth bout",
-    place: "Cassanova · arena night",
-    accent: "#b84a5a",
-  },
-  {
-    when: "Tomorrow · 7 PM",
-    title: "Ashfall watch — session circle",
-    place: "Velkrath Wood · border lamps",
-    accent: "#5a8fc4",
-  },
-  {
-    when: "Tomorrow · 10 PM",
-    title: "Night hunt under the black canopy",
-    place: "Velkrath Wood",
-    accent: "#8b6bb8",
-  },
-];
 
 type Preview = {
   name: string;
@@ -389,17 +364,18 @@ export default function RealmPage() {
       <section className="space-y-3 feed-panel">
         <div className="flex items-baseline justify-between gap-3">
           <h2 className="section-serif text-fg">Coming up</h2>
-          <span
-            className="text-[10px] font-semibold tracking-[0.14em] uppercase text-fg-muted/80"
-            title="Calendar ships later"
+          <Link
+            href="/calendar"
+            className="text-[10px] font-semibold tracking-[0.14em] uppercase text-gold hover:text-gold-soft"
           >
-            Coming soon
-          </span>
+            Calendar →
+          </Link>
         </div>
         <div className="h-scroll">
           {COMING_UP.map((e) => (
-            <article
+            <Link
               key={e.title}
+              href="/calendar"
               className="event-card"
               style={{ ["--accent" as string]: e.accent }}
             >
@@ -410,7 +386,7 @@ export default function RealmPage() {
                 {e.title}
               </p>
               <p className="text-xs text-fg-muted mt-2">✦ {e.place}</p>
-            </article>
+            </Link>
           ))}
         </div>
       </section>
