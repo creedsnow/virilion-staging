@@ -1,115 +1,138 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { DiceStage, type DiceStageHandle } from "@/components/DiceStage";
 import {
   MOONMARKET_SKINS,
   moonmarketDie,
   moonmarketSkin,
 } from "@/lib/assets";
+import type { DiceSettledDetail } from "@/types/dice-stage";
 
 type Visibility = "private" | "scene" | "public";
 
 type SkinId = (typeof MOONMARKET_SKINS)[number]["id"];
 
-function CastingD20({
-  value,
-  rolling,
-  skinId,
-}: {
-  value: number | null;
-  rolling: boolean;
-  skinId: SkinId;
-}) {
-  const settled = value != null && !rolling;
-  const className = [
-    "cast-d20",
-    rolling ? "cast-d20-rolling" : "",
-    settled ? "cast-d20-settled" : "",
-    settled && value === 20 ? "cast-d20-nat20" : "",
-    settled && value === 1 ? "cast-d20-nat1" : "",
-  ]
-    .filter(Boolean)
-    .join(" ");
+/** Moonmarket skin id → dice-kit theme name. */
+const SKIN_TO_THEME: Record<SkinId, string> = {
+  "night-court": "nightcourt",
+  starveil: "starveil",
+  "gilded-coil": "gilded",
+  "parchment-bone": "bone",
+  mosswood: "mosswood",
+};
 
-  const skin = MOONMARKET_SKINS.find((s) => s.id === skinId) || MOONMARKET_SKINS[2];
+type ShapeId = "d4" | "d6" | "d8" | "d10" | "d12" | "d20" | "dpercent";
 
-  return (
-    <div className={className} aria-live="polite">
-      <span className="cast-d20-aura" aria-hidden />
-      <div className="cast-d20-art-frame" aria-hidden>
-        <Image
-          src={moonmarketSkin(skin.id)}
-          alt=""
-          width={800}
-          height={800}
-          className="cast-d20-art"
-          sizes="168px"
-          priority
-        />
-        <span className="cast-d20-art-veil" />
-      </div>
-      <span className="cast-d20-value font-display">{value ?? "—"}</span>
-      <span className="sr-only">
-        {rolling
-          ? "Casting"
-          : value == null
-            ? `Ready · ${skin.label} skin`
-            : `Cast ${value} · ${skin.label}`}
-      </span>
-    </div>
-  );
+const SHAPE_SIDES: Record<ShapeId, number> = {
+  d4: 4,
+  d6: 6,
+  d8: 8,
+  d10: 10,
+  d12: 12,
+  d20: 20,
+  dpercent: 100,
+};
+
+function shapeLabel(id: ShapeId): string {
+  return id === "dpercent" ? "d%" : id;
+}
+
+function randomResult(sides: number): string {
+  if (sides === 100) {
+    const tens = Math.floor(Math.random() * 10) * 10;
+    return String(tens).padStart(2, "0");
+  }
+  return String(1 + Math.floor(Math.random() * sides));
 }
 
 export default function DicePage() {
+  const stageRef = useRef<DiceStageHandle>(null);
   const [rolling, setRolling] = useState(false);
-  const [value, setValue] = useState<number | null>(null);
+  const [value, setValue] = useState<string | null>(null);
   const [visibility, setVisibility] = useState<Visibility>("private");
   const [skinId, setSkinId] = useState<SkinId>("gilded-coil");
+  const [sides, setSides] = useState(20);
+  const [shapeId, setShapeId] = useState<ShapeId>("d20");
+  const [muted, setMuted] = useState(false);
   const [history, setHistory] = useState<
-    { value: number; visibility: Visibility; skinId: SkinId; at: string }[]
+    {
+      value: string;
+      sides: number;
+      visibility: Visibility;
+      skinId: SkinId;
+      at: string;
+    }[]
   >([]);
 
-  function roll() {
+  const theme = SKIN_TO_THEME[skinId] || "gilded";
+
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const sync = () => setMuted(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  const onSettled = useCallback(
+    (detail: DiceSettledDetail) => {
+      setValue(detail.result);
+      setRolling(false);
+      setHistory((h) =>
+        [
+          {
+            value: detail.result,
+            sides: detail.sides,
+            visibility,
+            skinId,
+            at: new Date().toISOString(),
+          },
+          ...h,
+        ].slice(0, 8)
+      );
+    },
+    [visibility, skinId]
+  );
+
+  async function roll() {
+    if (rolling) return;
+    const el = stageRef.current;
+    if (!el) return;
     setRolling(true);
     setValue(null);
-    const duration = 700 + Math.random() * 400;
-    const start = performance.now();
-    const tick = (now: number) => {
-      setValue(1 + Math.floor(Math.random() * 20));
-      if (now - start < duration) {
-        requestAnimationFrame(tick);
-      } else {
-        const final = 1 + Math.floor(Math.random() * 20);
-        setValue(final);
-        setRolling(false);
-        setHistory((h) =>
-          [
-            {
-              value: final,
-              visibility,
-              skinId,
-              at: new Date().toISOString(),
-            },
-            ...h,
-          ].slice(0, 8)
-        );
-      }
-    };
-    requestAnimationFrame(tick);
+    const result = randomResult(sides);
+    try {
+      await el.roll({ sides, result, theme });
+    } catch {
+      setRolling(false);
+    }
+  }
+
+  function pickShape(id: ShapeId) {
+    if (rolling) return;
+    setShapeId(id);
+    setSides(SHAPE_SIDES[id]);
+    setValue(null);
   }
 
   const naturalLabel =
-    value == null
+    value == null || sides !== 20
       ? null
-      : value === 20
+      : value === "20"
         ? "Natural 20"
-        : value === 1
+        : value === "1"
           ? "Natural 1"
           : null;
 
   const activeSkin =
     MOONMARKET_SKINS.find((s) => s.id === skinId) || MOONMARKET_SKINS[2];
+
+  const castLabel =
+    shapeId === "dpercent"
+      ? "Cast the d%"
+      : `Cast the ${shapeId}`;
 
   return (
     <div className="space-y-5">
@@ -122,15 +145,21 @@ export default function DicePage() {
           Witnessed under the lamps
         </p>
         <p className="text-sm text-fg-muted mt-2 leading-relaxed">
-          Client-only ritual for staging. Skin art sits in the bowl — blank faces,
-          number overlaid. From a scene room, Cast here stamps scene rolls into
-          that chamber.
+          Client-only ritual for staging. A real 3D die tumbles in the bowl —
+          Moonmarket skins paint its faces. From a scene room, Cast here stamps
+          scene rolls into that chamber.
         </p>
       </div>
 
-      <div className="card dice-stage rounded-2xl flex flex-col items-center py-9 gap-5 relative overflow-hidden">
+      <div className="card dice-stage rounded-2xl flex flex-col items-center py-7 gap-5 relative overflow-hidden">
         <span className="dice-stage-speckle" aria-hidden />
-        <CastingD20 value={value} rolling={rolling} skinId={skinId} />
+        <DiceStage
+          ref={stageRef}
+          theme={theme}
+          muted={muted}
+          className="dice-kit-host relative z-[1]"
+          onSettled={onSettled}
+        />
         {naturalLabel ? (
           <p className="section-kicker -mt-1 tracking-[0.18em]">{naturalLabel}</p>
         ) : (
@@ -138,8 +167,8 @@ export default function DicePage() {
             {rolling
               ? "The bowl turns…"
               : value == null
-                ? `Ready · ${activeSkin.label}`
-                : "Cast settles"}
+                ? `Ready · ${activeSkin.label} · ${shapeLabel(shapeId)}`
+                : `Cast settles · ${value}`}
           </p>
         )}
 
@@ -196,7 +225,7 @@ export default function DicePage() {
           onClick={roll}
           disabled={rolling}
         >
-          {rolling ? "Casting…" : "Cast the d20"}
+          {rolling ? "Casting…" : castLabel}
         </button>
       </div>
 
@@ -205,28 +234,49 @@ export default function DicePage() {
           <div>
             <p className="section-kicker mb-0.5">Shapes in the bowl</p>
             <p className="text-xs text-fg-muted leading-snug">
-              No d20 product shot yet — bowl uses skin sets. Shop / Moonmarket
+              Tap a shape to change sides on the stage. Shop / Moonmarket
               deferred post-launch; art kept for later.
             </p>
           </div>
         </div>
         <div className="cast-shape-row">
-          {(["d4", "d6", "d8", "d10", "d12", "dpercent"] as const).map((id) => (
-            <div
+          {(
+            [
+              "d4",
+              "d6",
+              "d8",
+              "d10",
+              "d12",
+              "d20",
+              "dpercent",
+            ] as const
+          ).map((id) => (
+            <button
               key={id}
+              type="button"
               className="cast-shape-tile"
-              title={id === "dpercent" ? "d%" : id}
+              data-active={shapeId === id}
+              aria-pressed={shapeId === id}
+              title={shapeLabel(id)}
+              disabled={rolling}
+              onClick={() => pickShape(id)}
             >
-              <Image
-                src={moonmarketDie(id)}
-                alt=""
-                width={200}
-                height={200}
-                className="cast-shape-img"
-                sizes="72px"
-              />
-              <span>{id === "dpercent" ? "d%" : id}</span>
-            </div>
+              {id === "d20" ? (
+                <span className="cast-shape-d20-mark font-display" aria-hidden>
+                  20
+                </span>
+              ) : (
+                <Image
+                  src={moonmarketDie(id === "dpercent" ? "dpercent" : id)}
+                  alt=""
+                  width={200}
+                  height={200}
+                  className="cast-shape-img"
+                  sizes="72px"
+                />
+              )}
+              <span>{shapeLabel(id)}</span>
+            </button>
           ))}
         </div>
       </section>
@@ -239,6 +289,8 @@ export default function DicePage() {
               const skinLabel =
                 MOONMARKET_SKINS.find((s) => s.id === h.skinId)?.label ||
                 h.skinId;
+              const dieTag =
+                h.sides === 100 ? "d%" : h.sides === 20 ? "d20" : `d${h.sides}`;
               return (
                 <li
                   key={`${h.at}-${i}`}
@@ -246,11 +298,14 @@ export default function DicePage() {
                 >
                   <span className="text-sm text-fg-muted capitalize min-w-0">
                     {h.visibility}
-                    <span className="text-fg-muted/60"> · {skinLabel}</span>
+                    <span className="text-fg-muted/60">
+                      {" "}
+                      · {skinLabel} · {dieTag}
+                    </span>
                   </span>
                   <span
                     className={`font-display text-xl font-semibold tabular-nums shrink-0 ${
-                      h.value === 20 || h.value === 1
+                      h.sides === 20 && (h.value === "20" || h.value === "1")
                         ? "text-gold"
                         : "text-gold-soft"
                     }`}

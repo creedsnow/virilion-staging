@@ -1569,6 +1569,23 @@ body {
   opacity: 0.55;
 }
 
+/* 3D dice-kit host inside the ceremonial bowl card */
+.dice-kit-host {
+  width: 100%;
+  max-width: 480px;
+  height: 360px;
+  margin-inline: auto;
+  border-radius: 1rem;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 55% 45% at 50% 62%, rgba(12, 8, 18, 0.55), transparent 70%);
+}
+@media (max-width: 420px) {
+  .dice-kit-host {
+    height: 300px;
+  }
+}
+
 .cast-d20 {
   position: relative;
   display: flex;
@@ -4299,14 +4316,36 @@ button.scene-call-hint:hover {
   flex-direction: column;
   align-items: center;
   gap: 0.3rem;
+  padding: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: inherit;
 }
-.cast-shape-img {
+.cast-shape-tile:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.cast-shape-img,
+.cast-shape-d20-mark {
   width: 4.5rem;
   height: 4.5rem;
   border-radius: 0.85rem;
   object-fit: cover;
   border: 1px solid color-mix(in srgb, var(--border) 55%, var(--aura) 25%);
   box-shadow: var(--shadow-card);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.cast-shape-d20-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--gold-soft);
+  background:
+    radial-gradient(circle at 50% 40%, color-mix(in srgb, var(--aura) 28%, transparent), transparent 65%),
+    linear-gradient(160deg, #1a1424, #0c0a12);
 }
 .cast-shape-tile span {
   font-size: 0.62rem;
@@ -4315,8 +4354,19 @@ button.scene-call-hint:hover {
   text-transform: uppercase;
   color: var(--fg-muted);
 }
-.cast-shape-tile:hover .cast-shape-img {
+.cast-shape-tile:hover .cast-shape-img,
+.cast-shape-tile:hover .cast-shape-d20-mark {
   border-color: color-mix(in srgb, var(--gold) 50%, transparent);
+}
+.cast-shape-tile[data-active="true"] .cast-shape-img,
+.cast-shape-tile[data-active="true"] .cast-shape-d20-mark {
+  border-color: color-mix(in srgb, var(--gold) 70%, transparent);
+  box-shadow:
+    var(--shadow-card),
+    0 0 14px color-mix(in srgb, var(--gold) 28%, transparent);
+}
+.cast-shape-tile[data-active="true"] span {
+  color: var(--gold-soft);
 }
 
 .moonmarket-featured {
