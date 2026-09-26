@@ -1878,3 +1878,287 @@ body {
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--gold) 16%, #fffaf2), color-mix(in srgb, var(--parchment) 55%, #fffcf6));
 }
+
+/* —— Scene chamber · mythic story log —— */
+.scene-chamber {
+  position: relative;
+}
+
+.room-lamp-seal {
+  flex-shrink: 0;
+  width: 2.55rem;
+  height: 2.55rem;
+  border-radius: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold-soft);
+  border: 1px solid color-mix(in srgb, var(--gold) 38%, var(--border));
+  background:
+    radial-gradient(circle at 35% 28%, color-mix(in srgb, var(--gold) 28%, transparent), transparent 60%),
+    linear-gradient(160deg, color-mix(in srgb, var(--aura) 28%, #1a1028), #121018 78%);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--gold) 18%, transparent);
+}
+
+.story-log {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.2rem;
+  border: 1px solid color-mix(in srgb, var(--border) 58%, var(--aura) 28%);
+  background:
+    radial-gradient(ellipse 90% 45% at 50% -8%, color-mix(in srgb, var(--aura) 22%, transparent), transparent 65%),
+    radial-gradient(ellipse 40% 35% at 100% 100%, color-mix(in srgb, var(--gold) 10%, transparent), transparent 55%),
+    linear-gradient(180deg, color-mix(in srgb, var(--bg-card) 88%, var(--parchment)), var(--bg-card));
+  box-shadow: var(--shadow-card), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.story-log-sheen {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(1px 1px at 14% 18%, var(--speckle), transparent),
+    radial-gradient(1px 1px at 78% 28%, var(--speckle), transparent),
+    radial-gradient(1.5px 1.5px at 42% 72%, var(--speckle), transparent),
+    radial-gradient(1px 1px at 88% 82%, var(--speckle), transparent);
+  opacity: 0.45;
+}
+
+.story-log-inner {
+  padding: 0.85rem 0.95rem 1rem;
+  min-height: 100%;
+}
+
+.story-room-note {
+  display: flex;
+  gap: 0.55rem;
+  align-items: flex-start;
+  padding: 0.7rem 0.85rem;
+  margin-bottom: 0.85rem;
+  border-radius: 0.95rem;
+  border: 1px dashed color-mix(in srgb, var(--border) 55%, var(--gold) 32%);
+  background: color-mix(in srgb, var(--gold) 7%, var(--bg-elevated));
+  color: var(--fg-muted);
+  font-size: 0.72rem;
+  line-height: 1.45;
+  letter-spacing: 0.01em;
+}
+
+.story-room-note-mark {
+  color: var(--gold-soft);
+  flex-shrink: 0;
+  margin-top: 0.05rem;
+}
+
+.story-line {
+  position: relative;
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  padding: 0.75rem 0.35rem 0.8rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 48%, transparent);
+}
+
+.story-line:last-of-type {
+  border-bottom: none;
+}
+
+.story-line[data-mine="true"] {
+  margin-inline: -0.2rem;
+  padding-inline: 0.55rem;
+  border-radius: 0.9rem;
+  border-bottom-color: transparent;
+  background: color-mix(in srgb, var(--gold) 6%, transparent);
+}
+
+.story-seal {
+  position: relative;
+  flex-shrink: 0;
+  width: 2.35rem;
+  height: 2.35rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--gold-soft);
+  border: 1px solid color-mix(in srgb, var(--gold) 28%, transparent);
+  overflow: hidden;
+  box-shadow: 0 0 12px color-mix(in srgb, var(--aura) 18%, transparent);
+}
+
+.story-seal::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 25%, rgba(232, 200, 120, 0.32), transparent 55%);
+  pointer-events: none;
+}
+
+.story-you-pill {
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-soft);
+  border: 1px solid color-mix(in srgb, var(--gold) 40%, transparent);
+  border-radius: 9999px;
+  padding: 0.12rem 0.45rem;
+  background: color-mix(in srgb, var(--gold) 12%, transparent);
+}
+
+.story-text {
+  margin-top: 0.2rem;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--fg);
+}
+
+.story-menu-btn {
+  font-size: 0.65rem;
+  color: var(--fg-muted);
+  opacity: 0.65;
+  padding: 0.15rem 0.35rem;
+  min-height: 1.6rem;
+  border-radius: 0.4rem;
+  transition: opacity 0.15s, color 0.15s, background 0.15s;
+}
+
+.story-menu-btn:hover,
+.story-menu-btn[aria-expanded="true"] {
+  opacity: 1;
+  color: var(--gold-soft);
+  background: color-mix(in srgb, var(--gold) 10%, transparent);
+}
+
+.story-line-body {
+  position: relative;
+}
+
+.story-action-menu {
+  position: absolute;
+  right: 0;
+  top: 1.45rem;
+  z-index: 12;
+  min-width: 7.5rem;
+  border-radius: 0.75rem !important;
+}
+
+.story-action {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.45rem 0.65rem;
+  font-size: 0.75rem;
+  border-radius: 0.45rem;
+  color: var(--fg);
+}
+
+.story-action:hover {
+  color: var(--gold-soft);
+  background: color-mix(in srgb, var(--gold) 10%, transparent);
+}
+
+.story-action-danger:hover {
+  color: var(--danger);
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
+}
+
+.room-empty-lamp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.4rem;
+  height: 3.4rem;
+  margin: 0 auto 0.85rem;
+  border-radius: 1rem;
+  color: var(--gold-soft);
+  border: 1px solid color-mix(in srgb, var(--gold) 35%, var(--border));
+  background:
+    radial-gradient(circle at 40% 30%, color-mix(in srgb, var(--gold) 32%, transparent), transparent 62%),
+    color-mix(in srgb, var(--aura) 14%, var(--bg-elevated));
+  box-shadow: 0 0 28px color-mix(in srgb, var(--gold) 22%, transparent);
+}
+
+.story-composer {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.55rem 0.6rem;
+  border-radius: 1.15rem;
+  border: 1px solid color-mix(in srgb, var(--border) 58%, var(--gold) 28%);
+  background:
+    radial-gradient(ellipse 70% 80% at 0% 50%, color-mix(in srgb, var(--aura) 16%, transparent), transparent 55%),
+    linear-gradient(180deg, color-mix(in srgb, var(--bg-card) 88%, var(--parchment)), var(--bg-card));
+  box-shadow: var(--shadow-card), 0 0 20px color-mix(in srgb, var(--aura) 10%, transparent);
+}
+
+.story-composer-seal {
+  flex-shrink: 0;
+  width: 2.35rem;
+  height: 2.35rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--gold-soft);
+  border: 1px solid color-mix(in srgb, var(--gold) 35%, transparent);
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--aura) 42%, #1a1028), #121018 75%);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--aura) 22%, transparent);
+}
+
+.story-composer-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--fg);
+  font-size: 0.95rem;
+  line-height: 1.4;
+  padding: 0.35rem 0.15rem;
+}
+
+.story-composer-input::placeholder {
+  color: color-mix(in srgb, var(--fg-muted) 85%, transparent);
+}
+
+.story-toast {
+  text-align: center;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  color: var(--ok);
+  margin-bottom: 0.45rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  border: 1px solid color-mix(in srgb, var(--ok) 35%, var(--border));
+  background: color-mix(in srgb, var(--ok) 10%, var(--bg-elevated));
+}
+
+[data-theme="light"] .story-log {
+  background:
+    radial-gradient(ellipse 90% 45% at 50% -8%, color-mix(in srgb, var(--aura) 14%, transparent), transparent 65%),
+    linear-gradient(180deg, #fffaf2, color-mix(in srgb, var(--parchment) 55%, #fffcf6));
+}
+
+[data-theme="light"] .story-line[data-mine="true"] {
+  background: color-mix(in srgb, var(--gold) 10%, transparent);
+}
+
+[data-theme="light"] .story-composer {
+  background:
+    linear-gradient(180deg, #fffaf2, color-mix(in srgb, var(--parchment) 48%, #fffcf6));
+}
+
+[data-theme="light"] .story-composer-seal,
+[data-theme="light"] .room-lamp-seal {
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--aura) 28%, #efe3cb), color-mix(in srgb, var(--parchment) 70%, #d8c8a8));
+  border-color: color-mix(in srgb, var(--gold) 40%, var(--border));
+  color: var(--gold-deep);
+}
