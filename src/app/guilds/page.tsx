@@ -14,7 +14,7 @@ export default function GuildsPage() {
             <span className="display-italic text-[1.05em]">hall</span>
           </h1>
           <p className="text-sm text-fg-muted mt-1.5 leading-relaxed max-w-md">
-            Founding takes two vessels — master and co-master. Directory, ranks,
+            Founding takes two characters — master and co-master. Directory, ranks,
             and guild chat ship later. No invented guilds on staging.
           </p>
         </div>
@@ -29,8 +29,8 @@ export default function GuildsPage() {
             The lamps are out · no guilds yet
           </p>
           <p className="text-sm text-fg-muted leading-relaxed max-w-md mx-auto sm:mx-0">
-            Weave holds living vessel bonds today. Guild founding is not a second
-            vessel — it waits for two who agree to hold the hall together.
+            Weave holds living character bonds today. Guild founding is not a second
+            character — it waits for two who agree to hold the hall together.
           </p>
           <ul className="text-xs text-fg-muted/90 leading-relaxed space-y-1.5 max-w-sm mx-auto sm:mx-0 list-none pl-0">
             <li>

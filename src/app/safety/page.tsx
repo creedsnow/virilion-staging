@@ -14,7 +14,7 @@ export default function SafetyPage() {
             <span className="display-italic text-[1.05em]">safety</span>
           </h1>
           <p className="text-sm text-fg-muted mt-1.5 leading-relaxed max-w-md">
-            Consent first. Report and Block live on vessel messages in scene rooms.
+            Consent first. Report and Block live on character messages in scene rooms.
           </p>
         </div>
       </div>
@@ -28,7 +28,7 @@ export default function SafetyPage() {
             sacred, consent-gated, and never automatic.
           </p>
           <p className="text-xs text-fg-muted leading-relaxed">
-            If something feels wrong, leave the room, Block the vessel, or Report the message.
+            If something feels wrong, leave the room, Block the character, or Report the message.
             Demo saves Report/Block locally on this browser.
           </p>
         </div>
@@ -39,7 +39,7 @@ export default function SafetyPage() {
         <div className="relative z-[1] space-y-3">
           <p className="section-kicker">Report</p>
           <p className="text-sm text-fg-muted leading-relaxed">
-            On another vessel&apos;s message in a scene room, use{" "}
+            On another character&apos;s message in a scene room, use{" "}
             <strong className="text-fg">Report</strong>. Staging stores a local note
             only — no server queue yet. Toast says &quot;saved locally.&quot;
           </p>
@@ -51,7 +51,7 @@ export default function SafetyPage() {
         <div className="relative z-[1] space-y-3">
           <p className="section-kicker">Block</p>
           <p className="text-sm text-fg-muted leading-relaxed">
-            <strong className="text-fg">Block</strong> hides that vessel&apos;s messages in this
+            <strong className="text-fg">Block</strong> hides that character&apos;s messages in this
             browser for the demo. Full cross-device block ships with real accounts.
           </p>
         </div>
@@ -63,7 +63,7 @@ export default function SafetyPage() {
           <p className="section-kicker mb-1">Community</p>
           <p className="font-display text-xl font-semibold text-fg">Rules · 21 locks</p>
           <p className="text-xs text-fg-muted mt-0.5">
-            Age · one vessel · consent · in-app home
+            Age · one character · consent · in-app home
           </p>
         </div>
       </Link>

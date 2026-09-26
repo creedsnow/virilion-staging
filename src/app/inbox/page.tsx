@@ -128,7 +128,7 @@ export default function InboxPage() {
             <span className="display-italic text-[1.05em]">words</span>
           </h1>
           <p className="text-sm text-fg-muted mt-1.5 leading-relaxed max-w-md">
-            Soft words between vessels. Threads show faces first — never Player
+            Soft words between characters. Threads show faces first — never Player
             accounts.
           </p>
         </div>
@@ -140,7 +140,7 @@ export default function InboxPage() {
           <div className="relative z-[1] space-y-2 text-center py-2">
             <p className="font-display text-xl text-gold-soft">The night is quiet</p>
             <p className="text-sm text-fg-muted leading-relaxed max-w-sm mx-auto">
-              No whispers yet. When another vessel reaches for you, their face
+              No whispers yet. When another character reaches for you, their face
               will rest here.
             </p>
           </div>

@@ -218,7 +218,7 @@ export function SceneRoom({
               ✦
             </span>
             <p>
-              The lamps are lit. Speak as your Vessel in this room. Cast here stamps a
+              The lamps are lit. Speak as your Character in this room. Cast here stamps a
               scene roll into the story log.
             </p>
           </div>
@@ -246,7 +246,7 @@ export function SceneRoom({
                 The lamps wait for a first line.
               </p>
               <p className="text-sm text-fg-muted leading-relaxed max-w-sm mx-auto">
-                Speak as your Vessel below. Open another tab to demo multi-vessel
+                Speak as your Character below. Open another tab to demo multi-character
                 presence in this place.
               </p>
             </div>
@@ -344,7 +344,7 @@ export function SceneRoom({
                             onClick={() => {
                               blockVessel(m.vesselId);
                               setMenuId(null);
-                              setToast("Vessel blocked in this browser");
+                              setToast("Character blocked in this browser");
                               reload();
                             }}
                           >

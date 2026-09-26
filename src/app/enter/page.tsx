@@ -228,8 +228,8 @@ export default function EnterPage() {
           </h1>
           <p className="display-italic text-[1.05rem] text-fg-muted mt-3 leading-relaxed max-w-[17.5rem] mx-auto">
             {toRite
-              ? "One vessel. Role first. Cross when you are ready."
-              : "Your vessel waits under Virelios lamps."}
+              ? "One character. Role first. Cross when you are ready."
+              : "Your character waits under Virelios lamps."}
           </p>
           <div className="threshold-progress mt-8" aria-hidden>
             <span />

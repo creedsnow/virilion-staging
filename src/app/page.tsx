@@ -154,7 +154,7 @@ export default function RealmPage() {
     return (
       <EmptyState
         title="The threshold is closed"
-        body="Finish the Rite of Making to embody your one Vessel — then the lamps of Virelios open for him."
+        body="Finish the Rite of Making to embody your one Character — then the lamps of Virelios open for him."
         action={
           <Link href="/rite" className="btn-gold">
             Begin the Rite
@@ -197,7 +197,7 @@ export default function RealmPage() {
         </p>
       </div>
 
-      {/* 1. Who am I — Vessel (demo plate) */}
+      {/* 1. Who am I — Character (demo plate) */}
       <section className="card vessel-card vessel-card-glow !p-0 space-y-0 relative">
         <Image
           src="/virilion-logo.png"
@@ -243,7 +243,7 @@ export default function RealmPage() {
             />
           </div>
           <div className="min-w-0 flex-1 flex flex-col">
-            <p className="realm-kicker">Your vessel</p>
+            <p className="realm-kicker">Your character</p>
             <div className="flex items-start justify-between gap-2 mt-[3px]">
               <h2 className="realm-vessel-name">
                 {vessel.name}
@@ -313,8 +313,8 @@ export default function RealmPage() {
             <span className="section-kicker block mb-0.5">Asking for you</span>
             <span className="font-display text-lg text-fg leading-tight block">
               {askCount === 1
-                ? "One vessel waits on the Weave"
-                : `${askCount} vessels wait on the Weave`}
+                ? "One character waits on the Weave"
+                : `${askCount} characters wait on the Weave`}
             </span>
             <span className="text-[11px] text-fg-muted mt-1 block">
               Open Weave · accept or decline
@@ -350,7 +350,7 @@ export default function RealmPage() {
           <button
             type="button"
             className="walk-card walk-card-tap"
-            aria-label="You · open vessel preview"
+            aria-label="You · open character preview"
             onClick={() =>
               setPreview({
                 name: vessel.name,
@@ -504,7 +504,7 @@ export default function RealmPage() {
       </Link>
 
       <p className="text-[11px] text-fg-muted/75 text-center pt-1">
-        {player?.screenName || "Traveler"} · present as vessel · in-app home
+        {player?.screenName || "Traveler"} · present as character · in-app home
       </p>
 
       {preview ? (
@@ -534,7 +534,7 @@ export default function RealmPage() {
                 />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="section-kicker mb-0.5">Vessel preview · demo</p>
+                <p className="section-kicker mb-0.5">Character preview · demo</p>
                 <h3 className="font-display text-xl font-semibold text-fg leading-tight">
                   {preview.name}
                 </h3>

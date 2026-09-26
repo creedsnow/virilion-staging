@@ -106,7 +106,7 @@ export default function SelfPage() {
         <p className="section-kicker mb-1">Identity</p>
         <h1 className="font-display text-3xl font-semibold text-fg leading-tight">Self</h1>
         <p className="text-sm text-fg-muted mt-1.5 leading-relaxed max-w-md">
-          Public face is your Vessel. Player holds account look and settings. One vessel only.
+          Public face is your Character. Player holds account look and settings. One character only.
         </p>
       </div>
 
@@ -118,7 +118,7 @@ export default function SelfPage() {
           data-active={tab === "vessel"}
           onClick={() => setTab("vessel")}
         >
-          Vessel
+          Character
         </button>
         <button
           type="button"
@@ -164,7 +164,7 @@ export default function SelfPage() {
                     />
                   </div>
                   <div className="min-w-0 flex-1 pt-1">
-                    <p className="section-kicker mb-1">Your vessel</p>
+                    <p className="section-kicker mb-1">Your character</p>
                     <h2 className="font-display text-[1.85rem] font-semibold text-gold-soft leading-tight">
                       {vessel.name}
                     </h2>
@@ -295,7 +295,7 @@ export default function SelfPage() {
                   <div className="relative z-[1] border-t border-gold/30 pt-3 space-y-2">
                     <p className="text-sm text-gold-soft font-medium">Next step · GM approve</p>
                     <p className="text-xs text-fg-muted leading-relaxed">
-                      Custom selection is waiting. Open demo Admin to Approve (embodies the vessel)
+                      Custom selection is waiting. Open demo Admin to Approve (embodies the character)
                       or Reject / clear (demo stub — re-Rite after).
                     </p>
                     <Link href="/admin" className="btn-gold text-xs py-2 px-3 inline-flex !min-h-0">
@@ -336,20 +336,20 @@ export default function SelfPage() {
                 <ul className="space-y-2 text-sm text-fg-muted leading-relaxed">
                   <li className="flex gap-2">
                     <span className="text-gold shrink-0">✦</span>
-                    <span>One vessel. No second slot, no switcher, no paid CTA.</span>
+                    <span>One character. No second slot, no switcher, no paid CTA.</span>
                   </li>
                   <li className="flex gap-2">
                     <span className="text-gold shrink-0">✦</span>
-                    <span>Marriage: Coming soon — any two vessels.</span>
+                    <span>Marriage: Coming soon — any two characters.</span>
                   </li>
                 </ul>
               </section>
             </>
           ) : (
             <div className="card stone-panel rounded-2xl space-y-3">
-              <p className="section-kicker">No vessel yet</p>
+              <p className="section-kicker">No character yet</p>
               <p className="text-sm text-fg-muted leading-relaxed">
-                Finish the Rite of Making to embody your one Vessel.
+                Finish the Rite of Making to embody your one Character.
               </p>
               <Link href="/rite" className="btn-gold inline-flex justify-center">
                 Begin the Rite
@@ -418,7 +418,7 @@ export default function SelfPage() {
           <Link href="/admin" className="card stone-panel block rounded-2xl hover:border-gold/40 transition">
             <p className="section-kicker mb-1">GM tools</p>
             <p className="text-sm font-medium text-fg font-display text-lg">Demo admin</p>
-            <p className="text-xs text-fg-muted mt-0.5">Approve or Reject / clear pending vessels</p>
+            <p className="text-xs text-fg-muted mt-0.5">Approve or Reject / clear pending characters</p>
           </Link>
 
           <div className="pt-1 space-y-2">
@@ -426,7 +426,7 @@ export default function SelfPage() {
               Log out
             </button>
             <p className="text-[11px] text-fg-muted text-center leading-relaxed px-2">
-              Clears demo session and vessel, then returns to Enter — fresh start without clearing browser cache.
+              Clears demo session and character, then returns to Enter — fresh start without clearing browser cache.
             </p>
             {qa ? (
               <button
@@ -435,7 +435,7 @@ export default function SelfPage() {
                 onClick={() => {
                   if (
                     confirm(
-                      "Wipe this demo vessel? You can forge again. One-vessel lock still applies while a vessel exists."
+                      "Wipe this demo character? You can forge again. One-character lock still applies while a character exists."
                     )
                   ) {
                     wipeVesselForDemo();
@@ -444,7 +444,7 @@ export default function SelfPage() {
                   }
                 }}
               >
-                Demo: wipe vessel & re-Rite
+                Demo: wipe character & re-Rite
               </button>
             ) : null}
           </div>

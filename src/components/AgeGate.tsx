@@ -48,7 +48,7 @@ export function AgeGate({ onConfirm }: { onConfirm: () => void }) {
               <span className="text-gold shrink-0">✦</span>
               <span>
                 <strong className="text-fg">Players</strong> may be any identity.{" "}
-                <strong className="text-fg">Vessels</strong> are adult male gay /
+                <strong className="text-fg">Characters</strong> are adult male gay /
                 male-attracted characters.
               </span>
             </li>

@@ -157,7 +157,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             : pathname.startsWith("/dice")
               ? "Casting Bowl"
               : pathname.startsWith("/self")
-                ? "Vessel · Player"
+                ? "Character · Player"
                 : pathname.startsWith("/weave")
                   ? "Bonds · Constellation"
                   : pathname.startsWith("/codex")

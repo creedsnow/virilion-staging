@@ -165,7 +165,7 @@ export default function WeavePage() {
     return (
       <EmptyState
         title="Weave"
-        body="Embody a Vessel first, then ask and accept character-to-character bonds."
+        body="Embody a Character first, then ask and accept character-to-character bonds."
       />
     );
   }
@@ -179,7 +179,7 @@ export default function WeavePage() {
             <p className="section-kicker mb-1">Bonds · Constellation</p>
             <h1 className="font-display text-3xl font-semibold text-fg">The Weave</h1>
             <p className="text-sm text-fg-muted mt-1.5 leading-relaxed max-w-sm">
-              Vessel to vessel — soft threads across the night.{" "}
+              Character to character — soft threads across the night.{" "}
               {askingForYou.length > 0
                 ? `${askingForYou.length} asking for you tonight.`
                 : "No open asks right now."}
@@ -201,7 +201,7 @@ export default function WeavePage() {
           <p className="section-kicker">Reach across</p>
           <div className="space-y-2">
             <label className="label" htmlFor="bond-name">
-              Vessel name
+              Character name
             </label>
             <input
               id="bond-name"
@@ -258,7 +258,7 @@ export default function WeavePage() {
       </section>
 
       <p className="text-xs text-fg-muted leading-relaxed text-center pt-1">
-        Vessel to vessel · accept, decline, or ask across the night
+        Character to character · accept, decline, or ask across the night
       </p>
     </div>
   );

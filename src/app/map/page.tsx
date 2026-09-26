@@ -30,7 +30,7 @@ function hallGate(
     return {
       enterable: false,
       label: "Locked",
-      reason: "Embody a Vessel in the Rite first.",
+      reason: "Embody a Character in the Rite first.",
     };
   }
   if (hall.id === "the-blood-hideaway") {

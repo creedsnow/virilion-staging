@@ -18,7 +18,7 @@ Premium mobile-first **Next.js App Router** PWA portal into **Virilion** (adult 
 Locks live in `/workspace/virilion/handoff/` (and this repo’s `src/lib/canon/`). Key gates enforced in the Rite:
 
 - Exactly **14 Peoples** — no Veilborn
-- **One vessel per player**
+- **One character per player**
 - **Sorns = Bottom-only**; **Serynth = Top-only** (no Blessing / can-carry)
 - Role → People filter; Style lists from §4.1; **Daddy banned for Smols only**; Bear bans unchanged
 - Custom People/Style/Class → `pending_gm`
@@ -38,9 +38,9 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ### Log out vs hard-refresh vs `?qa=1`
 
-- **Log out** (Self → Player, header ⋯ menu, or Enter when already signed in): clears demo session + vessel + related play keys (`virilion_demo_player`, `virilion_vessel`, pending, presence, scenes/voice/weave/reports/blocked) **and** Auth.js session cookie when present; returns to Enter. Moonlight dark is the default after clear. Keeps age gate + QA latch.
+- **Log out** (Self → Player, header ⋯ menu, or Enter when already signed in): clears demo session + character + related play keys (`virilion_demo_player`, `virilion_vessel`, pending, presence, scenes/voice/weave/reports/blocked) **and** Auth.js session cookie when present; returns to Enter. Moonlight dark is the default after clear. Keeps age gate + QA latch.
 - **Hard-refresh** alone does **not** clear localStorage — you stay in the same saved demo state.
-- **`?qa=1` wipe**: player path hides demo wipe CTAs. Latch `localStorage.virilion_qa=1` (or `?qa=1`) to show vessel-only “wipe & re-Rite” for QA retake — not a full Log out. Clear with `?qa=0`.
+- **`?qa=1` wipe**: player path hides demo wipe CTAs. Latch `localStorage.virilion_qa=1` (or `?qa=1`) to show character-only “wipe & re-Rite” for QA retake — not a full Log out. Clear with `?qa=0`.
 
 ```bash
 npm run build   # production build
@@ -54,9 +54,9 @@ npm start       # serve production build
    - **Log in** — Auth.js credentials when `DATABASE_URL` + `AUTH_SECRET` are set
    - **Continue as Demo** — localStorage only (identical ceremonial look; no fake signup)
    - **Create account** — email + passphrase + confirm against Neon; if secrets are missing shows honest **“Accounts wiring — needs database”**
-3. **Rite of Making** (Role → Can carry → People → Style → Class → Name → Review). Real accounts also persist the vessel to Neon.
+3. **Rite of Making** (Role → Can carry → People → Style → Class → Name → Review). Real accounts also persist the character to Neon.
 4. App shell: Realm · Map · d20 · Scenes · Self (+ Weave)
-5. Scenes → open room → chat as Vessel; **Join call** opens in-app voice
+5. Scenes → open room → chat as Character; **Join call** opens in-app voice
 6. Self → Player → **Log out** clears session cookie + local demo keys
 
 ## Real accounts (Neon + Auth.js)
@@ -114,8 +114,8 @@ Or trigger a redeploy from the Vercel dashboard after saving env.
 2. `AUTH_SECRET` generated and set locally + on Vercel
 3. `npm run db:push` (or migrate) against Neon
 4. Redeploy staging
-5. Enter → **Create account** with email + passphrase + confirm → Rite → vessel lands in Neon
-6. Log out / Log in on another browser — vessel returns from DB
+5. Enter → **Create account** with email + passphrase + confirm → Rite → character lands in Neon
+6. Log out / Log in on another browser — character returns from DB
 
 Until those secrets exist, Create account shows **Accounts wiring — needs database** and **Continue as Demo** still works.
 
@@ -155,9 +155,9 @@ Canon questions → Virilion GM / Launch Planner — developers do not invent lo
 | `/dice` | d20 ritual |
 | `/wisp` | Deferred → redirects to `/` |
 | `/shop` | Deferred → redirects to `/` |
-| `/self` | Vessel \| Player |
+| `/self` | Character \| Player |
 | `/rules` | Community rules (21) in-app |
-| `/admin` | Approve / reject pending_gm vessels |
+| `/admin` | Approve / reject pending_gm characters |
 | `/api/auth/*` | Auth.js handlers + register + status |
 | `/api/vessel` | Persist / load vessel for signed-in users |
 
@@ -170,8 +170,8 @@ Canon questions → Virilion GM / Launch Planner — developers do not invent lo
 
 | What works in demo | What needs Neon + AUTH_SECRET |
 |--------------------|-------------------------------|
-| Enter → Rite → one Vessel → Realm | Create account / Log in |
-| `/admin` Approve embodies vessel here | Multi-device GM queue (still local for demo approve) |
+| Enter → Rite → one Character → Realm | Create account / Log in |
+| `/admin` Approve embodies character here | Multi-device GM queue (still local for demo approve) |
 | Map / Scenes / Weave local persist | Shared rooms / bonds later |
 
 ## Deferred post-launch (kept for re-enable)

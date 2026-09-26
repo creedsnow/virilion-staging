@@ -13,7 +13,7 @@ export default function RulesPage() {
           <span className="display-italic text-[1.05em]">Rules</span>
         </h1>
         <p className="text-sm text-fg-muted mt-1.5 leading-relaxed">
-          Product rules for the in-app home. Present as your Vessel. Consent before
+          Product rules for the in-app home. Present as your Character. Consent before
           escalation. Adult characters only.
         </p>
       </div>

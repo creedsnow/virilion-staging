@@ -111,8 +111,8 @@ export default function RitePage() {
         </h1>
         <p className="text-sm text-fg-muted leading-relaxed max-w-sm mx-auto">
           {pending
-            ? "Your custom vessel waits under soft lamps. The Realm opens — approve on Self or /admin when ready."
-            : "One vessel embodied. The lamps of Virelios are lit for him."}
+            ? "Your custom character waits under soft lamps. The Realm opens — approve on Self or /admin when ready."
+            : "One character embodied. The lamps of Virelios are lit for him."}
         </p>
         <div className="threshold-progress mx-auto" aria-hidden>
           <span />
@@ -131,10 +131,10 @@ export default function RitePage() {
     return (
       <div className="rite-hero text-center space-y-4">
         <p className="section-kicker">Rite of Making</p>
-        <h1 className="font-display text-3xl font-semibold text-gold-soft">One vessel</h1>
+        <h1 className="font-display text-3xl font-semibold text-gold-soft">One character</h1>
         <p className="text-sm text-fg-muted leading-relaxed">
           You already embody <strong className="text-fg">{existing.name}</strong>.
-          Virilion is one vessel per player — no second slot.
+          Virilion is one character per player — no second slot.
         </p>
         <div className="flex flex-col sm:flex-row gap-2 justify-center items-center">
           <button type="button" className="btn-gold" onClick={() => router.replace("/")}>
@@ -147,7 +147,7 @@ export default function RitePage() {
               onClick={() => {
                 if (
                   confirm(
-                    "Demo QA only: wipe this vessel and retake the Rite? Not a second vessel — the one-vessel lock stays."
+                    "Demo QA only: wipe this character and retake the Rite? Not a second character — the one-character lock stays."
                   )
                 ) {
                   wipeVesselForDemo();
@@ -173,7 +173,7 @@ export default function RitePage() {
         </div>
         {qa ? (
           <p className="text-[10px] text-fg-muted/75 leading-relaxed max-w-sm mx-auto">
-            QA path only · clears local demo vessel so tile selection and People lore can be re-tested.
+            QA path only · clears local demo character so tile selection and People lore can be re-tested.
           </p>
         ) : null}
       </div>
@@ -345,7 +345,7 @@ export default function RitePage() {
     3: "Styles filtered by People. Daddy ≠ Bear. Daddy banned for Smols only.",
     4: "Each class ties to an Order Hall. Custom → GM.",
     5: "Public face in the Realm — keep him clearly adult.",
-    6: "One vessel only. Confirm, then cross the threshold.",
+    6: "One character only. Confirm, then cross the threshold.",
   };
 
   if (showThreshold) {
@@ -356,8 +356,8 @@ export default function RitePage() {
           The Rite of Making
         </h1>
         <p className="text-sm text-fg-muted leading-relaxed max-w-sm mx-auto">
-          Shape one vessel — role, People, style, class, name — then step into a living Realm.
-          One vessel only.
+          Shape one character — role, People, style, class, name — then step into a living Realm.
+          One character only.
         </p>
         <div className="threshold-progress mx-auto" aria-hidden>
           <span />
@@ -689,7 +689,7 @@ export default function RitePage() {
         <div className="space-y-3">
           <div>
             <label className="label" htmlFor="vname">
-              Vessel name (required)
+              Character name (required)
             </label>
             <input
               id="vname"
@@ -741,7 +741,7 @@ export default function RitePage() {
                 <span className="rite-review-medallion-sheen" />
               </div>
               <div className="min-w-0 flex-1 pt-0.5">
-                <p className="section-kicker mb-1">Vessel reveal</p>
+                <p className="section-kicker mb-1">Character reveal</p>
                 <h2 className="font-display text-[1.55rem] font-semibold text-gold-soft leading-tight">
                   {name.trim() || "Unnamed"}
                 </h2>

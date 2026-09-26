@@ -87,8 +87,8 @@ function ScenesInner() {
   if (!vessel) {
     return (
       <EmptyState
-        title="No vessel yet"
-        body="Complete the Rite of Making to step into places and halls as your Vessel."
+        title="No character yet"
+        body="Complete the Rite of Making to step into places and halls as your Character."
         action={
           <Link href="/rite" className="btn-gold inline-flex">
             Begin the Rite
@@ -123,7 +123,7 @@ function ScenesInner() {
             <span className="display-italic">happening</span>
           </h1>
           <p className="scenes-hero-sub">
-            Step into a room as your Vessel. Presence and voice stay in the same
+            Step into a room as your Character. Presence and voice stay in the same
             place — open when you want company under the lamps.
           </p>
         </div>
