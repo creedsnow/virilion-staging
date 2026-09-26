@@ -63,6 +63,10 @@ const UI_ICON_IDS = new Set([
   "roster",
   "vessel",
   "order-hall",
+  "join-call",
+  "voice-lit",
+  "chat",
+  "party",
 ]);
 
 export function codexPeopleCardSm(peopleId: string): string {
@@ -154,4 +158,17 @@ export function wispStill(size: 128 | 256 = 256): string {
   return size === 128
     ? "/assets/wisps/wisp-still-128.webp"
     : "/assets/wisps/wisp-still-256.webp";
+}
+
+/** Prefer hall card-sm, else place card-sm, from scene art ids. */
+export function sceneLobbyArt(opts: {
+  placeId?: string;
+  hallId?: string;
+}): string | null {
+  if (opts.hallId) {
+    const hall = codexHallCardSm(opts.hallId);
+    if (hall) return hall;
+  }
+  if (opts.placeId) return codexPlaceCardSm(opts.placeId);
+  return null;
 }

@@ -195,7 +195,7 @@ export default function RealmPage() {
         </h1>
         {justArrived ? (
           <p className="text-sm text-fg-muted mt-2.5 leading-relaxed max-w-md">
-            Presence, places, and open halls — a living world, not a server home.
+            Presence, places, and open halls — a living world under the lamps.
           </p>
         ) : null}
       </div>

@@ -128,7 +128,7 @@ export function VoicePanel({
         });
         setStatus("live");
       } catch (err) {
-        // Still stamp presence so Join call is not an empty roster when mic is denied.
+        // Still stamp presence so Join voice is not an empty roster when mic is denied.
         upsertVoicePresence(sceneId, {
           vesselId: vessel.id,
           vesselName: vessel.name,
@@ -206,12 +206,12 @@ export function VoicePanel({
         <div className="voice-panel-glow" aria-hidden />
         <div className="relative z-[1] flex items-start justify-between gap-3">
           <div>
-            <p className="section-kicker mb-1">In-app voice</p>
+            <p className="section-kicker mb-1">Voice · this room</p>
             <h2 className="font-display text-xl font-semibold text-fg leading-tight">
               {sceneTitle}
             </h2>
             <p className="text-[11px] text-fg-muted mt-1">
-              In-app voice preview · this browser
+              Voice presence · this room · this browser
             </p>
           </div>
           <button type="button" className="btn-ghost text-xs py-1.5 px-2.5 !min-h-0" onClick={leave}>
@@ -232,7 +232,7 @@ export function VoicePanel({
             <p className="font-display text-base text-danger mb-1">Mic unavailable</p>
             <p className="text-sm text-fg-muted leading-relaxed">
               {error}. You are still marked present in this room (muted). Allow mic
-              access and re-open Join call for the WebRTC preview — still in-app.
+              access and re-open Join voice for the WebRTC preview in this room.
             </p>
           </div>
         )}
@@ -250,7 +250,7 @@ export function VoicePanel({
         )}
 
         <div className="relative z-[1]">
-          <p className="text-[10px] uppercase tracking-[0.14em] text-gold mb-2">In call</p>
+          <p className="text-[10px] uppercase tracking-[0.14em] text-gold mb-2">Present here</p>
           <ul className="voice-roster space-y-1.5">
             {roster.length === 0 ? (
               <li className="voice-state text-sm text-fg-muted py-3 px-3">
@@ -314,8 +314,8 @@ export function VoicePanel({
           </button>
         </div>
         <p className="relative z-[1] text-[11px] text-fg-muted leading-relaxed">
-          Staging voice: local mic + WebRTC loopback + shared presence. Multi-browser
-          mesh signaling ships next — still in-app.
+          Staging voice: local mic + WebRTC loopback + shared presence in this room.
+          Multi-browser mesh signaling ships next.
         </p>
       </div>
     </div>

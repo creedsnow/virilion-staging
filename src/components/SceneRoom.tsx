@@ -1,7 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import type { Vessel } from "@/lib/types";
+import { sceneLobbyArt } from "@/lib/assets";
 import {
   blockVessel,
   getBlocked,
@@ -12,6 +14,7 @@ import {
   type SceneInfo,
   type SceneMessage,
 } from "@/lib/scenes";
+import { UiAssetIcon } from "./UiAssetIcon";
 import { VoicePanel } from "./VoicePanel";
 
 function hueForVessel(id: string): string {
@@ -115,6 +118,10 @@ export function SceneRoom({
   }
 
   const initial = vessel.name.trim().charAt(0).toUpperCase() || "V";
+  const placeArt = sceneLobbyArt({
+    placeId: scene.placeId,
+    hallId: scene.hallId,
+  });
 
   return (
     <div className="scene-chamber flex flex-col min-h-[calc(100dvh-11.5rem)]">
@@ -130,24 +137,44 @@ export function SceneRoom({
               {backLabel}
             </button>
             <div className="flex items-start gap-3">
-              <span className="room-lamp-seal" aria-hidden>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M9 3h6M10 3v2h4V3M8 7h8l1 3v6a3 3 0 0 1-3 3h-4a3 3 0 0 1-3-3V10l1-3Z"
-                    stroke="currentColor"
-                    strokeWidth="1.55"
-                    strokeLinejoin="round"
+              {placeArt ? (
+                <span className="room-place-thumb" aria-hidden>
+                  <Image
+                    src={placeArt}
+                    alt=""
+                    width={96}
+                    height={120}
+                    className="room-place-thumb-img"
+                    sizes="52px"
                   />
-                  <path
-                    d="M12 10v5"
-                    stroke="currentColor"
-                    strokeWidth="1.55"
-                    strokeLinecap="round"
+                  <span className="room-place-thumb-veil" />
+                </span>
+              ) : (
+                <span className="room-lamp-seal" aria-hidden>
+                  <UiAssetIcon
+                    name="scenes"
+                    size={18}
+                    fallback={
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                        <path
+                          d="M9 3h6M10 3v2h4V3M8 7h8l1 3v6a3 3 0 0 1-3 3h-4a3 3 0 0 1-3-3V10l1-3Z"
+                          stroke="currentColor"
+                          strokeWidth="1.55"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M12 10v5"
+                          stroke="currentColor"
+                          strokeWidth="1.55"
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                    }
                   />
-                </svg>
-              </span>
+                </span>
+              )}
               <div className="min-w-0">
-                <p className="section-kicker mb-0.5">In-app chamber</p>
+                <p className="section-kicker mb-0.5">Room · presence</p>
                 <h1 className="font-display text-xl font-semibold text-fg leading-tight">
                   {scene.title}
                 </h1>
@@ -168,7 +195,7 @@ export function SceneRoom({
               className="btn-gold text-xs py-2 px-3 !min-h-0 !rounded-xl"
               onClick={() => setVoiceOpen(true)}
             >
-              Join call
+              Join voice
             </button>
             <button
               type="button"
@@ -191,8 +218,8 @@ export function SceneRoom({
               ✦
             </span>
             <p>
-              The lamps are lit. Speak as your Vessel. Cast here stamps a scene roll into
-              this feed.
+              The lamps are lit. Speak as your Vessel in this room. Cast here stamps a
+              scene roll into the story log.
             </p>
           </div>
 
@@ -214,12 +241,13 @@ export function SceneRoom({
                   />
                 </svg>
               </span>
-              <p className="section-kicker mb-2">Quiet chamber</p>
+              <p className="section-kicker mb-2">Quiet room</p>
               <p className="font-display text-xl text-gold-soft mb-2 leading-snug">
-                No one has spoken yet.
+                The lamps wait for a first line.
               </p>
               <p className="text-sm text-fg-muted leading-relaxed max-w-sm mx-auto">
-                Ink the first line below. Open another tab to demo multi-vessel talk.
+                Speak as your Vessel below. Open another tab to demo multi-vessel
+                presence in this place.
               </p>
             </div>
           ) : (

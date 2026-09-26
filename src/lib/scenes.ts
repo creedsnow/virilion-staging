@@ -7,6 +7,10 @@ export interface SceneInfo {
   vibe: string;
   seats: string;
   open: boolean;
+  /** MAP_REGIONS id when place card-sm art exists */
+  placeId?: string;
+  /** ORDER_HALLS id when hall card-sm art exists */
+  hallId?: string;
 }
 
 export interface SceneMessage {
@@ -40,6 +44,7 @@ export const DEMO_SCENES: SceneInfo[] = [
     vibe: "Soft night stroll, open to bonds",
     seats: "Open",
     open: true,
+    placeId: "virelios",
   },
   {
     id: "velkrath-moon",
@@ -48,14 +53,16 @@ export const DEMO_SCENES: SceneInfo[] = [
     vibe: "Quiet hunt, pack-friendly",
     seats: "Gathering · demo",
     open: true,
+    placeId: "velkrath",
   },
   {
     id: "dawns-chapel-vigil",
     title: "Dawn Vigil",
-    place: "Dawn's Chapel (Order Hall)",
+    place: "Dawn's Chapel · Order Hall",
     vibe: "Priest-led prayer circle",
     seats: "Open",
     open: true,
+    hallId: "dawns-chapel",
   },
   {
     id: "wastes-bell",
@@ -64,6 +71,7 @@ export const DEMO_SCENES: SceneInfo[] = [
     vibe: "Warlock pact talk — consent first",
     seats: "Gathering · demo",
     open: true,
+    hallId: "bell-hall-ruins",
   },
 ];
 
@@ -245,6 +253,7 @@ export function sceneForPlace(opts: {
     vibe: opts.note,
     seats: "Demo cast",
     open: true,
+    placeId: opts.id,
   };
 }
 
@@ -262,5 +271,6 @@ export function sceneForHall(opts: {
     vibe: `Class circle for ${opts.tiedTo}`,
     seats: "Demo cast",
     open: true,
+    hallId: opts.id,
   };
 }

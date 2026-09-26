@@ -148,7 +148,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       : pathname.startsWith("/rite")
         ? "Rite of Making"
         : pathname.startsWith("/scenes")
-          ? "Live rooms"
+          ? "Halls & rooms"
           : pathname.startsWith("/map")
             ? "One world"
             : pathname.startsWith("/dice")

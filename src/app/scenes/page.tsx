@@ -1,10 +1,13 @@
 "use client";
 
 import { Suspense, useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { EmptyState } from "@/components/EmptyState";
 import { SceneRoom } from "@/components/SceneRoom";
+import { UiAssetIcon } from "@/components/UiAssetIcon";
+import { sceneLobbyArt } from "@/lib/assets";
 import { DEMO_SCENES, type SceneInfo } from "@/lib/scenes";
 import { getVessel } from "@/lib/storage";
 import type { Vessel } from "@/lib/types";
@@ -12,20 +15,44 @@ import type { Vessel } from "@/lib/types";
 function LampSeal() {
   return (
     <span className="scene-lamp-seal" aria-hidden>
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-        <path
-          d="M9 3h6M10 3v2h4V3M8 7h8l1 3v6a3 3 0 0 1-3 3h-4a3 3 0 0 1-3-3V10l1-3Z"
-          stroke="currentColor"
-          strokeWidth="1.55"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M12 10v5"
-          stroke="currentColor"
-          strokeWidth="1.55"
-          strokeLinecap="round"
-        />
-      </svg>
+      <UiAssetIcon
+        name="scenes"
+        size={18}
+        fallback={
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M9 3h6M10 3v2h4V3M8 7h8l1 3v6a3 3 0 0 1-3 3h-4a3 3 0 0 1-3-3V10l1-3Z"
+              stroke="currentColor"
+              strokeWidth="1.55"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M12 10v5"
+              stroke="currentColor"
+              strokeWidth="1.55"
+              strokeLinecap="round"
+            />
+          </svg>
+        }
+      />
+    </span>
+  );
+}
+
+function SceneThumb({ scene }: { scene: SceneInfo }) {
+  const art = sceneLobbyArt({ placeId: scene.placeId, hallId: scene.hallId });
+  if (!art) return <LampSeal />;
+  return (
+    <span className="scene-place-thumb" aria-hidden>
+      <Image
+        src={art}
+        alt=""
+        width={96}
+        height={120}
+        className="scene-place-thumb-img"
+        sizes="56px"
+      />
+      <span className="scene-place-thumb-veil" />
     </span>
   );
 }
@@ -54,14 +81,14 @@ function ScenesInner() {
   }, [booted, vessel, search]);
 
   if (!booted) {
-    return <p className="text-sm text-fg-muted">Opening scenes…</p>;
+    return <p className="text-sm text-fg-muted">Opening halls…</p>;
   }
 
   if (!vessel) {
     return (
       <EmptyState
         title="No vessel yet"
-        body="Complete the Rite of Making to join scenes as your Vessel."
+        body="Complete the Rite of Making to step into places and halls as your Vessel."
         action={
           <Link href="/rite" className="btn-gold inline-flex">
             Begin the Rite
@@ -90,14 +117,14 @@ function ScenesInner() {
       <div className="scenes-hero">
         <div className="scenes-hero-sheen" aria-hidden />
         <div className="relative z-[1]">
-          <p className="section-kicker mb-1">In-app RP · Chambers</p>
+          <p className="section-kicker mb-1">Places · Halls · Rooms</p>
           <h1 className="font-display text-3xl font-semibold text-fg leading-tight">
             Where the story is{" "}
             <span className="display-italic text-[1.05em]">happening</span>
           </h1>
           <p className="text-sm text-fg-muted mt-1.5 leading-relaxed max-w-md">
-            Step inside a room as your Vessel. Join call lives inside the chamber —
-            same place, voice when you want it.
+            Step into a room as your Vessel. Presence and voice stay in the same
+            place — open when you want company under the lamps.
           </p>
         </div>
       </div>
@@ -109,7 +136,7 @@ function ScenesInner() {
               <div className="scene-card-accent" aria-hidden />
               <div className="scene-card-glow" aria-hidden />
               <div className="relative z-[1] flex gap-3 items-start">
-                <LampSeal />
+                <SceneThumb scene={s} />
                 <div className="min-w-0 flex-1">
                   <div className="flex justify-between gap-3 items-start">
                     <div className="min-w-0">
@@ -144,7 +171,13 @@ function ScenesInner() {
                         setActive(s);
                       }}
                     >
-                      Voice inside
+                      <UiAssetIcon
+                        name="voice-lit"
+                        size={14}
+                        className="scene-call-hint-icon"
+                        fallback={null}
+                      />
+                      Voice in room
                     </button>
                   </div>
                 </div>
@@ -159,7 +192,7 @@ function ScenesInner() {
 
 export default function ScenesPage() {
   return (
-    <Suspense fallback={<p className="text-sm text-fg-muted">Opening scenes…</p>}>
+    <Suspense fallback={<p className="text-sm text-fg-muted">Opening halls…</p>}>
       <ScenesInner />
     </Suspense>
   );

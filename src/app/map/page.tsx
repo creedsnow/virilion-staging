@@ -37,7 +37,7 @@ function hallGate(
     return {
       enterable: false,
       label: "Locked",
-      reason: "Vampirism affliction required · Coming soon",
+      reason: "Vampirism affliction required · locked for now",
     };
   }
   const cls = CLASSES.find((c) => c.id === vessel.classId);
@@ -514,7 +514,7 @@ function PlaceCard({
             {region.label}
           </h2>
         </div>
-        <span className="place-heat shrink-0" title="Demo heat stub" data-heat={heat}>
+        <span className="place-heat shrink-0" title="Gathering heat · demo" data-heat={heat}>
           <span className="place-heat-pips" aria-hidden>
             {Array.from({ length: 5 }).map((_, i) => (
               <i key={i} data-on={i < heat ? "true" : "false"} />
@@ -601,7 +601,7 @@ function HallCard({
             {hall.name}
           </h2>
         </div>
-        <span className="place-heat shrink-0" title="Demo heat stub" data-heat={heat}>
+        <span className="place-heat shrink-0" title="Gathering heat · demo" data-heat={heat}>
           <span className="place-heat-pips" aria-hidden>
             {Array.from({ length: 5 }).map((_, i) => (
               <i key={i} data-on={i < heat ? "true" : "false"} />

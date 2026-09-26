@@ -258,7 +258,7 @@ export default function WeavePage() {
       </section>
 
       <p className="text-xs text-fg-muted leading-relaxed text-center pt-1">
-        Marriage · Coming soon · Guild founding later
+        Vessel to vessel · accept, decline, or ask across the night
       </p>
     </div>
   );
