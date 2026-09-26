@@ -29,7 +29,7 @@ export default function MapPage() {
     <div className="space-y-4">
       <div>
         <p className="section-kicker mb-1">World</p>
-        <h1 className="text-2xl font-semibold text-fg">Map</h1>
+        <h1 className="font-display text-3xl font-semibold text-fg">Map</h1>
         <p className="text-sm text-fg-muted mt-1 leading-relaxed">
           One vast world. Color regions — tap a place. No Google-Maps chrome. Wisp stays off
           the map.

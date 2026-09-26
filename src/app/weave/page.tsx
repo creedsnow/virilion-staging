@@ -74,7 +74,8 @@ export default function WeavePage() {
     <div className="space-y-4">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold text-fg">Weave</h1>
+          <p className="section-kicker mb-1">Bonds</p>
+            <h1 className="font-display text-3xl font-semibold text-fg">Weave</h1>
           <p className="text-sm text-fg-muted mt-1">
             Connections constellation — vessel to vessel. Marriage: Coming soon.
           </p>

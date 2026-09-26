@@ -6,21 +6,31 @@ import { setAgeOk } from "@/lib/storage";
 export function AgeGate({ onConfirm }: { onConfirm: () => void }) {
   return (
     <div className="fixed inset-0 z-[100] night-sky flex items-center justify-center p-5">
-      <div className="stone-panel card max-w-md w-full text-center shadow-2xl rounded-2xl px-6 py-8 space-y-5">
+      <div className="relative z-[1] stone-panel card max-w-md w-full text-center rounded-2xl px-6 py-8 space-y-5">
         <div className="flex justify-center">
-          <Image
-            src="/virilion-logo.png"
-            alt=""
-            width={72}
-            height={72}
-            className="opacity-95 drop-shadow-[0_0_16px_rgba(201,162,39,0.35)]"
-            priority
-          />
+          <div className="relative">
+            <div
+              className="absolute -inset-4 rounded-full blur-xl opacity-60"
+              style={{
+                background:
+                  "radial-gradient(circle, color-mix(in srgb, var(--aura) 50%, transparent), transparent 70%)",
+              }}
+              aria-hidden
+            />
+            <Image
+              src="/virilion-logo.png"
+              alt=""
+              width={68}
+              height={68}
+              className="relative rounded-xl"
+              priority
+            />
+          </div>
         </div>
 
         <div>
           <p className="demo-badge mb-3">Adult portal · 18+</p>
-          <h1 className="text-2xl font-semibold text-gold-soft tracking-wide">
+          <h1 className="font-display text-3xl font-semibold text-gold-soft tracking-wide">
             Enter with consent
           </h1>
         </div>
@@ -34,8 +44,8 @@ export function AgeGate({ onConfirm }: { onConfirm: () => void }) {
             <li className="flex gap-2">
               <span className="text-gold shrink-0">✦</span>
               <span>
-                <strong className="text-fg">Players</strong> may be any identity.
-                <strong className="text-fg"> Vessels</strong> are adult male gay /
+                <strong className="text-fg">Players</strong> may be any identity.{" "}
+                <strong className="text-fg">Vessels</strong> are adult male gay /
                 male-attracted characters.
               </span>
             </li>

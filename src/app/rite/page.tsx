@@ -232,7 +232,7 @@ export default function RitePage() {
     <div className="space-y-5">
       <div>
         <p className="section-kicker mb-1">Rite of Making · Demo</p>
-        <h1 className="text-2xl font-semibold text-fg">Forge your Vessel</h1>
+        <h1 className="font-display text-3xl font-semibold text-fg">Forge your Vessel</h1>
         <p className="text-sm text-fg-muted mt-1">
           Role first. One vessel only. Adult male gay / male-attracted characters.
         </p>

@@ -34,7 +34,7 @@ export default function ScenesPage() {
     <div className="space-y-4">
       <div>
         <p className="section-kicker mb-1">In-app RP</p>
-        <h1 className="text-2xl font-semibold text-fg">Scenes</h1>
+        <h1 className="font-display text-3xl font-semibold text-fg">Scenes</h1>
         <p className="text-sm text-fg-muted mt-1 leading-relaxed">
           Discover live rooms → open text RP here. Join call opens in-app voice —
           never leaves Virilion.
