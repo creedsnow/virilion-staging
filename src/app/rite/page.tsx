@@ -251,17 +251,19 @@ export default function RitePage() {
   return (
     <div className="space-y-5">
       <div className="rite-progress-head">
-        <p className="section-kicker">
-          Rite of Making · Step {step + 1} of {STEPS.length}
-        </p>
-        <div className="flex gap-1.5 mt-2.5">
+        <div className="flex items-baseline justify-between gap-3">
+          <p className="section-kicker mb-0">
+            Rite of Making · Step {step + 1} of {STEPS.length}
+          </p>
+          <p className="rite-step-label">{STEPS[step]}</p>
+        </div>
+        <div className="rite-progress-track" aria-hidden>
           {STEPS.map((s, i) => (
             <span
               key={s}
               title={s}
-              className={`h-1.5 flex-1 rounded-full transition-colors ${
-                i < step ? "bg-gold/70" : i === step ? "bg-gold" : "bg-border"
-              }`}
+              className="rite-progress-bead"
+              data-state={i < step ? "done" : i === step ? "active" : "idle"}
             />
           ))}
         </div>
@@ -375,19 +377,24 @@ export default function RitePage() {
               <> Sorns and Serynth are locked out for Verse.</>
             ) : null}
           </p>
-          <div className="flex flex-wrap gap-2">
+          <div className="rite-choice-grid">
             {allowedPeople.map((id) => {
               const p = PEOPLES.find((x) => x.id === id);
-              const label = id === "custom" ? "Custom (GM)" : p?.name || id;
+              const label = id === "custom" ? "Custom" : p?.name || id;
+              const note =
+                id === "custom"
+                  ? "GM approval required"
+                  : p?.homeland || "";
               return (
                 <button
                   key={id}
                   type="button"
-                  className="chip"
+                  className="rite-choice"
                   data-active={people === id}
                   onClick={() => onSelectPeople(id)}
                 >
-                  {label}
+                  <span className="rite-choice-name">{label}</span>
+                  {note ? <span className="rite-choice-note">{note}</span> : null}
                 </button>
               );
             })}
@@ -423,14 +430,17 @@ export default function RitePage() {
             Styles filtered by People. <strong className="text-fg">Daddy ≠ Bear</strong>.
             Daddy banned for Smols only; Bear bans unchanged (Smols, Trahgs, Kaelir, Serynth).
           </p>
-          <div className="flex flex-wrap gap-2">
+          <div className="rite-choice-grid">
             {STYLES.map((s) => {
               const allowed = allowedStyles.includes(s.id);
+              const note = !allowed
+                ? styleBlockedReason(people, s.id) || "Not available"
+                : s.note || s.promptBody;
               return (
                 <button
                   key={s.id}
                   type="button"
-                  className="chip"
+                  className="rite-choice"
                   data-active={style === s.id}
                   disabled={!allowed}
                   title={
@@ -440,13 +450,14 @@ export default function RitePage() {
                   }
                   onClick={() => allowed && setStyle(s.id)}
                 >
-                  {s.name}
+                  <span className="rite-choice-name">{s.name}</span>
+                  {note ? <span className="rite-choice-note">{note}</span> : null}
                 </button>
               );
             })}
           </div>
           {people === "smols" ? (
-            <p className="gate-warn">Daddy is banned for Smols — chips are disabled.</p>
+            <p className="gate-warn">Daddy is banned for Smols — tiles are disabled.</p>
           ) : null}
           {style && !allowedStyles.includes(style) ? (
             <p className="text-sm text-danger">{styleBlockedReason(people, style)}</p>
@@ -467,16 +478,19 @@ export default function RitePage() {
           <p className="gate-note">
             Class ties to an Order Hall on the Map. Custom → GM approval.
           </p>
-          <div className="flex flex-wrap gap-2">
+          <div className="rite-choice-grid">
             {CLASSES.map((c) => (
               <button
                 key={c.id}
                 type="button"
-                className="chip"
+                className="rite-choice"
                 data-active={classId === c.id}
                 onClick={() => setClassId(c.id)}
               >
-                {c.name}
+                <span className="rite-choice-name">{c.name}</span>
+                <span className="rite-choice-note">
+                  {c.id === "custom" ? c.blurb : c.orderHall}
+                </span>
               </button>
             ))}
           </div>
@@ -531,51 +545,82 @@ export default function RitePage() {
 
       {step === 6 && role && people && style && classId && (
         <div className="space-y-4">
-          <div className="card stone-panel rounded-2xl space-y-2 text-sm">
-            <Row label="Name" value={name} />
-            <Row label="Role" value={role} />
-            <Row
-              label="Can carry"
-              value={
-                showCanCarry(role, people)
-                  ? canCarry
-                    ? "Open to Blessing"
-                    : "Off"
-                  : "N/A"
-              }
-            />
-            <Row
-              label="People"
-              value={
-                people === "custom"
-                  ? `Custom: ${peopleCustom}`
-                  : PEOPLES.find((p) => p.id === people)?.name || people
-              }
-            />
-            <Row
-              label="Style"
-              value={
-                style === "custom"
-                  ? `Custom: ${styleCustom}`
-                  : STYLES.find((s) => s.id === style)?.name || style
-              }
-            />
-            <Row
-              label="Class"
-              value={
-                classId === "custom"
-                  ? `Custom: ${classCustom}`
-                  : CLASSES.find((c) => c.id === classId)?.name || classId
-              }
-            />
-            {bio ? <Row label="Bio" value={bio} /> : null}
+          <div className="card stone-panel rite-review-card rounded-2xl space-y-3 text-sm relative overflow-hidden">
+            <span className="vessel-watermark" aria-hidden>
+              V
+            </span>
+            <div className="flex gap-3.5 items-start relative z-[1]">
+              <div className="rite-review-medallion" aria-hidden>
+                <span className="relative z-[1] font-display text-[1.85rem] font-semibold text-gold-soft">
+                  {(name.trim().charAt(0) || "V").toUpperCase()}
+                </span>
+                <span className="rite-review-medallion-sheen" />
+              </div>
+              <div className="min-w-0 flex-1 pt-0.5">
+                <p className="section-kicker mb-1">Vessel reveal</p>
+                <h2 className="font-display text-[1.55rem] font-semibold text-gold-soft leading-tight">
+                  {name.trim() || "Unnamed"}
+                </h2>
+                <p className="text-sm text-fg-muted mt-1 leading-snug">
+                  {(people === "custom"
+                    ? "Custom"
+                    : PEOPLES.find((p) => p.id === people)?.name || people)}{" "}
+                  ·{" "}
+                  {(style === "custom"
+                    ? "Custom"
+                    : STYLES.find((s) => s.id === style)?.name || style)}{" "}
+                  ·{" "}
+                  {(classId === "custom"
+                    ? "Custom"
+                    : CLASSES.find((c) => c.id === classId)?.name || classId)}
+                </p>
+              </div>
+            </div>
+            <div className="space-y-2 relative z-[1] border-t border-border/55 pt-3">
+              <Row label="Role" value={role} />
+              <Row
+                label="Can carry"
+                value={
+                  showCanCarry(role, people)
+                    ? canCarry
+                      ? "Open to Blessing"
+                      : "Off"
+                    : "N/A"
+                }
+              />
+              <Row
+                label="People"
+                value={
+                  people === "custom"
+                    ? `Custom: ${peopleCustom}`
+                    : PEOPLES.find((p) => p.id === people)?.name || people
+                }
+              />
+              <Row
+                label="Style"
+                value={
+                  style === "custom"
+                    ? `Custom: ${styleCustom}`
+                    : STYLES.find((s) => s.id === style)?.name || style
+                }
+              />
+              <Row
+                label="Class"
+                value={
+                  classId === "custom"
+                    ? `Custom: ${classCustom}`
+                    : CLASSES.find((c) => c.id === classId)?.name || classId
+                }
+              />
+              {bio ? <Row label="Bio" value={bio} /> : null}
+            </div>
             {needsGmApproval(people, style, classId) ? (
-              <p className="text-gold text-xs pt-2 border-t border-border/60 leading-relaxed">
+              <p className="text-gold text-xs pt-1 border-t border-border/60 leading-relaxed relative z-[1]">
                 Custom selection → <strong>pending_gm</strong>. After submit you&apos;ll land on Self
                 with links to status and <strong>/admin</strong> Approve (or Reject / clear).
               </p>
             ) : (
-              <p className="text-ok text-xs pt-2 border-t border-border/60">
+              <p className="text-ok text-xs pt-1 border-t border-border/60 relative z-[1]">
                 Ready to embody — no GM gate needed.
               </p>
             )}

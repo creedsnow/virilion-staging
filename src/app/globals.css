@@ -922,11 +922,141 @@ body {
 
 /* —— Rite premium step UI —— */
 .rite-progress-head {
-  padding: 0.85rem 1rem;
-  border-radius: 1.1rem;
-  border: 1px solid color-mix(in srgb, var(--border) 70%, var(--gold) 18%);
-  background: color-mix(in srgb, var(--bg-card) 92%, transparent);
+  padding: 0.9rem 1.05rem 1rem;
+  border-radius: 1.15rem;
+  border: 1px solid color-mix(in srgb, var(--border) 65%, var(--gold) 28%);
+  background:
+    radial-gradient(ellipse 80% 70% at 90% -30%, color-mix(in srgb, var(--aura) 22%, transparent), transparent 60%),
+    radial-gradient(ellipse 40% 50% at 0% 120%, color-mix(in srgb, var(--gold) 10%, transparent), transparent 55%),
+    color-mix(in srgb, var(--bg-card) 94%, transparent);
+  box-shadow: var(--shadow-card), 0 0 22px color-mix(in srgb, var(--gold) 8%, transparent);
+}
+.rite-step-label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-soft);
+  white-space: nowrap;
+}
+.rite-progress-track {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.85rem;
+}
+.rite-progress-bead {
+  flex: 1;
+  height: 0.42rem;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--border) 88%, transparent);
+  transition: background 0.18s, box-shadow 0.18s, transform 0.18s;
+}
+.rite-progress-bead[data-state="done"] {
+  background: color-mix(in srgb, var(--gold) 72%, var(--border));
+  box-shadow: 0 0 8px color-mix(in srgb, var(--gold) 28%, transparent);
+}
+.rite-progress-bead[data-state="active"] {
+  background: linear-gradient(90deg, var(--gold), var(--gold-soft));
+  box-shadow:
+    0 0 12px color-mix(in srgb, var(--gold) 48%, transparent),
+    0 0 4px color-mix(in srgb, var(--aura) 30%, transparent);
+  transform: scaleY(1.25);
+}
+.rite-choice-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+@media (min-width: 420px) {
+  .rite-choice-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.rite-choice {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.2rem;
+  text-align: left;
+  min-height: 4.1rem;
+  padding: 0.75rem 0.85rem;
+  border-radius: 1.05rem;
+  border: 1px solid color-mix(in srgb, var(--border) 78%, var(--aura) 14%);
+  background:
+    linear-gradient(155deg, color-mix(in srgb, var(--bg-card) 88%, var(--aura) 6%), var(--bg-card));
   box-shadow: var(--shadow-card);
+  color: var(--fg);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s, transform 0.15s;
+}
+.rite-choice:hover:not(:disabled):not([data-active="true"]) {
+  border-color: color-mix(in srgb, var(--gold) 42%, var(--border));
+  transform: translateY(-1px);
+}
+.rite-choice[data-active="true"] {
+  border-color: color-mix(in srgb, var(--gold) 70%, var(--aura) 20%);
+  background:
+    linear-gradient(155deg, color-mix(in srgb, var(--gold) 16%, var(--bg-card)), color-mix(in srgb, var(--aura) 10%, var(--bg-card)));
+  box-shadow:
+    var(--shadow-card),
+    0 0 18px color-mix(in srgb, var(--gold) 22%, transparent),
+    0 0 10px color-mix(in srgb, var(--aura) 16%, transparent);
+  transform: translateY(-1px);
+}
+.rite-choice:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+  transform: none;
+}
+.rite-choice-name {
+  font-family: var(--font-display), ui-serif, Georgia, serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--fg);
+}
+.rite-choice[data-active="true"] .rite-choice-name {
+  color: var(--gold-soft);
+}
+.rite-choice-note {
+  font-size: 0.68rem;
+  line-height: 1.3;
+  color: var(--fg-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.rite-review-card {
+  background: var(--vessel-wash);
+  border-color: color-mix(in srgb, var(--border) 62%, var(--gold) 30%);
+  box-shadow:
+    var(--shadow-card),
+    0 0 28px color-mix(in srgb, var(--aura) 14%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+.rite-review-medallion {
+  position: relative;
+  flex-shrink: 0;
+  width: 4.75rem;
+  height: 4.75rem;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid color-mix(in srgb, var(--gold) 30%, transparent);
+  overflow: hidden;
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--aura) 48%, #1a1028), #121018 75%);
+  box-shadow: 0 0 22px color-mix(in srgb, var(--aura) 30%, transparent);
+}
+.rite-review-medallion-sheen {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 25%, rgba(232, 200, 120, 0.38), transparent 55%);
+  pointer-events: none;
 }
 
 .role-pick {
@@ -1683,4 +1813,42 @@ body {
 [data-theme="light"] .people-tile {
   background:
     linear-gradient(180deg, #fffaf2, color-mix(in srgb, var(--parchment) 55%, #fffcf6));
+}
+
+[data-theme="light"] .rite-progress-head {
+  background:
+    radial-gradient(ellipse 80% 70% at 90% -30%, color-mix(in srgb, var(--aura) 14%, transparent), transparent 60%),
+    linear-gradient(180deg, #fffaf2, color-mix(in srgb, var(--parchment) 50%, #fffcf6));
+  border-color: color-mix(in srgb, var(--border) 70%, var(--gold) 22%);
+  box-shadow: var(--shadow-card), inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+[data-theme="light"] .rite-choice {
+  background:
+    linear-gradient(155deg, #fffaf2, color-mix(in srgb, var(--parchment) 48%, #fffcf6));
+  border-color: color-mix(in srgb, var(--border) 78%, var(--gold) 14%);
+  box-shadow: var(--shadow-card), inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+[data-theme="light"] .rite-choice[data-active="true"] {
+  background:
+    linear-gradient(155deg, color-mix(in srgb, var(--gold) 18%, #fffaf2), color-mix(in srgb, var(--parchment) 55%, #fffcf6));
+  border-color: color-mix(in srgb, var(--gold) 55%, var(--border));
+}
+[data-theme="light"] .rite-review-card {
+  background:
+    linear-gradient(180deg, #fffaf2, color-mix(in srgb, var(--parchment) 55%, #fffcf6));
+}
+[data-theme="light"] .rite-review-medallion {
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--aura) 28%, #efe3cb), color-mix(in srgb, var(--parchment) 70%, #d8c8a8));
+  border-color: color-mix(in srgb, var(--gold) 40%, var(--border));
+  box-shadow: 0 0 18px color-mix(in srgb, var(--gold) 18%, transparent);
+}
+[data-theme="light"] .rite-hero,
+[data-theme="light"] .role-pick {
+  background:
+    linear-gradient(180deg, #fffaf2, color-mix(in srgb, var(--parchment) 48%, #fffcf6));
+}
+[data-theme="light"] .role-pick[data-active="true"] {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--gold) 16%, #fffaf2), color-mix(in srgb, var(--parchment) 55%, #fffcf6));
 }
