@@ -32,12 +32,12 @@ export default function ScenesPage() {
 
   return (
     <div className="space-y-4">
-      <div>
+      <div className="rite-hero">
         <p className="section-kicker mb-1">In-app RP</p>
         <h1 className="font-display text-3xl font-semibold text-fg">Scenes</h1>
-        <p className="text-sm text-fg-muted mt-1 leading-relaxed">
+        <p className="text-sm text-fg-muted mt-1.5 leading-relaxed">
           Discover live rooms → open text RP here. Join call opens in-app voice —
-          never leaves Virilion.
+          never leaves Virilion. No Discord-as-home.
         </p>
       </div>
       <ul className="space-y-3">
@@ -45,16 +45,16 @@ export default function ScenesPage() {
           <li key={s.id}>
             <button
               type="button"
-              className="card w-full text-left hover:border-gold/50 transition stone-panel rounded-2xl min-h-[5.5rem]"
+              className="room-chrome w-full text-left px-4 py-4 hover:border-gold/45 transition min-h-[5.75rem]"
               onClick={() => setActive(s)}
             >
-              <div className="flex justify-between gap-3 items-start">
+              <div className="relative z-[1] flex justify-between gap-3 items-start">
                 <div className="min-w-0">
-                  <h2 className="font-medium text-fg">{s.title}</h2>
-                  <p className="text-xs text-gold/90 mt-0.5 tracking-wide">{s.place}</p>
+                  <h2 className="font-display text-xl font-semibold text-fg">{s.title}</h2>
+                  <p className="text-xs text-gold mt-0.5 tracking-wide">✦ {s.place}</p>
                   <p className="text-sm text-fg-muted mt-2 leading-relaxed">{s.vibe}</p>
                 </div>
-                <span className="shrink-0 text-[10px] uppercase tracking-wide text-ok border border-ok/40 rounded-full px-2 py-0.5">
+                <span className="shrink-0 text-[10px] uppercase tracking-wide text-ok border border-ok/40 rounded-full px-2 py-0.5 bg-ok/10">
                   {s.seats}
                 </span>
               </div>

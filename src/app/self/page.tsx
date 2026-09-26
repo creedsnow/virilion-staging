@@ -12,7 +12,6 @@ import {
   getPlayer,
   getVessel,
   wipeVesselForDemo,
-  type ThemeMode,
 } from "@/lib/storage";
 import type { DemoPlayer, Vessel } from "@/lib/types";
 
@@ -120,20 +119,28 @@ export default function SelfPage() {
             </p>
           </div>
           <div className="card space-y-2">
-            <p className="label">Theme</p>
-            <div className="flex gap-2">
-              {(["dark", "light"] as ThemeMode[]).map((t) => (
-                <button
-                  key={t}
-                  type="button"
-                  className="chip capitalize"
-                  data-active={theme === t}
-                  onClick={() => setTheme(t)}
-                >
-                  {t}
-                </button>
-              ))}
+            <p className="label">Look</p>
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                className="chip"
+                data-active={theme === "dark"}
+                onClick={() => setTheme("dark")}
+              >
+                Moonlight
+              </button>
+              <button
+                type="button"
+                className="chip"
+                data-active={theme === "light"}
+                onClick={() => setTheme("light")}
+              >
+                Parchment
+              </button>
             </div>
+            <p className="text-[11px] text-fg-muted">
+              Dark is the app default — lamp & moonlight rich. Parchment is the magical cream option from the design demo.
+            </p>
           </div>
           <Link href="/admin" className="card block hover:border-gold/40">
             <p className="text-sm font-medium text-fg">GM demo admin</p>

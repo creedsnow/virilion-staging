@@ -62,27 +62,29 @@ export function SceneRoom({
 
   return (
     <div className="flex flex-col h-[calc(100dvh-8rem)]">
-      <div className="flex items-start justify-between gap-2 mb-3">
-        <div>
-          <button type="button" className="text-xs text-gold mb-1 hover:text-gold-soft" onClick={onBack}>
-            ← Scenes
+      <div className="room-chrome px-4 py-3.5 mb-3">
+        <div className="relative z-[1] flex items-start justify-between gap-2">
+          <div>
+            <button type="button" className="text-xs text-gold mb-1 hover:text-gold-soft" onClick={onBack}>
+              ← Scenes
+            </button>
+            <h1 className="font-display text-xl font-semibold text-fg">{scene.title}</h1>
+            <p className="text-xs text-fg-muted mt-0.5">
+              ✦ {scene.place} · Present as{" "}
+              <span className="text-gold-soft font-medium">{vessel.name}</span>
+            </p>
+          </div>
+          <button
+            type="button"
+            className="btn-gold text-xs py-2 px-3 shrink-0 !min-h-0 !rounded-xl"
+            onClick={() => setVoiceOpen(true)}
+          >
+            Join call
           </button>
-          <h1 className="text-lg font-semibold text-fg">{scene.title}</h1>
-          <p className="text-xs text-fg-muted">
-            {scene.place} · Present as{" "}
-            <span className="text-gold-soft font-medium">{vessel.name}</span>
-          </p>
         </div>
-        <button
-          type="button"
-          className="btn-gold text-xs py-2 px-3 shrink-0"
-          onClick={() => setVoiceOpen(true)}
-        >
-          Join call
-        </button>
       </div>
 
-      <div className="card flex-1 overflow-y-auto space-y-3 mb-3">
+      <div className="card flex-1 overflow-y-auto space-y-3 mb-3 border-aura/20">
         {messages.length === 0 ? (
           <p className="text-sm text-fg-muted text-center py-8">
             Quiet for now. Open the scene in another tab to demo multi-vessel chat

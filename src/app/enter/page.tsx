@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
-import { DemoBadge } from "@/components/DemoBadge";
 import { getVessel, setPlayer } from "@/lib/storage";
 
 export default function EnterPage() {
@@ -31,33 +30,33 @@ export default function EnterPage() {
   }
 
   return (
-    <div className="night-sky -mx-4 min-h-[100dvh] px-5 py-12 flex flex-col items-center justify-center relative">
-      <div className="relative z-[1] w-full max-w-sm flex flex-col items-center">
-        <DemoBadge className="mb-7" />
-
-        <div className="relative mb-5">
+    <div className="night-sky enter-sky -mx-4 min-h-[100dvh] px-5 py-10 flex flex-col items-center justify-center relative">
+      <div className="relative z-[1] w-full max-w-[22rem] flex flex-col items-center">
+        <div className="relative mb-6">
           <div
-            className="absolute -inset-6 rounded-full blur-2xl opacity-70"
+            className="absolute -inset-8 rounded-full blur-3xl opacity-80"
             style={{
               background:
-                "radial-gradient(circle, color-mix(in srgb, var(--aura) 55%, transparent), transparent 70%)",
+                "radial-gradient(circle, color-mix(in srgb, var(--aura) 60%, transparent), transparent 68%)",
             }}
             aria-hidden
           />
-          <div className="relative rounded-[1.35rem] overflow-hidden border border-gold/25 shadow-[0_0_40px_rgba(123,94,167,0.35)]">
+          <div className="relative rounded-[1.25rem] overflow-hidden border border-gold/20 shadow-[0_0_48px_rgba(123,94,167,0.4)]">
             <Image
               src="/virilion-logo.png"
               alt="Virilion"
-              width={112}
-              height={112}
+              width={108}
+              height={108}
               className="block"
               priority
             />
           </div>
         </div>
 
-        <h1 className="display-title text-[1.65rem] mb-1">Virilion</h1>
-        <p className="display-italic text-lg mb-8">Enter Virilion</p>
+        <h1 className="display-title text-[1.85rem] mb-1.5 tracking-[0.22em]">
+          Virilion
+        </h1>
+        <p className="display-italic text-[1.15rem] mb-9">Enter Virilion</p>
 
         <form onSubmit={enter} className="w-full space-y-4">
           <div>
@@ -66,7 +65,7 @@ export default function EnterPage() {
             </label>
             <input
               id="email"
-              className="input"
+              className="input enter-input"
               value={email || name}
               onChange={(e) => {
                 setEmail(e.target.value);
@@ -84,50 +83,48 @@ export default function EnterPage() {
             <input
               id="password"
               type="password"
-              className="input"
+              className="input enter-input"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="········"
               autoComplete="current-password"
             />
             <div className="flex justify-end mt-1.5">
-              <span className="text-[11px] text-fg-muted">Forgot password?</span>
+              <button
+                type="button"
+                className="text-[12px] font-display italic text-fg-muted hover:text-gold-soft"
+                onClick={() => enter()}
+              >
+                Forgot password?
+              </button>
             </div>
           </div>
 
-          <button type="submit" className="btn-gold w-full mt-1">
+          <button type="submit" className="btn-gold btn-enter w-full mt-2">
             Log in
           </button>
-          <p className="text-center text-[11px] text-fg-muted -mt-1">
+          <p className="text-center text-[11px] text-fg-muted -mt-0.5 leading-relaxed">
             Demo mode — no password needed
           </p>
 
-          <div className="flex items-center gap-3 pt-3">
-            <span className="h-px flex-1 bg-border" />
-            <span className="text-[10px] tracking-[0.14em] uppercase text-fg-muted">
+          <div className="flex items-center gap-3 pt-4">
+            <span className="h-px flex-1 bg-border/80" />
+            <span className="text-[10px] tracking-[0.16em] uppercase text-fg-muted whitespace-nowrap">
               New to Virilion?
             </span>
-            <span className="h-px flex-1 bg-border" />
+            <span className="h-px flex-1 bg-border/80" />
           </div>
 
           <button
             type="button"
-            className="btn-outline-gold w-full"
+            className="btn-outline-gold btn-enter w-full"
             onClick={createAccount}
           >
             Create account
           </button>
-
-          <button
-            type="button"
-            className="link-quiet text-xs w-full text-center pt-1"
-            onClick={() => enter()}
-          >
-            Skip — enter as Traveler
-          </button>
         </form>
 
-        <p className="mt-8 text-[11px] text-fg-muted/85 text-center max-w-xs leading-relaxed">
+        <p className="mt-9 text-[11px] text-fg-muted/80 text-center max-w-xs leading-relaxed">
           In-app RP home. One vessel. Fields are cosmetic — this build is labeled Demo.
         </p>
       </div>

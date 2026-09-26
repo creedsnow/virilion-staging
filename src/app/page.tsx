@@ -10,11 +10,11 @@ import { CLASSES } from "@/lib/canon/classes";
 import { STYLES } from "@/lib/canon/styles";
 
 const WALKING = [
-  { name: "Thorne", status: "in scene", hue: "#5a3d78" },
-  { name: "Ilyan", status: "looking for adventure", hue: "#3d5a80" },
-  { name: "Ryven", status: "open", hue: "#6b3d4a" },
-  { name: "Auren", status: "social", hue: "#3d6b58" },
-  { name: "Halvard", status: "questing", hue: "#6b5a3d" },
+  { name: "Thorne", status: "in scene", hue: "#5a3d78", pip: "#c9a227" },
+  { name: "Ilyan", status: "looking for adventure", hue: "#3d5a80", pip: "#6b9fd4" },
+  { name: "Ryven", status: "open", hue: "#6b3d4a", pip: "#6b8f71" },
+  { name: "Auren", status: "social", hue: "#3d6b58", pip: "#a78bfa" },
+  { name: "Halvard", status: "questing", hue: "#6b5a3d", pip: "#e4a574" },
 ];
 
 const COMING_UP = [
@@ -22,19 +22,25 @@ const COMING_UP = [
     when: "Tonight · 8 PM",
     title: "Lamps of the Coil — open tavern night",
     place: "Virelios · The Gilded Coil",
-    accent: "#6b8f71",
+    accent: "#c9784a",
   },
   {
     when: "Tomorrow · dusk",
     title: "Border watch at Velkrath Wood",
     place: "Velkrath · lycan welcome",
-    accent: "#7a5ea8",
+    accent: "#b86b9a",
+  },
+  {
+    when: "Sat · twilight",
+    title: "Moonmarket stalls reopen",
+    place: "Virelios · lower coil",
+    accent: "#5a8fc4",
   },
   {
     when: "Coming soon",
     title: "Marriage rites open to any two vessels",
     place: "Eligibility locked · venues later",
-    accent: "#b08a2a",
+    accent: "#8b6bb8",
   },
 ];
 
@@ -80,34 +86,40 @@ export default function RealmPage() {
   const initial = vessel.name.trim().charAt(0).toUpperCase() || "V";
 
   return (
-    <div className="space-y-6 -mt-1">
+    <div className="space-y-7 -mt-0.5">
       <div>
         <h1 className="display-hero">
           The lamps of Virelios are lit, {firstName}.
         </h1>
-        <p className="text-sm text-fg-muted mt-2 leading-relaxed">
+        <p className="text-sm text-fg-muted mt-2.5 leading-relaxed max-w-md">
           Eight of your bonds walk the world tonight. Two are asking for you.
-          <span className="text-fg-muted/70"> (Demo stubs.)</span>
         </p>
       </div>
 
       {/* YOUR VESSEL */}
-      <section className="card stone-panel rounded-2xl space-y-3 relative overflow-hidden">
-        <p className="section-kicker">Your vessel</p>
-        <div className="flex gap-3 items-start">
+      <section className="card vessel-card rounded-2xl space-y-3.5 relative overflow-hidden">
+        <div className="flex gap-3.5 items-start">
           <div
-            className="h-[4.5rem] w-[4.5rem] shrink-0 rounded-xl flex items-center justify-center text-2xl font-display font-semibold text-gold-soft border border-gold/30"
+            className="h-[5.25rem] w-[5.25rem] shrink-0 rounded-[0.95rem] flex items-center justify-center text-[1.85rem] font-display font-semibold text-gold-soft border border-gold/25 relative overflow-hidden"
             style={{
               background:
-                "linear-gradient(145deg, color-mix(in srgb, var(--aura) 35%, #1a1028), #121018)",
+                "linear-gradient(145deg, color-mix(in srgb, var(--aura) 42%, #1a1028), #121018 72%)",
             }}
             aria-hidden
           >
-            {initial}
+            <span className="relative z-[1]">{initial}</span>
+            <span
+              className="absolute inset-0 opacity-40"
+              style={{
+                background:
+                  "radial-gradient(circle at 30% 25%, rgba(232,200,120,0.35), transparent 55%)",
+              }}
+            />
           </div>
-          <div className="min-w-0 flex-1">
+          <div className="min-w-0 flex-1 pt-0.5">
+            <p className="section-kicker mb-1">Your vessel</p>
             <div className="flex items-start justify-between gap-2">
-              <h2 className="font-display text-2xl font-semibold text-fg leading-tight">
+              <h2 className="font-display text-[1.55rem] font-semibold text-fg leading-tight">
                 {vessel.name}
               </h2>
               {vessel.status === "pending_gm" ? (
@@ -119,20 +131,14 @@ export default function RealmPage() {
             <p className="text-sm text-fg-muted mt-0.5">
               {peopleLabel} · {classLabel} · {styleLabel}
             </p>
-            <p className="text-xs text-fg-muted mt-1 capitalize">
-              {vessel.role}
-              {vessel.canCarry ? " · Open to Blessing" : ""} · Player{" "}
-              {player?.screenName || "Traveler"}
-            </p>
+            <div className="mt-2.5">
+              <span className="pill-jewel">✦ Virelios · The Gilded Coil</span>
+            </div>
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-2">
-          <span className="pill-jewel">✦ Virelios · The Gilded Coil</span>
-        </div>
-
         {vessel.bio ? (
-          <p className="text-sm text-fg-muted leading-relaxed border-t border-border/60 pt-3">
+          <p className="text-sm text-fg-muted leading-relaxed border-t border-border/55 pt-3">
             {vessel.bio}
           </p>
         ) : null}
@@ -160,10 +166,10 @@ export default function RealmPage() {
       {/* Walking now */}
       <section className="space-y-3">
         <div className="flex items-baseline justify-between gap-3">
-          <h2 className="section-serif">Walking now</h2>
+          <h2 className="section-serif text-fg">Walking now</h2>
           <Link
             href="/weave"
-            className="text-[10px] font-semibold tracking-[0.14em] uppercase text-fg-muted hover:text-gold"
+            className="text-[10px] font-semibold tracking-[0.14em] uppercase text-gold hover:text-gold-soft"
           >
             The Weave →
           </Link>
@@ -174,12 +180,19 @@ export default function RealmPage() {
               <div
                 className="walk-avatar"
                 style={{
-                  background: `linear-gradient(160deg, ${w.hue}, #0e0c14 75%)`,
+                  background: `linear-gradient(160deg, ${w.hue}, #0e0c14 78%)`,
                 }}
               >
-                <span>{w.name}</span>
+                <span
+                  className="walk-pip"
+                  style={{ background: w.pip, boxShadow: `0 0 8px ${w.pip}` }}
+                />
+                <span className="walk-initial font-display" aria-hidden>
+                  {w.name.charAt(0)}
+                </span>
+                <span className="walk-name">{w.name}</span>
               </div>
-              <p className="text-[11px] text-fg-muted mt-1.5 text-center leading-snug capitalize">
+              <p className="text-[11px] text-fg-muted mt-1.5 text-center leading-snug capitalize px-0.5">
                 {w.status}
               </p>
             </div>
@@ -190,9 +203,9 @@ export default function RealmPage() {
       {/* Coming up */}
       <section className="space-y-3">
         <div className="flex items-baseline justify-between gap-3">
-          <h2 className="section-serif">Coming up</h2>
-          <span className="text-[10px] font-semibold tracking-[0.14em] uppercase text-fg-muted">
-            Calendar · soon
+          <h2 className="section-serif text-fg">Coming up</h2>
+          <span className="text-[10px] font-semibold tracking-[0.14em] uppercase text-gold/80">
+            Calendar →
           </span>
         </div>
         <div className="h-scroll">
@@ -203,51 +216,50 @@ export default function RealmPage() {
               style={{ ["--accent" as string]: e.accent }}
             >
               <p className="text-[10px] uppercase tracking-[0.12em] text-fg-muted font-semibold">
-                {e.when}
+                ✦ {e.when}
               </p>
-              <p className="font-display text-lg font-semibold text-fg mt-1 leading-snug">
+              <p className="font-display text-[1.05rem] font-semibold text-fg mt-1.5 leading-snug">
                 {e.title}
               </p>
-              <p className="text-xs text-fg-muted mt-1.5">{e.place}</p>
+              <p className="text-xs text-fg-muted mt-2">✦ {e.place}</p>
             </article>
           ))}
         </div>
       </section>
 
-      {/* Where next — calm, honest */}
-      <section className="space-y-3">
-        <h2 className="section-serif">Where next</h2>
-        <div className="grid grid-cols-2 gap-3">
-          <Link
-            href="/scenes"
-            className="card hover:border-gold/40 transition min-h-[4.75rem] flex flex-col justify-center"
-          >
-            <p className="text-sm font-medium text-fg">Scenes</p>
-            <p className="text-xs text-fg-muted mt-1">In-app rooms + voice</p>
-          </Link>
-          <Link
-            href="/map"
-            className="card hover:border-gold/40 transition min-h-[4.75rem] flex flex-col justify-center"
-          >
-            <p className="text-sm font-medium text-fg">Map</p>
-            <p className="text-xs text-fg-muted mt-1">One world, color regions</p>
-          </Link>
-          <Link
-            href="/dice"
-            className="card hover:border-gold/40 transition min-h-[4.75rem] flex flex-col justify-center"
-          >
-            <p className="text-sm font-medium text-fg">d20</p>
-            <p className="text-xs text-fg-muted mt-1">Premium dice ritual</p>
-          </Link>
-          <Link
-            href="/self"
-            className="card hover:border-gold/40 transition min-h-[4.75rem] flex flex-col justify-center"
-          >
-            <p className="text-sm font-medium text-fg">Self</p>
-            <p className="text-xs text-fg-muted mt-1">Vessel · Player</p>
-          </Link>
-        </div>
-      </section>
+      {/* Codex stub */}
+      <Link href="/codex" className="codex-card group">
+        <span className="codex-icon" aria-hidden>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M6 4.5h9.5A2.5 2.5 0 0 1 18 7v13.5H8.5A2.5 2.5 0 0 0 6 22.5V4.5Z"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M6 4.5A2.5 2.5 0 0 0 3.5 7v13A2.5 2.5 0 0 1 6 17.5"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinejoin="round"
+            />
+            <path d="M9.5 9h6M9.5 12.5h5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+          </svg>
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="section-kicker block">The World Codex</span>
+          <span className="font-display text-lg text-fg leading-tight block mt-0.5">
+            Everything known of Virilion
+          </span>
+        </span>
+        <span className="text-fg-muted group-hover:text-gold text-lg transition" aria-hidden>
+          ›
+        </span>
+      </Link>
+
+      <p className="text-[11px] text-fg-muted/75 text-center pt-1">
+        Player {player?.screenName || "Traveler"} · Demo stubs · in-app home
+      </p>
     </div>
   );
 }

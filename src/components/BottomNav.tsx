@@ -9,17 +9,17 @@ function IconLantern(_props?: { active?: boolean }) {
       <path
         d="M9 3h6M10 3v2h4V3M8 7h8l1 3v7a3 3 0 0 1-3 3h-4a3 3 0 0 1-3-3V10l1-3Z"
         stroke="currentColor"
-        strokeWidth="1.6"
+        strokeWidth="1.55"
         strokeLinejoin="round"
       />
       <path
         d="M12 10v6"
         stroke="currentColor"
-        strokeWidth="1.6"
+        strokeWidth="1.55"
         strokeLinecap="round"
         opacity={0.9}
       />
-      <path d="M10.5 13h3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      <path d="M10.5 13h3" stroke="currentColor" strokeWidth="1.55" strokeLinecap="round" />
     </svg>
   );
 }
@@ -30,10 +30,10 @@ function IconMap(_props?: { active?: boolean }) {
       <path
         d="M9 4.5 3.5 6.5v13L9 17.5l6 2 5.5-2v-13L15 6.5l-6-2Z"
         stroke="currentColor"
-        strokeWidth="1.6"
+        strokeWidth="1.55"
         strokeLinejoin="round"
       />
-      <path d="M9 4.5v13M15 6.5v13" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M9 4.5v13M15 6.5v13" stroke="currentColor" strokeWidth="1.55" />
     </svg>
   );
 }
@@ -44,11 +44,15 @@ function IconDoor(_props?: { active?: boolean }) {
       <path
         d="M7 21V8.5A5.5 5.5 0 0 1 12.5 3h0A5.5 5.5 0 0 1 18 8.5V21"
         stroke="currentColor"
-        strokeWidth="1.6"
+        strokeWidth="1.55"
         strokeLinejoin="round"
       />
-      <path d="M7 21h11" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-      <circle cx="14.5" cy="13" r="0.9" fill="currentColor" />
+      <path d="M7 21h11" stroke="currentColor" strokeWidth="1.55" strokeLinecap="round" />
+      <path
+        d="M12.5 11.2l.9 1.7 1.9.3-1.4 1.3.3 1.9-1.7-.9-1.7.9.3-1.9-1.4-1.3 1.9-.3.9-1.7Z"
+        fill="currentColor"
+        opacity="0.85"
+      />
     </svg>
   );
 }
@@ -56,11 +60,11 @@ function IconDoor(_props?: { active?: boolean }) {
 function IconSelf(_props?: { active?: boolean }) {
   return (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <circle cx="12" cy="8" r="3.25" stroke="currentColor" strokeWidth="1.6" />
+      <circle cx="12" cy="8" r="3.25" stroke="currentColor" strokeWidth="1.55" />
       <path
         d="M5.5 19.5c1.6-3.2 4-4.8 6.5-4.8s4.9 1.6 6.5 4.8"
         stroke="currentColor"
-        strokeWidth="1.6"
+        strokeWidth="1.55"
         strokeLinecap="round"
       />
     </svg>
@@ -69,21 +73,27 @@ function IconSelf(_props?: { active?: boolean }) {
 
 function IconD20(_props?: { active?: boolean }) {
   return (
-    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden>
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden>
       <path
-        d="M12 2.8 21 8.2v7.6L12 21.2 3 15.8V8.2L12 2.8Z"
+        d="M12 2.5 20.8 7.6v8.8L12 21.5 3.2 16.4V7.6L12 2.5Z"
         stroke="currentColor"
-        strokeWidth="1.55"
+        strokeWidth="1.5"
         strokeLinejoin="round"
       />
-      <path d="M3 8.2 12 12l9-3.8M12 12v9.2M7.2 10.1 12 2.8l4.8 7.3" stroke="currentColor" strokeWidth="1.2" opacity="0.85" />
+      <path
+        d="M3.2 7.6 12 11.8l8.8-4.2M12 11.8V21.5M7.4 9.6 12 2.5l4.6 7.1"
+        stroke="currentColor"
+        strokeWidth="1.15"
+        opacity="0.88"
+      />
       <text
         x="12"
-        y="14.2"
+        y="14.4"
         textAnchor="middle"
-        fontSize="6.5"
+        fontSize="6.2"
         fontWeight="700"
         fill="currentColor"
+        fontFamily="system-ui,sans-serif"
       >
         20
       </text>
@@ -104,10 +114,10 @@ export function BottomNav() {
 
   return (
     <nav
-      className="fixed bottom-0 inset-x-0 z-40 px-3 pb-[max(0.55rem,env(safe-area-inset-bottom))] pt-1"
+      className="fixed bottom-0 inset-x-0 z-40 px-3.5 pb-[max(0.65rem,env(safe-area-inset-bottom))] pt-2 pointer-events-none"
       aria-label="Main"
     >
-      <ul className="nav-shell mx-auto max-w-lg grid grid-cols-5 items-end px-2 pt-2 pb-2">
+      <ul className="nav-shell pointer-events-auto mx-auto max-w-lg grid grid-cols-5 items-end px-1.5 pt-2.5 pb-2">
         {ITEMS.map((item) => {
           const active =
             item.href === "/"
@@ -116,7 +126,7 @@ export function BottomNav() {
           const Icon = item.Icon;
           if ("center" in item && item.center) {
             return (
-              <li key={item.href} className="flex justify-center -mt-7">
+              <li key={item.href} className="flex justify-center -mt-8">
                 <Link
                   href={item.href}
                   className="nav-d20"
@@ -133,13 +143,13 @@ export function BottomNav() {
             <li key={item.href} className="flex justify-center">
               <Link
                 href={item.href}
-                className={`flex flex-col items-center gap-0.5 px-1.5 py-1 min-w-[3.4rem] min-h-[48px] justify-center transition ${
+                className={`flex flex-col items-center gap-0.5 px-1 py-1 min-w-[3.35rem] min-h-[48px] justify-center transition ${
                   active ? "text-gold" : "text-fg-muted hover:text-fg"
                 }`}
                 aria-current={active ? "page" : undefined}
               >
                 <Icon />
-                <span className="text-[9px] font-semibold tracking-[0.14em] uppercase mt-0.5">
+                <span className="text-[9px] font-semibold tracking-[0.15em] uppercase mt-0.5">
                   {item.label}
                 </span>
               </Link>
