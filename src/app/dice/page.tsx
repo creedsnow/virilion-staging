@@ -5,8 +5,19 @@ import { useState } from "react";
 type Visibility = "private" | "scene" | "public";
 
 function CastingD20({ value, rolling }: { value: number | null; rolling: boolean }) {
+  const settled = value != null && !rolling;
+  const className = [
+    "cast-d20",
+    rolling ? "cast-d20-rolling" : "",
+    settled ? "cast-d20-settled" : "",
+    settled && value === 20 ? "cast-d20-nat20" : "",
+    settled && value === 1 ? "cast-d20-nat1" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
-    <div className={`cast-d20 ${rolling ? "cast-d20-rolling" : ""}`} aria-live="polite">
+    <div className={className} aria-live="polite">
       <span className="cast-d20-aura" aria-hidden />
       <svg
         className="cast-d20-svg"

@@ -1450,6 +1450,97 @@ body {
   filter: blur(8px);
 }
 
+/* Casting Bowl settle ritual — bloom on land, then linger */
+.cast-d20-settled .cast-d20-aura {
+  animation: cast-settle-bloom 0.9s ease-out forwards;
+  filter: blur(7px);
+}
+.cast-d20-settled::after {
+  content: "";
+  position: absolute;
+  inset: 2%;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  border: 1px solid color-mix(in srgb, var(--gold) 42%, var(--aura) 28%);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--aura) 22%, transparent),
+    0 0 22px color-mix(in srgb, var(--gold) 28%, transparent),
+    0 0 36px color-mix(in srgb, var(--aura) 36%, transparent);
+  animation: cast-settle-ring 0.9s ease-out forwards;
+}
+.cast-d20-settled .cast-d20-svg {
+  filter:
+    drop-shadow(0 10px 22px rgba(0, 0, 0, 0.35))
+    drop-shadow(0 0 22px rgba(123, 94, 167, 0.55))
+    drop-shadow(0 0 16px rgba(201, 162, 39, 0.28));
+}
+.cast-d20-settled .cast-d20-value {
+  animation: cast-value-settle 0.55s ease-out;
+}
+
+.cast-d20-nat20 .cast-d20-aura {
+  background:
+    radial-gradient(
+      circle,
+      color-mix(in srgb, var(--gold-soft) 62%, transparent) 0%,
+      color-mix(in srgb, var(--gold) 34%, transparent) 38%,
+      color-mix(in srgb, var(--aura) 22%, transparent) 58%,
+      transparent 74%
+    );
+  animation-name: cast-settle-bloom-nat20;
+  filter: blur(8px);
+}
+.cast-d20-nat20::after {
+  inset: -4%;
+  border-color: color-mix(in srgb, var(--gold-soft) 55%, transparent);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--gold) 30%, transparent),
+    0 0 28px color-mix(in srgb, var(--gold) 42%, transparent),
+    0 0 48px color-mix(in srgb, var(--aura) 28%, transparent);
+  animation-name: cast-settle-ring-nat20;
+}
+.cast-d20-nat20 .cast-d20-svg {
+  filter:
+    drop-shadow(0 10px 22px rgba(0, 0, 0, 0.32))
+    drop-shadow(0 0 26px rgba(201, 162, 39, 0.48))
+    drop-shadow(0 0 18px rgba(123, 94, 167, 0.35));
+}
+.cast-d20-nat20 .cast-d20-value {
+  color: var(--gold-soft);
+  text-shadow: 0 0 22px rgba(201, 162, 39, 0.62), 0 2px 8px rgba(0, 0, 0, 0.45);
+}
+
+.cast-d20-nat1 .cast-d20-aura {
+  background:
+    radial-gradient(
+      circle,
+      color-mix(in srgb, var(--aura) 48%, transparent) 0%,
+      color-mix(in srgb, var(--aura) 22%, transparent) 44%,
+      transparent 68%
+    );
+  animation-name: cast-settle-bloom-nat1;
+  filter: blur(7px);
+  opacity: 0.85;
+}
+.cast-d20-nat1::after {
+  border-color: color-mix(in srgb, var(--aura) 38%, transparent);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--aura) 18%, transparent),
+    0 0 18px color-mix(in srgb, var(--aura) 28%, transparent),
+    0 0 28px rgba(80, 60, 120, 0.22);
+  animation-name: cast-settle-ring-nat1;
+}
+.cast-d20-nat1 .cast-d20-svg {
+  filter:
+    drop-shadow(0 10px 22px rgba(0, 0, 0, 0.4))
+    drop-shadow(0 0 16px rgba(123, 94, 167, 0.38));
+}
+.cast-d20-nat1 .cast-d20-value {
+  color: color-mix(in srgb, var(--gold-soft) 55%, var(--aura));
+  text-shadow: 0 0 14px rgba(123, 94, 167, 0.4), 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
 @keyframes cast-aura-breathe {
   0%, 100% { opacity: 0.72; transform: scale(0.96); }
   50% { opacity: 1; transform: scale(1.04); }
@@ -1458,6 +1549,138 @@ body {
   0% { transform: rotate(-6deg) scale(0.98); }
   50% { transform: rotate(6deg) scale(1.03); }
   100% { transform: rotate(-6deg) scale(0.98); }
+}
+@keyframes cast-settle-bloom {
+  0% {
+    opacity: 0.55;
+    transform: scale(0.88);
+  }
+  35% {
+    opacity: 1;
+    transform: scale(1.18);
+  }
+  100% {
+    opacity: 0.92;
+    transform: scale(1.06);
+  }
+}
+@keyframes cast-settle-bloom-nat20 {
+  0% {
+    opacity: 0.55;
+    transform: scale(0.86);
+  }
+  35% {
+    opacity: 1;
+    transform: scale(1.28);
+  }
+  100% {
+    opacity: 0.96;
+    transform: scale(1.12);
+  }
+}
+@keyframes cast-settle-bloom-nat1 {
+  0% {
+    opacity: 0.4;
+    transform: scale(0.9);
+  }
+  40% {
+    opacity: 0.78;
+    transform: scale(1.08);
+  }
+  100% {
+    opacity: 0.68;
+    transform: scale(1.02);
+  }
+}
+@keyframes cast-settle-ring {
+  0% {
+    opacity: 0;
+    transform: scale(0.82);
+  }
+  40% {
+    opacity: 0.95;
+    transform: scale(1.08);
+  }
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+}
+@keyframes cast-settle-ring-nat20 {
+  0% {
+    opacity: 0;
+    transform: scale(0.78);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1.14);
+  }
+  100% {
+    opacity: 0.62;
+    transform: scale(1.04);
+  }
+}
+@keyframes cast-settle-ring-nat1 {
+  0% {
+    opacity: 0;
+    transform: scale(0.86);
+  }
+  45% {
+    opacity: 0.7;
+    transform: scale(1.04);
+  }
+  100% {
+    opacity: 0.38;
+    transform: scale(0.98);
+  }
+}
+@keyframes cast-value-settle {
+  0% {
+    transform: scale(1.22);
+    opacity: 0.65;
+  }
+  55% {
+    transform: scale(0.96);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cast-d20-settled .cast-d20-aura,
+  .cast-d20-nat20 .cast-d20-aura,
+  .cast-d20-nat1 .cast-d20-aura {
+    animation: none;
+    opacity: 0.92;
+    transform: scale(1.05);
+  }
+  .cast-d20-nat20 .cast-d20-aura {
+    opacity: 0.96;
+    transform: scale(1.1);
+  }
+  .cast-d20-nat1 .cast-d20-aura {
+    opacity: 0.7;
+    transform: scale(1.02);
+  }
+  .cast-d20-settled::after,
+  .cast-d20-nat20::after,
+  .cast-d20-nat1::after {
+    animation: none;
+    opacity: 0.5;
+    transform: none;
+  }
+  .cast-d20-nat20::after {
+    opacity: 0.58;
+  }
+  .cast-d20-nat1::after {
+    opacity: 0.36;
+  }
+  .cast-d20-settled .cast-d20-value {
+    animation: none;
+  }
 }
 
 .btn-cast {
@@ -1498,6 +1721,35 @@ body {
 
 [data-theme="light"] .cast-d20-value {
   text-shadow: 0 0 14px rgba(166, 124, 34, 0.35), 0 1px 4px rgba(80, 55, 25, 0.2);
+}
+[data-theme="light"] .cast-d20-settled .cast-d20-aura {
+  filter: blur(6px);
+  opacity: 0.78;
+}
+[data-theme="light"] .cast-d20-settled::after {
+  border-color: color-mix(in srgb, var(--gold) 32%, var(--aura) 18%);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--aura) 14%, transparent),
+    0 0 16px color-mix(in srgb, var(--gold) 18%, transparent),
+    0 0 24px color-mix(in srgb, var(--aura) 16%, transparent);
+}
+[data-theme="light"] .cast-d20-nat20 .cast-d20-aura {
+  opacity: 0.82;
+}
+[data-theme="light"] .cast-d20-nat20::after {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--gold) 22%, transparent),
+    0 0 18px color-mix(in srgb, var(--gold) 24%, transparent),
+    0 0 28px color-mix(in srgb, var(--aura) 14%, transparent);
+}
+[data-theme="light"] .cast-d20-nat1 .cast-d20-aura {
+  opacity: 0.62;
+}
+[data-theme="light"] .cast-d20-nat20 .cast-d20-value {
+  text-shadow: 0 0 16px rgba(166, 124, 34, 0.42), 0 1px 4px rgba(80, 55, 25, 0.22);
+}
+[data-theme="light"] .cast-d20-nat1 .cast-d20-value {
+  text-shadow: 0 0 12px rgba(123, 94, 167, 0.28), 0 1px 4px rgba(80, 55, 25, 0.2);
 }
 [data-theme="light"] .btn-cast {
   color: #1a1408;

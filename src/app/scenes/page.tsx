@@ -144,7 +144,7 @@ function ScenesInner() {
                         setActive(s);
                       }}
                     >
-                      Join call
+                      Voice inside
                     </button>
                   </div>
                 </div>
