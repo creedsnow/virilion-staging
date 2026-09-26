@@ -127,7 +127,11 @@ export function AppShell({ children }: { children: ReactNode }) {
               ? "Casting Bowl"
               : pathname.startsWith("/self")
                 ? "Vessel · Player"
-                : "Staging demo";
+                : pathname.startsWith("/weave")
+                  ? "Bonds · Constellation"
+                  : pathname.startsWith("/codex")
+                    ? "The World Codex"
+                    : "Staging demo";
 
   return (
     <div className={`min-h-dvh flex flex-col text-fg ${isEnter ? "" : "app-canvas"}`}>

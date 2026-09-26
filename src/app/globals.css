@@ -1035,3 +1035,130 @@ body {
 [data-theme="light"] .btn-cast {
   color: #1a1408;
 }
+
+/* —— Weave: calm constellation of bonds —— */
+.weave-hero {
+  position: relative;
+  padding: 1.2rem 1.2rem 1.35rem;
+  border-radius: 1.25rem;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--border) 60%, var(--aura) 28%);
+  background:
+    radial-gradient(ellipse 70% 55% at 88% -10%, color-mix(in srgb, var(--aura) 38%, transparent), transparent 62%),
+    radial-gradient(ellipse 45% 40% at 8% 110%, color-mix(in srgb, var(--gold) 14%, transparent), transparent 55%),
+    var(--bg-card);
+  box-shadow: var(--shadow-card);
+}
+.weave-hero::before {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1.5px 1.5px at 18% 22%, color-mix(in srgb, var(--gold-soft) 70%, transparent), transparent),
+    radial-gradient(1px 1px at 42% 38%, color-mix(in srgb, var(--aura) 80%, transparent), transparent),
+    radial-gradient(1.5px 1.5px at 68% 18%, color-mix(in srgb, var(--gold) 65%, transparent), transparent),
+    radial-gradient(1px 1px at 82% 48%, color-mix(in srgb, var(--aura) 70%, transparent), transparent),
+    radial-gradient(1px 1px at 28% 72%, color-mix(in srgb, var(--gold-soft) 55%, transparent), transparent),
+    radial-gradient(1.5px 1.5px at 55% 78%, color-mix(in srgb, var(--aura) 60%, transparent), transparent);
+  opacity: 0.85;
+}
+.weave-threads {
+  pointer-events: none;
+  position: absolute;
+  inset: 12% 8% 18% 55%;
+  opacity: 0.45;
+  background:
+    linear-gradient(125deg, transparent 40%, color-mix(in srgb, var(--gold) 28%, transparent) 50%, transparent 60%),
+    linear-gradient(55deg, transparent 35%, color-mix(in srgb, var(--aura) 35%, transparent) 48%, transparent 62%);
+  mask-image: radial-gradient(ellipse at 50% 50%, black 20%, transparent 75%);
+}
+
+.bond-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.95rem 1.05rem;
+  border-radius: 1.15rem;
+  border: 1px solid color-mix(in srgb, var(--border) 72%, var(--gold) 18%);
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--bg-card) 90%, var(--aura) 6%), var(--bg-card));
+  box-shadow: var(--shadow-card);
+  transition: border-color 0.15s, transform 0.15s;
+}
+.bond-card:hover {
+  border-color: color-mix(in srgb, var(--gold) 42%, var(--border));
+  transform: translateY(-1px);
+}
+.bond-card[data-status="accepted"] {
+  border-color: color-mix(in srgb, var(--ok) 35%, var(--border));
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--bg-card) 88%, var(--ok) 8%), var(--bg-card));
+}
+.bond-card[data-status="open"] {
+  border-color: color-mix(in srgb, var(--gold) 38%, var(--border));
+  box-shadow: var(--shadow-card), 0 0 18px color-mix(in srgb, var(--gold) 12%, transparent);
+}
+
+.bond-avatar {
+  position: relative;
+  flex-shrink: 0;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--gold-soft);
+  border: 1px solid color-mix(in srgb, var(--gold) 30%, transparent);
+  overflow: hidden;
+}
+.bond-avatar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 25%, rgba(232, 200, 120, 0.32), transparent 55%);
+  pointer-events: none;
+}
+
+.bond-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-radius: 9999px;
+  padding: 0.28rem 0.65rem;
+  border: 1px solid transparent;
+}
+.bond-status[data-kind="open"] {
+  color: var(--gold-deep);
+  background: color-mix(in srgb, var(--gold) 16%, transparent);
+  border-color: color-mix(in srgb, var(--gold) 35%, transparent);
+}
+[data-theme="dark"] .bond-status[data-kind="open"] {
+  color: var(--gold-soft);
+}
+.bond-status[data-kind="asked"] {
+  color: color-mix(in srgb, var(--aura) 70%, var(--fg));
+  background: color-mix(in srgb, var(--aura) 18%, transparent);
+  border-color: color-mix(in srgb, var(--aura) 40%, transparent);
+}
+.bond-status[data-kind="accepted"] {
+  color: var(--ok);
+  background: color-mix(in srgb, var(--ok) 14%, transparent);
+  border-color: color-mix(in srgb, var(--ok) 32%, transparent);
+}
+
+.weave-ask {
+  padding: 1rem 1.1rem 1.15rem;
+  border-radius: 1.15rem;
+  border: 1px dashed color-mix(in srgb, var(--border) 65%, var(--gold) 28%);
+  background: color-mix(in srgb, var(--bg-elevated) 70%, transparent);
+}
