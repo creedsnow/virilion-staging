@@ -173,23 +173,16 @@ export default function RealmPage() {
         </span>
         <div className="flex gap-3.5 items-start relative z-[1]">
           <div
-            className="h-[5.25rem] w-[5.25rem] shrink-0 rounded-[0.95rem] flex items-center justify-center text-[1.85rem] font-display font-semibold text-gold-soft border border-gold/25 relative overflow-hidden shadow-[0_0_24px_rgba(123,94,167,0.28)]"
+            className="vessel-medallion h-[5.25rem] w-[5.25rem] rounded-[0.95rem] text-[1.85rem]"
             style={{
               background:
-                "linear-gradient(145deg, color-mix(in srgb, var(--aura) 42%, #1a1028), #121018 72%)",
+                "radial-gradient(circle at 30% 22%, rgba(232, 200, 120, 0.22), transparent 55%), linear-gradient(145deg, color-mix(in srgb, var(--aura) 42%, #1a1028), #121018 72%)",
             }}
             aria-hidden
           >
-            <span className="relative z-[1]">{initial}</span>
+            <span>{initial}</span>
             <span
-              className="absolute inset-0 opacity-40"
-              style={{
-                background:
-                  "radial-gradient(circle at 30% 25%, rgba(232,200,120,0.35), transparent 55%)",
-              }}
-            />
-            <span
-              className="absolute bottom-1.5 right-1.5 h-2.5 w-2.5 rounded-full border border-bg-card"
+              className="absolute bottom-1.5 right-1.5 h-2.5 w-2.5 rounded-full border border-bg-card z-[2]"
               style={{
                 background: presencePip(presence),
                 boxShadow: `0 0 8px ${presencePip(presence)}`,
