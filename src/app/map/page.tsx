@@ -106,16 +106,19 @@ export default function MapPage() {
 
   return (
     <div className="space-y-4">
-      <div className="rite-hero">
-        <p className="section-kicker mb-1">World</p>
-        <h1 className="font-display text-3xl font-semibold text-fg leading-tight">
-          One world,{" "}
-          <span className="display-italic text-[1.05em]">sixteen holdings</span>
-        </h1>
-        <p className="text-sm text-fg-muted mt-1.5 leading-relaxed">
-          Tap a region or Order Hall pin, then Enter. Colour marks whose homeland
-          it is.
-        </p>
+      <div className="map-hero">
+        <div className="map-hero-sheen" aria-hidden />
+        <div className="relative z-[1]">
+          <p className="section-kicker mb-1">World</p>
+          <h1 className="font-display text-3xl font-semibold text-fg leading-tight">
+            One world,{" "}
+            <span className="display-italic text-[1.05em]">sixteen holdings</span>
+          </h1>
+          <p className="text-sm text-fg-muted mt-1.5 leading-relaxed">
+            Tap a region or Order Hall pin, then Enter. Colour marks whose homeland
+            it is.
+          </p>
+        </div>
       </div>
 
       <div className="flex flex-wrap gap-2">
