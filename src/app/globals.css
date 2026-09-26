@@ -2,6 +2,7 @@
 
 :root,
 [data-theme="dark"] {
+  color-scheme: dark;
   --bg: #0b0a12;
   --bg-elevated: #15131f;
   --bg-card: #1c1828;
@@ -39,6 +40,7 @@
 }
 
 [data-theme="light"] {
+  color-scheme: light;
   --bg: #f4ecdf;
   --bg-elevated: #fff8ee;
   --bg-card: #fffaf2;

@@ -1,5 +1,5 @@
 /* Minimal Virilion PWA service worker — network-first docs, shell assets only */
-const CACHE = "virilion-staging-v2";
+const CACHE = "virilion-staging-v3";
 const PRECACHE = ["/manifest.webmanifest", "/virilion-logo.png"];
 
 self.addEventListener("install", (event) => {

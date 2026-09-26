@@ -2,7 +2,9 @@ import type { DemoPlayer, PresenceMode, Vessel } from "./types";
 
 const KEYS = {
   ageOk: "virilion_age_ok",
-  theme: "virilion_theme",
+  /** Canonical theme key. Legacy `virilion_theme` ignored (polish sessions left accidental Parchment). */
+  theme: "virilion_theme_v1",
+  themeLegacy: "virilion_theme",
   player: "virilion_demo_player",
   vessel: "virilion_vessel",
   pending: "virilion_pending_vessels",
@@ -28,16 +30,56 @@ export function setAgeOk(): void {
   localStorage.setItem(KEYS.ageOk, "1");
 }
 
+/**
+ * Moonlight (dark) is the product default. Parchment (light) only when the player
+ * explicitly saved it. Never consult prefers-color-scheme / matchMedia.
+ */
 export function getTheme(): ThemeMode {
   if (!canUseStorage()) return "dark";
-  const t = localStorage.getItem(KEYS.theme);
-  return t === "light" ? "light" : "dark";
+  try {
+    const primary = localStorage.getItem(KEYS.theme);
+    if (primary === "light" || primary === "dark") return primary;
+    // Drop legacy key so accidental Parchment from polish / OS traps cannot win.
+    localStorage.removeItem(KEYS.themeLegacy);
+  } catch {
+    /* ignore */
+  }
+  return "dark";
+}
+
+function applyThemeDom(theme: ThemeMode): void {
+  if (typeof document === "undefined") return;
+  const root = document.documentElement;
+  root.setAttribute("data-theme", theme);
+  root.style.colorScheme = theme;
+  // theme-color follows app theme, not OS prefers-color-scheme.
+  const color = theme === "light" ? "#f7f1e4" : "#0b0a10";
+  let meta = document.querySelector('meta[name="theme-color"][data-virilion-theme]') as HTMLMetaElement | null;
+  if (!meta) {
+    meta = document.createElement("meta");
+    meta.setAttribute("name", "theme-color");
+    meta.setAttribute("data-virilion-theme", "1");
+    document.head.appendChild(meta);
+  }
+  meta.setAttribute("content", color);
 }
 
 export function setTheme(theme: ThemeMode): void {
   if (!canUseStorage()) return;
-  localStorage.setItem(KEYS.theme, theme);
-  document.documentElement.setAttribute("data-theme", theme);
+  try {
+    localStorage.setItem(KEYS.theme, theme);
+    localStorage.removeItem(KEYS.themeLegacy);
+  } catch {
+    /* ignore */
+  }
+  applyThemeDom(theme);
+}
+
+/** Apply DOM theme without requiring a write (boot / hydrate). */
+export function applyStoredTheme(): ThemeMode {
+  const theme = getTheme();
+  applyThemeDom(theme);
+  return theme;
 }
 
 export function getPlayer(): DemoPlayer | null {

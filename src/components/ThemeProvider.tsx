@@ -9,7 +9,11 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { getTheme, setTheme as persistTheme, type ThemeMode } from "@/lib/storage";
+import {
+  applyStoredTheme,
+  setTheme as persistTheme,
+  type ThemeMode,
+} from "@/lib/storage";
 
 interface ThemeCtx {
   theme: ThemeMode;
@@ -26,13 +30,13 @@ const Ctx = createContext<ThemeCtx>({
 });
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
+  // Moonlight default — never seed from prefers-color-scheme.
   const [theme, setThemeState] = useState<ThemeMode>("dark");
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    const t = getTheme();
+    const t = applyStoredTheme();
     setThemeState(t);
-    document.documentElement.setAttribute("data-theme", t);
     setReady(true);
   }, []);
 

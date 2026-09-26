@@ -35,15 +35,16 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#0b0a10" },
-    { media: "(prefers-color-scheme: light)", color: "#f7f1e4" },
-  ],
+  // Moonlight chrome by default — do NOT follow prefers-color-scheme here.
+  // ThemeProvider updates theme-color when the player picks Parchment.
+  themeColor: "#0b0a10",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
   viewportFit: "cover",
 };
+
+const THEME_BOOT = `(function(){try{var k='virilion_theme_v1';var t=localStorage.getItem(k);if(t!=='light'&&t!=='dark'){try{localStorage.removeItem('virilion_theme');}catch(e){}t='dark';}var m=t==='light'?'light':'dark';var r=document.documentElement;r.setAttribute('data-theme',m);r.style.colorScheme=m;}catch(e){var r2=document.documentElement;r2.setAttribute('data-theme','dark');r2.style.colorScheme='dark';}})();`;
 
 export default function RootLayout({
   children,
@@ -52,13 +53,14 @@ export default function RootLayout({
     <html
       lang="en"
       data-theme="dark"
+      style={{ colorScheme: "dark" }}
       className={`${geistSans.variable} ${geistMono.variable} ${displaySerif.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('virilion_theme');document.documentElement.setAttribute('data-theme',t==='light'?'light':'dark');}catch(e){}})();`,
+            __html: THEME_BOOT,
           }}
         />
         <ThemeProvider>
