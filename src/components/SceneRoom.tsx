@@ -1,0 +1,162 @@
+"use client";
+
+import { useCallback, useEffect, useRef, useState } from "react";
+import type { Vessel } from "@/lib/types";
+import {
+  blockVessel,
+  getBlocked,
+  getSceneMessages,
+  postSceneMessage,
+  reportStub,
+  type SceneInfo,
+  type SceneMessage,
+} from "@/lib/scenes";
+import { VoicePanel } from "./VoicePanel";
+
+export function SceneRoom({
+  scene,
+  vessel,
+  onBack,
+}: {
+  scene: SceneInfo;
+  vessel: Vessel;
+  onBack: () => void;
+}) {
+  const [messages, setMessages] = useState<SceneMessage[]>([]);
+  const [text, setText] = useState("");
+  const [voiceOpen, setVoiceOpen] = useState(false);
+  const [menuId, setMenuId] = useState<string | null>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  const reload = useCallback(() => {
+    const blocked = new Set(getBlocked());
+    setMessages(getSceneMessages(scene.id).filter((m) => !blocked.has(m.vesselId)));
+  }, [scene.id]);
+
+  useEffect(() => {
+    reload();
+    const onEvt = (e: Event) => {
+      if ((e as CustomEvent).detail === scene.id) reload();
+    };
+    window.addEventListener("virilion-scene-msg", onEvt);
+    window.addEventListener("storage", reload);
+    const tick = setInterval(reload, 1500);
+    return () => {
+      window.removeEventListener("virilion-scene-msg", onEvt);
+      window.removeEventListener("storage", reload);
+      clearInterval(tick);
+    };
+  }, [reload, scene.id]);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages.length]);
+
+  function send(e: React.FormEvent) {
+    e.preventDefault();
+    if (!text.trim()) return;
+    postSceneMessage(scene.id, vessel, text);
+    setText("");
+    reload();
+  }
+
+  return (
+    <div className="flex flex-col h-[calc(100dvh-8rem)]">
+      <div className="flex items-start justify-between gap-2 mb-3">
+        <div>
+          <button type="button" className="text-xs text-gold mb-1" onClick={onBack}>
+            ← Scenes
+          </button>
+          <h1 className="text-lg font-semibold text-fg">{scene.title}</h1>
+          <p className="text-xs text-fg-muted">
+            {scene.place} · Speak as <span className="text-gold-soft">{vessel.name}</span>
+          </p>
+        </div>
+        <button
+          type="button"
+          className="btn-gold text-xs py-2 px-3"
+          onClick={() => setVoiceOpen(true)}
+        >
+          Join call
+        </button>
+      </div>
+
+      <div className="card flex-1 overflow-y-auto space-y-3 mb-3">
+        {messages.length === 0 ? (
+          <p className="text-sm text-fg-muted text-center py-8">
+            Quiet for now. Open the scene in another tab to demo multi-vessel chat
+            (same browser). Present as your Vessel. Consent before escalation.
+          </p>
+        ) : (
+          messages.map((m) => (
+            <div key={m.id} className="relative group">
+              <div className="flex items-baseline justify-between gap-2">
+                <span className="text-sm font-medium text-gold-soft">{m.vesselName}</span>
+                <button
+                  type="button"
+                  className="text-[10px] text-fg-muted opacity-60 hover:opacity-100"
+                  onClick={() => setMenuId(menuId === m.id ? null : m.id)}
+                >
+                  ···
+                </button>
+              </div>
+              <p className="text-sm text-fg whitespace-pre-wrap">{m.text}</p>
+              <p className="text-[10px] text-fg-muted">
+                {new Date(m.at).toLocaleTimeString()}
+              </p>
+              {menuId === m.id && m.vesselId !== vessel.id ? (
+                <div className="absolute right-0 top-5 z-10 card py-2 px-2 space-y-1 shadow-lg text-xs">
+                  <button
+                    type="button"
+                    className="block w-full text-left px-2 py-1 hover:text-gold"
+                    onClick={() => {
+                      reportStub(scene.id, m.vesselId, "player report");
+                      setMenuId(null);
+                      alert("Report saved locally (demo). GM review later.");
+                    }}
+                  >
+                    Report
+                  </button>
+                  <button
+                    type="button"
+                    className="block w-full text-left px-2 py-1 hover:text-danger"
+                    onClick={() => {
+                      blockVessel(m.vesselId);
+                      setMenuId(null);
+                      reload();
+                    }}
+                  >
+                    Block
+                  </button>
+                </div>
+              ) : null}
+            </div>
+          ))
+        )}
+        <div ref={bottomRef} />
+      </div>
+
+      <form onSubmit={send} className="flex gap-2">
+        <input
+          className="input flex-1"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder={`Message as ${vessel.name}…`}
+          maxLength={1000}
+        />
+        <button type="submit" className="btn-gold px-4" disabled={!text.trim()}>
+          Send
+        </button>
+      </form>
+
+      {voiceOpen ? (
+        <VoicePanel
+          sceneId={scene.id}
+          sceneTitle={scene.title}
+          vessel={vessel}
+          onClose={() => setVoiceOpen(false)}
+        />
+      ) : null}
+    </div>
+  );
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Virilion",
+  "short_name": "Virilion",
+  "description": "Adult queer mythic fantasy RP portal — staging demo",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b0a10",
+  "theme_color": "#0b0a10",
+  "icons": [
+    {
+      "src": "/virilion-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
