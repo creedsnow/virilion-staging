@@ -34,6 +34,16 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
+### QA / demo wipe
+
+Player path hides demo wipe CTAs. To retake the Rite in staging:
+
+- Visit any route with `?qa=1` (latches `localStorage.virilion_qa=1`), or
+- Set `localStorage.setItem("virilion_qa", "1")` in the console
+
+Clear with `?qa=0` or `localStorage.removeItem("virilion_qa")`.
+
+
 ```bash
 npm run build   # production build
 npm start       # serve production build

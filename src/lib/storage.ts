@@ -11,6 +11,8 @@ const KEYS = {
   /** Canonical presence key (v1). Legacy `virilion_presence` is migrated on read. */
   presence: "virilion_presence_v1",
   presenceLegacy: "virilion_presence",
+  /** Dev/QA gate: show demo wipe CTAs. Latch via ?qa=1. */
+  qa: "virilion_qa",
 } as const;
 
 export type ThemeMode = "dark" | "light";
@@ -170,6 +172,32 @@ export function clearSession(): void {
   localStorage.removeItem(KEYS.player);
   // Keep vessel + age + theme so "log out" returns to Enter but vessel persists for one-vessel demo.
   // Per brief: Log out from Self → Player returns to Enter. Vessel stays (one vessel lock).
+}
+
+
+/**
+ * Dev/QA gate for demo wipe / retake CTAs.
+ * Enable: visit any page with `?qa=1` (latches localStorage `virilion_qa=1`).
+ * Disable: localStorage.removeItem("virilion_qa") or ?qa=0.
+ * Hidden from the normal player path when unset.
+ */
+export function isQaMode(): boolean {
+  if (!canUseStorage()) return false;
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get("qa");
+    if (q === "1") {
+      localStorage.setItem(KEYS.qa, "1");
+      return true;
+    }
+    if (q === "0") {
+      localStorage.removeItem(KEYS.qa);
+      return false;
+    }
+    return localStorage.getItem(KEYS.qa) === "1";
+  } catch {
+    return false;
+  }
 }
 
 export function wipeVesselForDemo(): void {

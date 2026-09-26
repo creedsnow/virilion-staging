@@ -12,6 +12,7 @@ import {
   clearSession,
   getPlayer,
   getVessel,
+  isQaMode,
   wipeVesselForDemo,
 } from "@/lib/storage";
 import type { DemoPlayer, PresenceMode, Vessel } from "@/lib/types";
@@ -42,11 +43,13 @@ export default function SelfPage() {
   const [tab, setTab] = useState<"vessel" | "player">("vessel");
   const [vessel, setV] = useState<Vessel | null>(null);
   const [player, setP] = useState<DemoPlayer | null>(null);
+  const [qa, setQa] = useState(false);
   const [presence, changePresence] = usePresence();
 
   useEffect(() => {
     setV(getVessel());
     setP(getPlayer());
+    setQa(isQaMode());
   }, []);
 
   function logout() {
@@ -417,23 +420,25 @@ export default function SelfPage() {
             <button type="button" className="btn-ghost w-full" onClick={logout}>
               Log out → Enter
             </button>
-            <button
-              type="button"
-              className="btn-ghost w-full text-danger border-danger/40"
-              onClick={() => {
-                if (
-                  confirm(
-                    "Wipe this demo vessel? You can forge again. One-vessel lock still applies while a vessel exists."
-                  )
-                ) {
-                  wipeVesselForDemo();
-                  setV(null);
-                  router.replace("/rite");
-                }
-              }}
-            >
-              Demo: wipe vessel & re-Rite
-            </button>
+            {qa ? (
+              <button
+                type="button"
+                className="btn-ghost w-full text-danger border-danger/40"
+                onClick={() => {
+                  if (
+                    confirm(
+                      "Wipe this demo vessel? You can forge again. One-vessel lock still applies while a vessel exists."
+                    )
+                  ) {
+                    wipeVesselForDemo();
+                    setV(null);
+                    router.replace("/rite");
+                  }
+                }}
+              >
+                Demo: wipe vessel & re-Rite
+              </button>
+            ) : null}
           </div>
         </div>
       )}

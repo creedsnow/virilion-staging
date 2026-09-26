@@ -19,6 +19,7 @@ import {
   addPendingVessel,
   getPlayer,
   getVessel,
+  isQaMode,
   setPlayer,
   setVessel,
   wipeVesselForDemo,
@@ -38,6 +39,7 @@ const STEPS = [
 export default function RitePage() {
   const router = useRouter();
   const [existing, setExisting] = useState<Vessel | null>(null);
+  const [qa, setQa] = useState(false);
   const [booted, setBooted] = useState(false);
   const [step, setStep] = useState(0);
   const [role, setRole] = useState<RoleId | null>(null);
@@ -67,6 +69,7 @@ export default function RitePage() {
 
   useEffect(() => {
     setExisting(getVessel());
+    setQa(isQaMode());
     setBooted(true);
   }, []);
 
@@ -88,38 +91,42 @@ export default function RitePage() {
           <button type="button" className="btn-gold" onClick={() => router.replace("/")}>
             Return to Realm
           </button>
-          <button
-            type="button"
-            className="btn-ghost text-sm border-danger/40 text-danger"
-            onClick={() => {
-              if (
-                confirm(
-                  "Demo QA only: wipe this vessel and retake the Rite? Not a second vessel — the one-vessel lock stays."
-                )
-              ) {
-                wipeVesselForDemo();
-                setExisting(null);
-                setStep(0);
-                setRole(null);
-                setCanCarry(false);
-                setPeople(null);
-                setPeopleCustom("");
-                setStyle(null);
-                setStyleCustom("");
-                setClassId(null);
-                setClassCustom("");
-                setName("");
-                setBio("");
-                setError("");
-              }
-            }}
-          >
-            Demo: wipe & retake Rite
-          </button>
+          {qa ? (
+            <button
+              type="button"
+              className="btn-ghost text-sm border-danger/40 text-danger"
+              onClick={() => {
+                if (
+                  confirm(
+                    "Demo QA only: wipe this vessel and retake the Rite? Not a second vessel — the one-vessel lock stays."
+                  )
+                ) {
+                  wipeVesselForDemo();
+                  setExisting(null);
+                  setStep(0);
+                  setRole(null);
+                  setCanCarry(false);
+                  setPeople(null);
+                  setPeopleCustom("");
+                  setStyle(null);
+                  setStyleCustom("");
+                  setClassId(null);
+                  setClassCustom("");
+                  setName("");
+                  setBio("");
+                  setError("");
+                }
+              }}
+            >
+              Demo: wipe & retake Rite
+            </button>
+          ) : null}
         </div>
-        <p className="text-[10px] text-fg-muted/75 leading-relaxed max-w-sm mx-auto">
-          QA path only · clears local demo vessel so tile selection and People lore can be re-tested.
-        </p>
+        {qa ? (
+          <p className="text-[10px] text-fg-muted/75 leading-relaxed max-w-sm mx-auto">
+            QA path only · clears local demo vessel so tile selection and People lore can be re-tested.
+          </p>
+        ) : null}
       </div>
     );
   }
@@ -679,9 +686,6 @@ export default function RitePage() {
             )}
           </div>
           <div className="flex flex-wrap gap-2">
-            <button type="button" className="btn-ghost text-sm" disabled title="Coming soon">
-              Randomize (Coming soon)
-            </button>
             <button type="button" className="btn-ghost text-sm" onClick={copyPrompt}>
               Generate Prompt (copy)
             </button>
