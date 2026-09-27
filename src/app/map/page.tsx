@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense, useEffect, useMemo, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ORDER_HALLS, type OrderHall } from "@/lib/canon/orderHalls";
@@ -10,6 +11,13 @@ import { SceneRoom } from "@/components/SceneRoom";
 import { sceneForHall, sceneForPlace, type SceneInfo } from "@/lib/scenes";
 import { getVessel, subscribeVessel } from "@/lib/storage";
 import type { Vessel } from "@/lib/types";
+import {
+  codexHallCard,
+  codexHallCardSm,
+  codexPlaceCard,
+  codexPlaceCardSm,
+  worldMap,
+} from "@/lib/assets";
 
 type Filter = "all" | "places" | "halls";
 type Selection =
@@ -182,11 +190,28 @@ function MapInner() {
             <span className="display-italic">sixteen holdings</span>
           </h1>
           <p className="map-hero-sub">
-            Tap a region or Order Hall pin, then Enter. Colour marks whose homeland
-            it is.
+            Scroll the painted atlas, then tap a colour region or Order Hall pin
+            and Enter. Colour marks whose homeland it is.
           </p>
         </div>
       </div>
+
+      <figure className="map-world-paint stone-panel rounded-2xl">
+        <div className="map-world-paint-scroll" tabIndex={0} aria-label="Painted Virilion world map · scroll or pinch to explore">
+          <Image
+            src={worldMap()}
+            alt="Painted map of Virilion — sixteen holdings across one vast world"
+            width={959}
+            height={1616}
+            className="map-world-paint-img"
+            sizes="(max-width: 640px) 100vw, 640px"
+            priority
+          />
+        </div>
+        <figcaption className="map-world-paint-cap">
+          Painted atlas · pinch or scroll · pins live on the colour map below
+        </figcaption>
+      </figure>
 
       <div className="flex flex-wrap gap-2">
         <span className="map-legend map-legend-hub">+ Virelios · everyone</span>
@@ -487,6 +512,7 @@ function PlaceCard({
   const isWastes = region.kind === "wastes";
   const accessState = isHub ? "open" : "preview";
   const accessLabel = isHub ? "Open" : "Preview";
+  const art = codexPlaceCardSm(region.id) || codexPlaceCard(region.id);
   const status = isHub
     ? "Open · all Peoples · no pass"
     : isWastes
@@ -499,29 +525,43 @@ function PlaceCard({
     <article className="place-card place-card-arrive" data-arrive="true">
       <div className="place-card-sheen" aria-hidden />
       <div className="place-arrive-ring" aria-hidden />
-      <div className="relative z-[1] flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <p className="place-arrive-kicker mb-1">
-            {isHub
-              ? "Open hub · everyone"
-              : isWastes
-                ? "Wild holding"
-                : region.culture
-                  ? `Homeland of the ${region.culture}`
-                  : "Homeland"}
-          </p>
-          <h2 className="place-arrive-title">
-            {region.label}
-          </h2>
-        </div>
-        <span className="place-heat shrink-0" title="Gathering heat · demo" data-heat={heat}>
-          <span className="place-heat-pips" aria-hidden>
-            {Array.from({ length: 5 }).map((_, i) => (
-              <i key={i} data-on={i < heat ? "true" : "false"} />
-            ))}
+      <div className="relative z-[1] flex items-start gap-3">
+        {art ? (
+          <div className="place-card-art shrink-0" aria-hidden>
+            <Image
+              src={art}
+              alt=""
+              width={400}
+              height={500}
+              className="place-card-art-img"
+              sizes="120px"
+            />
+          </div>
+        ) : null}
+        <div className="min-w-0 flex-1 flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <p className="place-arrive-kicker mb-1">
+              {isHub
+                ? "Open hub · everyone"
+                : isWastes
+                  ? "Wild holding"
+                  : region.culture
+                    ? `Homeland of the ${region.culture}`
+                    : "Homeland"}
+            </p>
+            <h2 className="place-arrive-title">
+              {region.label}
+            </h2>
+          </div>
+          <span className="place-heat shrink-0" title="Gathering heat · demo" data-heat={heat}>
+            <span className="place-heat-pips" aria-hidden>
+              {Array.from({ length: 5 }).map((_, i) => (
+                <i key={i} data-on={i < heat ? "true" : "false"} />
+              ))}
+            </span>
+            <span>{heat}</span>
           </span>
-          <span>{heat}</span>
-        </span>
+        </div>
       </div>
       <div
         className="relative z-[1] mt-2 mb-3 h-1.5 w-16 rounded-full place-arrive-swatch"
@@ -587,28 +627,43 @@ function HallCard({
   const vampire = hall.tiedTo.includes("Vampire");
   const gate = hallGate(hall, vessel);
   const heat = demoHeat(hall.id);
+  const art = codexHallCardSm(hall.id) || codexHallCard(hall.id);
 
   return (
     <article className="place-card place-card-hall place-card-arrive" data-arrive="true">
       <div className="place-card-sheen" aria-hidden />
       <div className="place-arrive-ring" aria-hidden />
-      <div className="relative z-[1] flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <p className="place-arrive-kicker mb-1">
-            Order Hall · {hall.tiedTo}
-          </p>
-          <h2 className="place-arrive-title">
-            {hall.name}
-          </h2>
-        </div>
-        <span className="place-heat shrink-0" title="Gathering heat · demo" data-heat={heat}>
-          <span className="place-heat-pips" aria-hidden>
-            {Array.from({ length: 5 }).map((_, i) => (
-              <i key={i} data-on={i < heat ? "true" : "false"} />
-            ))}
+      <div className="relative z-[1] flex items-start gap-3">
+        {art ? (
+          <div className="place-card-art shrink-0" aria-hidden>
+            <Image
+              src={art}
+              alt=""
+              width={400}
+              height={500}
+              className="place-card-art-img"
+              sizes="120px"
+            />
+          </div>
+        ) : null}
+        <div className="min-w-0 flex-1 flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <p className="place-arrive-kicker mb-1">
+              Order Hall · {hall.tiedTo}
+            </p>
+            <h2 className="place-arrive-title">
+              {hall.name}
+            </h2>
+          </div>
+          <span className="place-heat shrink-0" title="Gathering heat · demo" data-heat={heat}>
+            <span className="place-heat-pips" aria-hidden>
+              {Array.from({ length: 5 }).map((_, i) => (
+                <i key={i} data-on={i < heat ? "true" : "false"} />
+              ))}
+            </span>
+            <span>{heat}</span>
           </span>
-          <span>{heat}</span>
-        </span>
+        </div>
       </div>
       <p className="relative z-[1] place-arrive-note mt-2">
         {hall.mapPlace}

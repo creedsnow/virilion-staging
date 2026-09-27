@@ -194,6 +194,12 @@ export function wispStill(size: 128 | 256 = 256): string {
     : "/assets/wisps/wisp-still-256.webp";
 }
 
+
+/** Painted world overview (Claude Design export · look/feel reference). */
+export function worldMap(): string {
+  return "/assets/img/world-map.webp";
+}
+
 /** Prefer full hall card, else full place card, from scene art ids (denser lobby thumbs). */
 export function sceneLobbyArt(opts: {
   placeId?: string;
