@@ -831,6 +831,99 @@ body {
   border: 1px solid var(--border) !important;
 }
 
+.shell-menu-group {
+  padding: 0.2rem 0 0.35rem;
+}
+.shell-menu-group + .shell-menu-group {
+  border-top: 1px solid color-mix(in srgb, var(--border) 85%, transparent);
+  margin-top: 0.2rem;
+  padding-top: 0.45rem;
+}
+.shell-menu-group-last {
+  border-top: 1px solid color-mix(in srgb, var(--border) 85%, transparent);
+  margin-top: 0.15rem;
+  padding-top: 0.35rem;
+}
+.shell-menu-group-label {
+  padding: 0.15rem 0.75rem 0.35rem;
+  font-size: 0.62rem;
+  font-weight: 650;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold-soft);
+  opacity: 0.92;
+}
+.shell-menu-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.shell-menu-hint {
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  border: 1px solid color-mix(in srgb, var(--gold) 28%, var(--border));
+  border-radius: 9999px;
+  padding: 0.12rem 0.45rem;
+  line-height: 1.2;
+}
+
+.realm-nextup {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.7rem 0.9rem;
+  border-radius: 0.85rem;
+  border: 1px solid color-mix(in srgb, var(--gold) 28%, var(--border));
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--gold) 10%, transparent), transparent 55%),
+    color-mix(in srgb, var(--bg-elevated) 88%, transparent);
+  transition: border-color 0.15s, background 0.15s;
+}
+.realm-nextup:hover {
+  border-color: color-mix(in srgb, var(--gold) 48%, var(--border));
+}
+.realm-quick-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+@media (min-width: 420px) {
+  .realm-quick-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.realm-quick-chip {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--bg-elevated) 80%, transparent);
+  min-height: 3.15rem;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+.realm-quick-chip:hover {
+  border-color: color-mix(in srgb, var(--gold) 40%, var(--border));
+  background: color-mix(in srgb, var(--gold) 8%, var(--bg-elevated));
+}
+.realm-quick-chip .section-kicker {
+  margin: 0;
+}
+.realm-quick-chip-title {
+  font-family: var(--font-display), serif;
+  font-size: 0.98rem;
+  color: var(--title);
+  line-height: 1.2;
+}
+.realm-quick-chip[data-coming="true"] .realm-quick-chip-title {
+  color: var(--fg-muted);
+}
+
 .notif-badge {
   position: absolute;
   top: 0.15rem;

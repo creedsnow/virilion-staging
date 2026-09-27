@@ -1,12 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { AgeGate } from "./AgeGate";
 import { BottomNav } from "./BottomNav";
 import { DemoBadge } from "./DemoBadge";
+import { MemberNav } from "./MemberNav";
 import { UiAssetIcon } from "./UiAssetIcon";
 import { useTheme } from "./ThemeProvider";
 import { clearSession, getAgeOk, getPlayer, getVessel, subscribeVessel } from "@/lib/storage";
@@ -170,7 +170,9 @@ export function AppShell({ children }: { children: ReactNode }) {
                           ? "Coming up"
                           : pathname.startsWith("/guilds")
                             ? "Guilds"
-                            : pathname.startsWith("/rules")
+                            : pathname.startsWith("/campaigns")
+                              ? "Campaigns"
+                              : pathname.startsWith("/rules")
                               ? "Community rules"
                               : pathname.startsWith("/admin")
                                 ? "Demo GM"
@@ -223,35 +225,10 @@ export function AppShell({ children }: { children: ReactNode }) {
                     <UiAssetIcon name="more" size={16} fallback={<IconMore />} />
                   </button>
                   {menuOpen ? (
-                    <div
-                      role="menu"
-                      className="shell-overflow-menu card stone-panel absolute right-0 top-[calc(100%+0.35rem)] z-40 min-w-[9.5rem] p-1.5 shadow-lg"
-                    >
-                      <Link
-                        href="/self"
-                        role="menuitem"
-                        className="shell-menu-item"
-                        onClick={() => setMenuOpen(false)}
-                      >
-                        Self
-                      </Link>
-                      <Link
-                        href="/rules"
-                        role="menuitem"
-                        className="shell-menu-item sm:hidden"
-                        onClick={() => setMenuOpen(false)}
-                      >
-                        Rules
-                      </Link>
-                      <button
-                        type="button"
-                        role="menuitem"
-                        className="shell-menu-item w-full text-left"
-                        onClick={logout}
-                      >
-                        Log out
-                      </button>
-                    </div>
+                    <MemberNav
+                      onNavigate={() => setMenuOpen(false)}
+                      onLogout={logout}
+                    />
                   ) : null}
                 </div>
               ) : null}

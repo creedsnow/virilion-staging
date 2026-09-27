@@ -306,8 +306,8 @@ export default function RealmPage() {
         </div>
       </section>
 
-      {/* 2. Actionable asks + where to go */}
-      <section className="realm-asks space-y-2">
+      {/* 2. Actionable asks + quick dash */}
+      <section className="realm-asks space-y-2.5">
         <Link href="/weave#asking" className="realm-ask-row" data-persist="asking-for-you">
           <span className="min-w-0">
             <span className="section-kicker block mb-0.5">Asking for you</span>
@@ -322,14 +322,44 @@ export default function RealmPage() {
           </span>
           <span className="text-gold shrink-0 text-sm tracking-wide">Weave →</span>
         </Link>
-        <div className="grid grid-cols-2 gap-2">
-          <Link href="/map" className="realm-ask-chip">
-            <span className="section-kicker block mb-0.5">Where</span>
-            <span className="font-display text-base text-[color:var(--title)]">Map · Enter places</span>
+
+        <Link href="/calendar" className="realm-nextup" aria-label="Next up — open calendar">
+          <span className="min-w-0">
+            <span className="section-kicker block mb-0.5">Next up</span>
+            <span className="font-display text-[1.05rem] text-fg leading-snug block">
+              {COMING_UP[0].title}
+            </span>
+            <span className="text-[11px] text-fg-muted mt-1 block">
+              {COMING_UP[0].when} · {COMING_UP[0].place}
+            </span>
+          </span>
+          <span className="text-gold shrink-0 text-sm tracking-wide">Calendar →</span>
+        </Link>
+
+        <div className="realm-quick-grid">
+          <Link href="/scenes" className="realm-quick-chip">
+            <span className="section-kicker">Scenes</span>
+            <span className="realm-quick-chip-title">Live rooms</span>
           </Link>
-          <Link href="/scenes" className="realm-ask-chip">
-            <span className="section-kicker block mb-0.5">Scenes</span>
-            <span className="font-display text-base text-[color:var(--title)]">Live rooms</span>
+          <Link href="/inbox" className="realm-quick-chip">
+            <span className="section-kicker">Inbox</span>
+            <span className="realm-quick-chip-title">Whispers</span>
+          </Link>
+          <Link href="/weave" className="realm-quick-chip">
+            <span className="section-kicker">Weave</span>
+            <span className="realm-quick-chip-title">Bonds</span>
+          </Link>
+          <Link href="/guilds" className="realm-quick-chip">
+            <span className="section-kicker">Guilds</span>
+            <span className="realm-quick-chip-title">Hall</span>
+          </Link>
+          <Link href="/campaigns" className="realm-quick-chip" data-coming="true">
+            <span className="section-kicker">Campaigns</span>
+            <span className="realm-quick-chip-title">Coming</span>
+          </Link>
+          <Link href="/map" className="realm-quick-chip">
+            <span className="section-kicker">Where</span>
+            <span className="realm-quick-chip-title">Map</span>
           </Link>
         </div>
       </section>
