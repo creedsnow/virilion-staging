@@ -23,9 +23,9 @@ const displaySerif = Spectral({
 });
 
 export const metadata: Metadata = {
-  title: "Virilion — Staging Demo",
+  title: "Virilion — Staging",
   description:
-    "Premium mobile PWA portal into Virilion — adult queer mythic fantasy RP world. Staging demo for Creed Snow.",
+    "Adult queer mythic fantasy RP site — desktop and mobile. Staging for Creed Snow.",
   applicationName: "Virilion",
   manifest: "/manifest.webmanifest",
   appleWebApp: {

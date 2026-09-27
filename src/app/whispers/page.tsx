@@ -105,10 +105,10 @@ export default function InboxPage() {
           Demo whispers · this browser only. Real multi-device chat ships later.
         </p>
         <div className="flex flex-wrap gap-2 justify-center">
-          <Link href="/safety" className="btn-ghost text-xs py-2 px-3 !min-h-0">
+          <Link href="/settings" className="btn-ghost text-xs py-2 px-3 !min-h-0">
             Safety
           </Link>
-          <Link href="/self" className="btn-ghost text-xs py-2 px-3 !min-h-0">
+          <Link href="/profile" className="btn-ghost text-xs py-2 px-3 !min-h-0">
             Self
           </Link>
         </div>
@@ -194,13 +194,13 @@ export default function InboxPage() {
       <section className="card stone-panel rounded-2xl space-y-2">
         <p className="section-kicker">World & tools</p>
         <div className="flex flex-wrap gap-2">
-          <Link href="/safety" className="chip">
+          <Link href="/settings" className="chip">
             Safety
           </Link>
-          <Link href="/self" className="chip">
+          <Link href="/profile" className="chip">
             Self
           </Link>
-          <Link href="/weave" className="chip">
+          <Link href="/bonds" className="chip">
             Weave
           </Link>
         </div>

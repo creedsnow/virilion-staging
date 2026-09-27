@@ -1,0 +1,621 @@
+"use client";
+
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { EmptyState } from "@/components/EmptyState";
+import { getPlayer, getVessel, subscribeVessel } from "@/lib/storage";
+import type { DemoPlayer, PresenceMode, Vessel } from "@/lib/types";
+import { usePresence } from "@/hooks/usePresence";
+import { PEOPLES } from "@/lib/canon/peoples";
+import { CLASSES } from "@/lib/canon/classes";
+import { STYLES } from "@/lib/canon/styles";
+import { DEMO_SCENES } from "@/lib/scenes";
+import { COMING_UP } from "@/lib/events";
+import { codexPeopleCard, newsVoiceVideoHero } from "@/lib/assets";
+
+const WALKING = [
+  {
+    name: "Thorne",
+    status: "in scene",
+    presence: "scene" as const,
+    hue: "#5a3d78",
+    pip: "#c9a227",
+    blurb: "Rival · lantern walk",
+    sceneId: "virelios-lantern",
+    href: "/scenes?open=virelios-lantern",
+  },
+  {
+    name: "Ilyan",
+    status: "open",
+    presence: "open" as const,
+    hue: "#3d5a80",
+    pip: "#6b9fd4",
+    blurb: "Looking for adventure",
+    href: "/bonds",
+  },
+  {
+    name: "Ryven",
+    status: "open",
+    presence: "open" as const,
+    hue: "#6b3d4a",
+    pip: "#6b8f71",
+    blurb: "Open to bonds",
+    href: "/bonds",
+  },
+  {
+    name: "Auren",
+    status: "open",
+    presence: "open" as const,
+    hue: "#3d6b58",
+    pip: "#a78bfa",
+    blurb: "Social · market lamps",
+    href: "/map",
+  },
+  {
+    name: "Halvard",
+    status: "unseen",
+    presence: "unseen" as const,
+    hue: "#6b5a3d",
+    pip: "#9a9488",
+    blurb: "Unseen for now",
+    href: "/bonds",
+  },
+  {
+    name: "Brogar",
+    status: "open",
+    presence: "open" as const,
+    hue: "#4a3d6b",
+    pip: "#c9784a",
+    blurb: "Looking for party",
+    href: "/scenes",
+  },
+  {
+    name: "Sen",
+    status: "in scene",
+    presence: "scene" as const,
+    hue: "#3d5a58",
+    pip: "#8b6bb8",
+    blurb: "Moonshift watch",
+    sceneId: "velkrath-moon",
+    href: "/scenes?open=velkrath-moon",
+  },
+];
+
+
+type Preview = {
+  name: string;
+  status: string;
+  presence: PresenceMode;
+  hue: string;
+  pip: string;
+  blurb: string;
+  sceneId?: string;
+  href?: string;
+} | null;
+
+function presenceLabel(p: PresenceMode) {
+  if (p === "scene") return "In scene";
+  if (p === "unseen") return "Unseen";
+  return "Open";
+}
+
+function presencePip(p: PresenceMode) {
+  if (p === "scene") return "#c9a227";
+  if (p === "unseen") return "#9a9488";
+  return "#6b8f71";
+}
+
+export default function RealmPage() {
+  const [vessel, setV] = useState<Vessel | null>(null);
+  const [player, setP] = useState<DemoPlayer | null>(null);
+  const [presence, changePresence] = usePresence();
+  const [preview, setPreview] = useState<Preview>(null);
+  const [askCount, setAskCount] = useState(2);
+  const [justArrived, setJustArrived] = useState(false);
+
+  useEffect(() => {
+    try {
+      const flag = sessionStorage.getItem("virilion_threshold");
+      if (flag === "rite-complete" || flag === "rite-pending") {
+        setJustArrived(true);
+        sessionStorage.setItem("virilion_arrived", "1");
+        sessionStorage.removeItem("virilion_threshold");
+      } else if (flag === "enter-realm" || flag === "enter-rite") {
+        sessionStorage.removeItem("virilion_threshold");
+      }
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
+  useEffect(() => {
+    function hydrate() {
+      setV(getVessel());
+      setP(getPlayer());
+      try {
+        const raw = localStorage.getItem("virilion_weave");
+        if (raw) {
+          const bonds = JSON.parse(raw) as { status?: string }[];
+          const n = bonds.filter((b) => b.status === "open").length;
+          setAskCount(n > 0 ? n : 2);
+        } else {
+          setAskCount(2);
+        }
+      } catch {
+        setAskCount(2);
+      }
+    }
+    hydrate();
+    return subscribeVessel(hydrate);
+  }, []);
+
+  if (!vessel) {
+    return (
+      <EmptyState
+        title="The threshold is closed"
+        body="Finish the Rite of Making to embody your one Character — then the lamps of Virelios open for him."
+        action={
+          <Link href="/join" className="btn-gold">
+            Begin the Rite
+          </Link>
+        }
+      />
+    );
+  }
+
+  const firstName = vessel.name.split(/\s+/)[0] || vessel.name;
+  const peopleLabel =
+    vessel.people === "custom"
+      ? vessel.peopleCustom || "Custom"
+      : PEOPLES.find((p) => p.id === vessel.people)?.name || vessel.people;
+  const styleLabel =
+    vessel.style === "custom"
+      ? vessel.styleCustom || "Custom"
+      : STYLES.find((s) => s.id === vessel.style)?.name || vessel.style;
+  const classLabel =
+    vessel.classId === "custom"
+      ? vessel.classCustom || "Custom"
+      : CLASSES.find((c) => c.id === vessel.classId)?.name || vessel.classId;
+  const initial = vessel.name.trim().charAt(0).toUpperCase() || "V";
+
+  const peopleArt =
+    vessel.people !== "custom" ? codexPeopleCard(vessel.people) : null;
+
+  return (
+    <div className="space-y-5 -mt-0.5 realm-arrival">
+      <div className="realm-hero-glow page-header">
+        <h1 className="display-hero">
+          {justArrived
+            ? `Welcome under the lamps, ${firstName}.`
+            : `The lamps of Virelios are lit, ${firstName}.`}
+        </h1>
+        <p className="realm-subline">
+          {justArrived
+            ? "Presence, places, and open halls — a living world under the lamps."
+            : "Eight of your bonds walk the world tonight. Two are asking for you."}
+        </p>
+      </div>
+
+      {/* 1. Who am I — Character (demo plate) */}
+      <section className="card vessel-card vessel-card-glow !p-0 space-y-0 relative">
+        <Image
+          src="/virilion-logo.png"
+          alt=""
+          width={158}
+          height={158}
+          className="vessel-watermark"
+          aria-hidden
+        />
+        <div className="flex gap-[13px] items-stretch relative z-[1] p-[14px]">
+          <div
+            className={`vessel-medallion vessel-medallion-portrait text-[1.85rem]${peopleArt ? " vessel-medallion-art" : ""}`}
+            style={
+              peopleArt
+                ? undefined
+                : {
+                    background:
+                      "linear-gradient(160deg, var(--plum), var(--bg))",
+                  }
+            }
+            aria-hidden
+          >
+            {peopleArt ? (
+              <Image
+                src={peopleArt}
+                alt=""
+                width={320}
+                height={400}
+                className="vessel-medallion-img"
+                sizes="88px"
+                priority
+              />
+            ) : (
+              <span>{initial}</span>
+            )}
+            <span
+              className="absolute bottom-1.5 right-1.5 h-2.5 w-2.5 rounded-full border border-bg-card z-[2]"
+              style={{
+                background: presencePip(presence),
+                boxShadow: `0 0 8px ${presencePip(presence)}`,
+              }}
+              title={presenceLabel(presence)}
+            />
+          </div>
+          <div className="min-w-0 flex-1 flex flex-col">
+            <p className="realm-kicker">Your character</p>
+            <div className="flex items-start justify-between gap-2 mt-[3px]">
+              <h2 className="realm-vessel-name">
+                {vessel.name}
+              </h2>
+              {vessel.status === "pending_gm" ? (
+                <span className="text-[10px] uppercase tracking-wide text-gold border border-gold/40 rounded-full px-2 py-0.5 shrink-0">
+                  Pending GM
+                </span>
+              ) : null}
+            </div>
+            <p className="realm-vessel-meta">
+              {peopleLabel} · {classLabel} · {styleLabel}
+            </p>
+            <div className="mt-auto pt-2 flex flex-wrap gap-1.5 items-center">
+              <span className="pill-storm">● Virelios · The Gilded Coil</span>
+            </div>
+          </div>
+        </div>
+
+        {vessel.status === "pending_gm" ? (
+          <div className="relative z-[1] border-t border-gold/30 px-[14px] pt-3 pb-2 space-y-2">
+            <p className="text-sm text-gold-soft font-medium">Held at the gate · GM blessing</p>
+            <p className="text-xs text-fg-muted leading-relaxed">
+              Custom People / Style / Class waits under soft lamps. Check Self, then open Admin to approve.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <Link href="/profile" className="btn-ghost text-xs py-1.5 px-3 !min-h-0">
+                Profile status
+              </Link>
+              <Link href="/admin" className="btn-gold text-xs py-1.5 px-3 !min-h-0">
+                Open /admin
+              </Link>
+            </div>
+          </div>
+        ) : null}
+
+        {vessel.bio ? (
+          <p className="text-sm text-fg-muted leading-relaxed border-t border-[rgba(201,163,91,0.16)] px-[14px] pt-3 pb-1 relative z-[1]">
+            {vessel.bio}
+          </p>
+        ) : null}
+
+        <div className="seg-control relative z-[1]" role="group" aria-label="Presence">
+          {(
+            [
+              ["open", "Open"],
+              ["scene", "In scene"],
+              ["unseen", "Unseen"],
+            ] as const
+          ).map(([id, label]) => (
+            <button
+              key={id}
+              type="button"
+              data-active={presence === id}
+              onClick={() => changePresence(id)}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {/* 2. Actionable asks + quick dash */}
+      <section className="realm-asks space-y-2.5">
+        <Link href="/weave#asking" className="realm-ask-row" data-persist="asking-for-you">
+          <span className="min-w-0">
+            <span className="section-kicker block mb-0.5">Asking for you</span>
+            <span className="font-display text-lg text-fg leading-tight block">
+              {askCount === 1
+                ? "One character waits on the Weave"
+                : `${askCount} characters wait on the Weave`}
+            </span>
+            <span className="text-[11px] text-fg-muted mt-1 block">
+              Open Bonds · accept or decline
+            </span>
+          </span>
+          <span className="text-gold shrink-0 text-sm tracking-wide">Weave →</span>
+        </Link>
+
+        <Link href="/events" className="realm-nextup" aria-label="Next up — open calendar">
+          <span className="min-w-0">
+            <span className="section-kicker block mb-0.5">Next up</span>
+            <span className="font-display text-[1.05rem] text-fg leading-snug block">
+              {COMING_UP[0].title}
+            </span>
+            <span className="text-[11px] text-fg-muted mt-1 block">
+              {COMING_UP[0].when} · {COMING_UP[0].place}
+            </span>
+          </span>
+          <span className="text-gold shrink-0 text-sm tracking-wide">Events →</span>
+        </Link>
+
+        <div className="realm-quick-grid">
+          <Link href="/scenes" className="realm-quick-chip">
+            <span className="section-kicker">Scenes</span>
+            <span className="realm-quick-chip-title">Live rooms</span>
+          </Link>
+          <Link href="/whispers" className="realm-quick-chip">
+            <span className="section-kicker">Whispers</span>
+            <span className="realm-quick-chip-title">Whispers</span>
+          </Link>
+          <Link href="/bonds" className="realm-quick-chip">
+            <span className="section-kicker">Bonds</span>
+            <span className="realm-quick-chip-title">Bonds</span>
+          </Link>
+          <Link href="/guilds" className="realm-quick-chip">
+            <span className="section-kicker">Guilds</span>
+            <span className="realm-quick-chip-title">Hall</span>
+          </Link>
+          <Link href="/campaigns" className="realm-quick-chip" data-coming="true">
+            <span className="section-kicker">Campaigns</span>
+            <span className="realm-quick-chip-title">Coming</span>
+          </Link>
+          <Link href="/map" className="realm-quick-chip">
+            <span className="section-kicker">Where</span>
+            <span className="realm-quick-chip-title">Map</span>
+          </Link>
+        </div>
+      </section>
+
+      {/* Presence rail — demo "Walking now" */}
+      <section className="space-y-2.5 realm-presence-panel">
+        <div className="flex items-baseline justify-between gap-3">
+          <h2 className="section-serif">Walking now</h2>
+          <Link
+            href="/bonds"
+            className="text-[11px] tracking-[0.1em] uppercase text-fg-muted hover:text-gold-soft"
+          >
+            Bonds →
+          </Link>
+        </div>
+        <div className="h-scroll">
+          {/* Self presence in strip — tap opens preview with Self CTA */}
+          <button
+            type="button"
+            className="walk-card walk-card-tap"
+            aria-label="You · open character preview"
+            onClick={() =>
+              setPreview({
+                name: vessel.name,
+                status: presenceLabel(presence).toLowerCase(),
+                presence,
+                hue: "#5a3d78",
+                pip: presencePip(presence),
+                blurb: "You · " + peopleLabel,
+                href: "/profile",
+              })
+            }
+          >
+            <div
+              className="walk-avatar"
+              style={{
+                background:
+                  "radial-gradient(circle at 32% 22%, color-mix(in srgb, var(--gold) 26%, transparent), transparent 48%), linear-gradient(160deg, color-mix(in srgb, var(--aura) 52%, #1a1028), #0e0c14 78%)",
+              }}
+            >
+              <span
+                className="walk-pip"
+                style={{
+                  background: presencePip(presence),
+                  boxShadow: `0 0 8px ${presencePip(presence)}`,
+                }}
+              />
+              <span className="walk-initial font-display" aria-hidden>
+                {initial}
+              </span>
+              <span className="walk-name">You</span>
+            </div>
+            <p className="text-[11px] text-fg-muted mt-1.5 text-center leading-snug capitalize px-0.5">
+              {presenceLabel(presence)}
+            </p>
+          </button>
+          {WALKING.map((w) => (
+            <button
+              key={w.name}
+              type="button"
+              className="walk-card walk-card-tap"
+              aria-label={`${w.name} · ${w.blurb}`}
+              onClick={() => setPreview(w)}
+            >
+              <div
+                className="walk-avatar"
+                style={{
+                  background: `radial-gradient(circle at 32% 22%, color-mix(in srgb, var(--gold) 22%, transparent), transparent 48%), linear-gradient(160deg, ${w.hue}, #0e0c14 78%)`,
+                }}
+              >
+                <span
+                  className="walk-pip"
+                  style={{ background: w.pip, boxShadow: `0 0 8px ${w.pip}` }}
+                />
+                <span className="walk-initial font-display" aria-hidden>
+                  {w.name.charAt(0)}
+                </span>
+                <span className="walk-name">{w.name}</span>
+              </div>
+              <p className="text-[11px] text-fg-muted mt-1.5 text-center leading-snug capitalize px-0.5">
+                {w.status}
+              </p>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {/* Coming up — demo calendar rail */}
+      <section className="space-y-2.5 realm-presence-panel">
+        <div className="flex items-baseline justify-between gap-3">
+          <h2 className="section-serif">Coming up</h2>
+          <Link
+            href="/events"
+            className="text-[11px] tracking-[0.1em] uppercase text-fg-muted hover:text-gold-soft"
+          >
+            Events →
+          </Link>
+        </div>
+        <div className="h-scroll">
+          {COMING_UP.map((e) => (
+            <Link
+              key={e.title}
+              href="/events"
+              className="event-card"
+              style={{ ["--accent" as string]: e.accent }}
+            >
+              <p className="text-[10px] uppercase tracking-[0.12em] text-fg-muted font-semibold">
+                ✦ {e.when}
+              </p>
+              <p className="font-display text-[1.05rem] font-semibold text-fg mt-1.5 leading-snug">
+                {e.title}
+              </p>
+              <p className="text-xs text-fg-muted mt-2">✦ {e.place}</p>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+
+      {/* News — voice/video live hero */}
+      <section className="space-y-2.5">
+        <h2 className="section-serif-lg">News</h2>
+        <Link href="/scenes" className="news-card group">
+          <div className="news-card-frame">
+            <Image
+              src={newsVoiceVideoHero("1200")}
+              alt=""
+              width={1200}
+              height={675}
+              className="news-card-img"
+              sizes="(max-width: 640px) 100vw, 560px"
+            />
+            <div className="news-card-veil" aria-hidden />
+          </div>
+          <div className="news-card-body">
+            <p className="news-card-title">Voice and video now live inside Virilion.</p>
+            <p className="news-card-sub">
+              Virilion is the RP chat and voice home. Discord stays a temporary community hub while players migrate in.
+            </p>
+            <span className="news-card-cta">Open Scenes →</span>
+          </div>
+        </Link>
+      </section>
+
+      <Link href="/codex" className="codex-card group">
+        <span className="codex-icon" aria-hidden>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M6 4.5h9.5A2.5 2.5 0 0 1 18 7v13.5H8.5A2.5 2.5 0 0 0 6 22.5V4.5Z"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M6 4.5A2.5 2.5 0 0 0 3.5 7v13A2.5 2.5 0 0 1 6 17.5"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinejoin="round"
+            />
+            <path d="M9.5 9h6M9.5 12.5h5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+          </svg>
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="section-kicker block">The World Codex</span>
+          <span className="font-display text-lg text-fg leading-tight block mt-0.5">
+            Everything known of Virilion
+          </span>
+        </span>
+        <span className="text-fg-muted group-hover:text-gold text-lg transition" aria-hidden>
+          ›
+        </span>
+      </Link>
+
+      <p className="text-[11px] text-fg-muted/75 text-center pt-1">
+        {player?.screenName || "Traveler"} · present as character · member home
+      </p>
+
+      {preview ? (
+        <div
+          className="vessel-preview-sheet"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${preview.name} preview`}
+          onClick={() => setPreview(null)}
+        >
+          <div
+            className="vessel-preview-card"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex gap-3.5 items-start">
+              <div
+                className="h-16 w-16 shrink-0 rounded-xl flex items-center justify-center font-display text-2xl font-semibold text-gold-soft border border-gold/25 relative"
+                style={{
+                  background: `linear-gradient(145deg, ${preview.hue}, #121018 75%)`,
+                }}
+                aria-hidden
+              >
+                {preview.name.charAt(0)}
+                <span
+                  className="absolute bottom-1 right-1 h-2.5 w-2.5 rounded-full border border-bg-card"
+                  style={{ background: preview.pip }}
+                />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="section-kicker mb-0.5">Character preview · demo</p>
+                <h3 className="font-display text-xl font-semibold text-fg leading-tight">
+                  {preview.name}
+                </h3>
+                <p className="text-sm text-fg-muted mt-1">{preview.blurb}</p>
+                <p className="text-[10px] uppercase tracking-[0.12em] text-gold mt-2">
+                  {presenceLabel(preview.presence)}
+                </p>
+              </div>
+            </div>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <Link
+                href={preview.href || (preview.sceneId ? `/scenes?open=${preview.sceneId}` : "/bonds")}
+                className="btn-gold text-sm py-2 px-4 !min-h-0"
+                onClick={() => setPreview(null)}
+              >
+                {preview.sceneId
+                  ? "Enter scene"
+                  : (preview.href || "").startsWith("/map")
+                    ? "Open map"
+                    : (preview.href || "").startsWith("/profile")
+                      ? "Open profile"
+                      : (preview.href || "").startsWith("/scenes")
+                        ? "Open scenes"
+                        : "Open Bonds"}
+              </Link>
+              {preview.href && !preview.href.startsWith("/bonds") ? (
+                <Link
+                  href="/bonds"
+                  className="btn-ghost text-sm py-2 px-4 !min-h-0"
+                  onClick={() => setPreview(null)}
+                >
+                  Weave
+                </Link>
+              ) : null}
+              <button
+                type="button"
+                className="btn-ghost text-sm py-2 px-4 !min-h-0"
+                onClick={() => setPreview(null)}
+              >
+                Close
+              </button>
+            </div>
+            {preview.sceneId ? (
+              <p className="text-[10px] text-fg-muted mt-3">
+                Open hall:{" "}
+                {DEMO_SCENES.find((s) => s.id === preview.sceneId)?.title || "scene"}
+              </p>
+            ) : null}
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
+}

@@ -62,7 +62,7 @@ export default function SelfPage() {
     void (async () => {
       await logoutSession();
       clearSession();
-      router.replace("/enter");
+      router.replace("/login");
     })();
   }
 
@@ -308,15 +308,15 @@ export default function SelfPage() {
               <section className="card stone-panel rounded-2xl space-y-2.5">
                 <p className="section-kicker">World & tools</p>
                 <div className="grid grid-cols-2 gap-2">
-                  <Link href="/inbox" className="realm-ask-chip">
+                  <Link href="/whispers" className="realm-ask-chip">
                     <span className="section-kicker block mb-0.5">Whispers</span>
                     <span className="font-display text-base text-fg">Inbox</span>
                   </Link>
-                  <Link href="/safety" className="realm-ask-chip">
+                  <Link href="/settings" className="realm-ask-chip">
                     <span className="section-kicker block mb-0.5">Care</span>
                     <span className="font-display text-base text-fg">Safety</span>
                   </Link>
-                  <Link href="/calendar" className="realm-ask-chip">
+                  <Link href="/events" className="realm-ask-chip">
                     <span className="section-kicker block mb-0.5">When</span>
                     <span className="font-display text-base text-fg">Coming up</span>
                   </Link>
@@ -351,7 +351,7 @@ export default function SelfPage() {
               <p className="text-sm text-fg-muted leading-relaxed">
                 Finish the Rite of Making to embody your one Character.
               </p>
-              <Link href="/rite" className="btn-gold inline-flex justify-center">
+              <Link href="/join" className="btn-gold inline-flex justify-center">
                 Begin the Rite
               </Link>
             </div>
@@ -399,7 +399,7 @@ export default function SelfPage() {
             </div>
           </section>
 
-          <Link href="/safety" className="card stone-panel block rounded-2xl hover:border-gold/40 transition">
+          <Link href="/settings" className="card stone-panel block rounded-2xl hover:border-gold/40 transition">
             <p className="section-kicker mb-1">Care</p>
             <p className="text-sm font-medium text-fg font-display text-lg">Safety & Rules</p>
             <p className="text-xs text-fg-muted mt-0.5">
@@ -440,7 +440,7 @@ export default function SelfPage() {
                   ) {
                     wipeVesselForDemo();
                     setV(null);
-                    router.replace("/rite");
+                    router.replace("/join");
                   }
                 }}
               >

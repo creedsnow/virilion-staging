@@ -99,8 +99,8 @@ function MapInner() {
   const search = useSearchParams();
   const [filter, setFilter] = useState<Filter>("all");
   const [sel, setSel] = useState<Selection>({ kind: "region", id: "virelios" });
-  const [hoverId, setHoverId] = useState<string | null>(null);
   const [hallsOpen, setHallsOpen] = useState(false);
+  const [showOutline, setShowOutline] = useState(false);
   const [vessel, setVesselState] = useState<Vessel | null>(null);
   const [booted, setBooted] = useState(false);
 
@@ -190,33 +190,71 @@ function MapInner() {
             <span className="display-italic">sixteen holdings</span>
           </h1>
           <p className="map-hero-sub">
-            Scroll the painted atlas, then tap a colour region or Order Hall pin
-            and Enter. Colour marks whose homeland it is.
+            Tap a hotspot on the painted atlas to open a place. Order Halls
+            stay on the list below — Enter from the detail card.
           </p>
         </div>
       </div>
 
-      <figure className="map-world-paint stone-panel rounded-2xl">
-        <div className="map-world-paint-scroll" tabIndex={0} aria-label="Painted Virilion world map · scroll or pinch to explore">
-          <Image
-            src={worldMap()}
-            alt="Painted map of Virilion — sixteen holdings across one vast world"
-            width={959}
-            height={1616}
-            className="map-world-paint-img"
-            sizes="(max-width: 640px) 100vw, 640px"
-            priority
-          />
+      <figure className="map-world-paint map-atlas-primary stone-panel rounded-2xl">
+        <div
+          className="map-world-paint-scroll"
+          tabIndex={0}
+          aria-label="Painted Virilion atlas · scroll to explore · tap regions"
+        >
+          <div className="map-atlas-surface">
+            <Image
+              src={worldMap()}
+              alt="Painted map of Virilion — sixteen holdings across one vast world"
+              width={959}
+              height={1616}
+              className="map-world-paint-img"
+              sizes="(max-width: 900px) 100vw, 860px"
+              priority
+            />
+            {showPlaces
+              ? MAP_REGIONS.map((r) => {
+                  const activeRegion = sel.kind === "region" && sel.id === r.id;
+                  return (
+                    <button
+                      key={r.id}
+                      type="button"
+                      className={`map-atlas-hotspot ${activeRegion ? "is-active" : ""} ${
+                        r.kind === "hub" ? "is-hub" : ""
+                      }`}
+                      style={{
+                        left: `${r.atlasPct.x}%`,
+                        top: `${r.atlasPct.y}%`,
+                      }}
+                      aria-label={r.label}
+                      aria-pressed={activeRegion}
+                      onClick={() => selectRegion(r.id)}
+                    >
+                      <span className="map-atlas-hotspot-dot" style={{ background: r.color }} />
+                      <span className="map-atlas-hotspot-label">{r.short}</span>
+                    </button>
+                  );
+                })
+              : null}
+          </div>
         </div>
         <figcaption className="map-world-paint-cap">
-          Painted atlas · pinch or scroll · pins live on the colour map below
+          Painted atlas · primary map · approximate hotspots
         </figcaption>
       </figure>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2 items-center">
         <span className="map-legend map-legend-hub">+ Virelios · everyone</span>
         <span className="map-legend map-legend-home">◆ Homelands · their People</span>
         <span className="map-legend map-legend-hall">❖ Order Halls · their class</span>
+        <button
+          type="button"
+          className="chip text-xs ml-auto"
+          data-active={showOutline}
+          onClick={() => setShowOutline((v) => !v)}
+        >
+          {showOutline ? "Hide colour outline" : "Colour outline"}
+        </button>
       </div>
 
       <div className="flex gap-2">
@@ -242,149 +280,56 @@ function MapInner() {
         ))}
       </div>
 
-      <div className="map-stage map-stage-hero map-stage-weight card p-0 overflow-hidden stone-panel rounded-2xl">
-        <svg
-          viewBox="0 0 360 270"
-          className="w-full h-auto map-svg"
-          aria-label="Virilion world colour map"
-        >
-          <defs>
-            <radialGradient id="mapGlow" cx="50%" cy="40%" r="65%">
-              <stop offset="0%" stopColor="rgba(123,94,167,0.28)" />
-              <stop offset="55%" stopColor="rgba(123,94,167,0.08)" />
-              <stop offset="100%" stopColor="transparent" />
-            </radialGradient>
-            <radialGradient id="mapVignette" cx="50%" cy="50%" r="72%">
-              <stop offset="55%" stopColor="transparent" />
-              <stop offset="100%" stopColor="rgba(4,2,10,0.55)" />
-            </radialGradient>
-            <filter id="regionSoft" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur in="SourceGraphic" stdDeviation="1.2" result="blur" />
-              <feMerge>
-                <feMergeNode in="blur" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-            <filter id="regionSelect" x="-40%" y="-40%" width="180%" height="180%">
-              <feDropShadow dx="0" dy="0" stdDeviation="3.2" floodColor="#e0c36a" floodOpacity="0.55" />
-              <feDropShadow dx="0" dy="0" stdDeviation="6" floodColor="#7b5ea7" floodOpacity="0.35" />
-            </filter>
-            <filter id="pinGlow" x="-80%" y="-80%" width="260%" height="260%">
-              <feDropShadow dx="0" dy="0" stdDeviation="2.4" floodColor="#a67cdd" floodOpacity="0.65" />
-            </filter>
-            <filter id="pinActive" x="-80%" y="-80%" width="260%" height="260%">
-              <feDropShadow dx="0" dy="0" stdDeviation="3.2" floodColor="#e0c36a" floodOpacity="0.75" />
-            </filter>
-          </defs>
-          <rect width="360" height="270" fill="#0a0812" />
-          <rect width="360" height="270" fill="url(#mapGlow)" />
-
-          {showPlaces
-            ? MAP_REGIONS.map((r) => {
-                const activeRegion = sel.kind === "region" && sel.id === r.id;
-                const hovered = hoverId === r.id && !activeRegion;
-                return (
-                  <g
-                    key={r.id}
-                    className="map-region cursor-pointer"
-                    onClick={() => selectRegion(r.id)}
-                    onMouseEnter={() => setHoverId(r.id)}
-                    onMouseLeave={() => setHoverId(null)}
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") selectRegion(r.id);
-                    }}
-                    filter={activeRegion ? "url(#regionSelect)" : "url(#regionSoft)"}
-                  >
-                    <polygon
-                      points={r.points}
-                      fill={r.color}
-                      opacity={activeRegion ? 0.95 : hovered ? 0.86 : 0.68}
-                      stroke={
-                        activeRegion
-                          ? "#e8d28a"
-                          : hovered
-                            ? "rgba(224,195,106,0.65)"
-                            : "rgba(46,42,58,0.75)"
-                      }
-                      strokeWidth={activeRegion ? 2.6 : hovered ? 1.6 : 1}
-                      style={{ transition: "opacity 0.15s ease" }}
-                    />
-                    <polygon
-                      points={r.points}
-                      fill={activeRegion ? "rgba(224,195,106,0.14)" : "rgba(255,255,255,0.04)"}
-                      style={{ pointerEvents: "none" }}
-                    />
-                    <text
-                      className="map-region-label"
-                      x={r.cx}
-                      y={r.cy}
-                      textAnchor="middle"
-                      dominantBaseline="middle"
-                      fill={r.kind === "hub" ? "#1a1408" : "#f5efe4"}
-                      fontSize={r.kind === "hub" ? 10 : 7.5}
-                      fontWeight={r.kind === "hub" ? 700 : 600}
-                      letterSpacing="0.03em"
-                      stroke={r.kind === "hub" ? "rgba(255,248,230,0.35)" : "rgba(8,6,14,0.72)"}
-                      strokeWidth={r.kind === "hub" ? 0.35 : 0.9}
-                      paintOrder="stroke fill"
-                      style={{ pointerEvents: "none" }}
+      {showOutline ? (
+        <div className="map-stage map-stage-fallback card p-0 overflow-hidden stone-panel rounded-2xl">
+          <p className="map-fallback-label">Colour outline · optional fallback</p>
+          <svg
+            viewBox="0 0 360 270"
+            className="w-full h-auto map-svg map-svg-fallback"
+            aria-label="Virilion colour outline fallback"
+          >
+            <rect width="360" height="270" fill="#0a0812" />
+            {showPlaces
+              ? MAP_REGIONS.map((r) => {
+                  const activeRegion = sel.kind === "region" && sel.id === r.id;
+                  return (
+                    <g
+                      key={r.id}
+                      className="map-region cursor-pointer"
+                      onClick={() => selectRegion(r.id)}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") selectRegion(r.id);
+                      }}
                     >
-                      {r.short}
-                    </text>
-                  </g>
-                );
-              })
-            : null}
-
-          {showHalls
-            ? ORDER_HALLS.map((h, i) => {
-                const host = MAP_REGIONS.find((r) => r.id === h.regionId);
-                if (!host) return null;
-                const siblings = ORDER_HALLS.filter((x) => x.regionId === h.regionId);
-                const idx = siblings.findIndex((x) => x.id === h.id);
-                const spread = siblings.length > 1 ? (idx - (siblings.length - 1) / 2) * 14 : 0;
-                const x = host.cx + spread;
-                const y = host.cy - (h.placement === "standalone" ? 18 : 10) - (i % 3);
-                const activeHall = sel.kind === "hall" && sel.id === h.id;
-                return (
-                  <g
-                    key={h.id}
-                    className="cursor-pointer"
-                    filter={activeHall ? "url(#pinActive)" : "url(#pinGlow)"}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      selectHall(h.id);
-                    }}
-                  >
-                    <circle
-                      cx={x}
-                      cy={y}
-                      r={activeHall ? 7.5 : 5.8}
-                      fill={activeHall ? "#e0c36a" : "#16102a"}
-                      stroke={activeHall ? "#f5efe4" : "#b894e0"}
-                      strokeWidth={1.6}
-                    />
-                    <text
-                      x={x}
-                      y={y + 0.5}
-                      textAnchor="middle"
-                      dominantBaseline="middle"
-                      fill={activeHall ? "#1a1408" : "#e0c36a"}
-                      fontSize="6"
-                      style={{ pointerEvents: "none" }}
-                    >
-                      ❖
-                    </text>
-                  </g>
-                );
-              })
-            : null}
-
-          <rect width="360" height="270" fill="url(#mapVignette)" style={{ pointerEvents: "none" }} />
-        </svg>
-      </div>
+                      <polygon
+                        points={r.points}
+                        fill={r.color}
+                        opacity={activeRegion ? 0.95 : 0.68}
+                        stroke={activeRegion ? "#e8d28a" : "rgba(46,42,58,0.75)"}
+                        strokeWidth={activeRegion ? 2.4 : 1}
+                      />
+                      <text
+                        className="map-region-label"
+                        x={r.cx}
+                        y={r.cy}
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                        fill={r.kind === "hub" ? "#1a1408" : "#f5efe4"}
+                        fontSize={r.kind === "hub" ? 10 : 7.5}
+                        fontWeight={700}
+                        style={{ pointerEvents: "none" }}
+                      >
+                        {r.short}
+                      </text>
+                    </g>
+                  );
+                })
+              : null}
+          </svg>
+        </div>
+      ) : null}
 
       {sel.kind === "region" && region ? (
         <PlaceCard
@@ -584,7 +529,7 @@ function PlaceCard({
             Enter place
           </button>
         ) : (
-          <Link href="/rite" className="btn-gold place-enter-cta text-sm py-2 px-4 !min-h-0 inline-flex">
+          <Link href="/join" className="btn-gold place-enter-cta text-sm py-2 px-4 !min-h-0 inline-flex">
             Rite first
           </Link>
         )}
@@ -696,7 +641,7 @@ function HallCard({
             Locked
           </span>
         ) : (
-          <Link href="/rite" className="btn-gold place-enter-cta text-sm py-2 px-4 !min-h-0 inline-flex">
+          <Link href="/join" className="btn-gold place-enter-cta text-sm py-2 px-4 !min-h-0 inline-flex">
             Rite first
           </Link>
         )}

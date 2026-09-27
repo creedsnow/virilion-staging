@@ -28,7 +28,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   // Credentials requires JWT — do not use database sessions here.
   session: { strategy: "jwt" },
   pages: {
-    signIn: "/enter",
+    signIn: "/login",
   },
   providers: [
     Credentials({

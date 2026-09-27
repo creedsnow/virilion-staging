@@ -14,25 +14,26 @@ export type MemberNavGroup = {
   items: MemberNavItem[];
 };
 
-/** Site Map Phase 1 member overflow — Play · Community · World · You */
+/** Site Map member nav — Play · Community · World · You (Market deferred) */
 export const MEMBER_NAV_GROUPS: MemberNavGroup[] = [
   {
     id: "play",
     label: "Play",
     items: [
       { href: "/scenes", label: "Scenes" },
-      { href: "/calendar", label: "Calendar" },
+      { href: "/events", label: "Calendar" },
+      { href: "/campaigns", label: "Campaigns", hint: "Soon" },
       { href: "/dice", label: "Casting Bowl" },
-      { href: "/campaigns", label: "Campaigns", hint: "Coming" },
     ],
   },
   {
     id: "community",
     label: "Community",
     items: [
-      { href: "/guilds", label: "Guilds" },
-      { href: "/weave", label: "Weave" },
-      { href: "/inbox", label: "Whispers" },
+      { href: "/guilds", label: "Guilds", hint: "Soon" },
+      { href: "/bonds", label: "Bonds" },
+      { href: "/whispers", label: "Whispers" },
+      { href: "/notifs", label: "Notifications", hint: "Thin" },
     ],
   },
   {
@@ -41,14 +42,15 @@ export const MEMBER_NAV_GROUPS: MemberNavGroup[] = [
     items: [
       { href: "/codex", label: "Codex" },
       { href: "/map", label: "Map" },
+      { href: "/chronicle", label: "Chronicle" },
     ],
   },
   {
     id: "you",
     label: "You",
     items: [
-      { href: "/self", label: "Self" },
-      { href: "/safety", label: "Safety" },
+      { href: "/profile", label: "Your character" },
+      { href: "/settings", label: "Settings & safety" },
       { href: "/rules", label: "Rules" },
       { href: "/admin", label: "Admin" },
     ],
@@ -60,6 +62,7 @@ type Props = {
   onLogout: () => void;
 };
 
+/** Compact overflow menu (optional fallback); SiteNav is primary. */
 export function MemberNav({ onNavigate, onLogout }: Props) {
   return (
     <div
@@ -78,9 +81,7 @@ export function MemberNav({ onNavigate, onLogout }: Props) {
               onClick={onNavigate}
             >
               <span>{item.label}</span>
-              {item.hint ? (
-                <span className="shell-menu-hint">{item.hint}</span>
-              ) : null}
+              {item.hint ? <span className="shell-menu-hint">{item.hint}</span> : null}
             </Link>
           ))}
         </div>

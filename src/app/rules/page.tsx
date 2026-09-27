@@ -34,7 +34,7 @@ export default function RulesPage() {
 
       <p className="text-xs text-fg-muted text-center leading-relaxed">
         Full canon text lives with Launch Planner.{" "}
-        <Link href="/self" className="text-gold hover:text-gold-soft">
+        <Link href="/profile" className="text-gold hover:text-gold-soft">
           ← Self
         </Link>
       </p>

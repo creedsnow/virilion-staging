@@ -90,7 +90,7 @@ export default function RitePage() {
   useEffect(() => {
     if (!completing) return;
     const t = window.setTimeout(() => {
-      router.replace("/");
+      router.replace("/dash");
     }, 2400);
     return () => window.clearTimeout(t);
   }, [completing, router]);
@@ -119,7 +119,7 @@ export default function RitePage() {
           <span />
           <span />
         </div>
-        <button type="button" className="btn-gold" onClick={() => router.replace("/")}>
+        <button type="button" className="btn-gold" onClick={() => router.replace("/dash")}>
           Enter the Realm
         </button>
       </div>
@@ -137,7 +137,7 @@ export default function RitePage() {
           Virilion is one character per player — no second slot.
         </p>
         <div className="flex flex-col sm:flex-row gap-2 justify-center items-center">
-          <button type="button" className="btn-gold" onClick={() => router.replace("/")}>
+          <button type="button" className="btn-gold" onClick={() => router.replace("/dash")}>
             Return to Realm
           </button>
           {qa ? (

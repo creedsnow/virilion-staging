@@ -75,7 +75,7 @@ export default function AdminPage() {
             <Link href="/" className="btn-gold text-xs py-2 px-3 inline-flex !min-h-0">
               Enter Realm
             </Link>
-            <Link href="/self" className="btn-ghost text-xs py-2 px-3 inline-flex !min-h-0">
+            <Link href="/profile" className="btn-ghost text-xs py-2 px-3 inline-flex !min-h-0">
               Self status
             </Link>
           </div>
@@ -145,7 +145,7 @@ export default function AdminPage() {
         <p className="text-xs text-fg-muted mt-1.5 leading-relaxed">
           Honest stubs only. No invented features in this staging shell.
         </p>
-        <Link href="/self" className="text-xs text-gold hover:text-gold-soft inline-block pt-1">
+        <Link href="/profile" className="text-xs text-gold hover:text-gold-soft inline-block pt-1">
           ← Self status
         </Link>
       </div>

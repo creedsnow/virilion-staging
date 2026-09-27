@@ -57,7 +57,7 @@ export default function EnterPage() {
 
   useEffect(() => {
     if (!threshold) return;
-    const dest = threshold === "realm" ? "/" : "/rite";
+    const dest = threshold === "realm" ? "/dash" : "/join";
     const t = window.setTimeout(() => {
       router.replace(dest);
     }, 2200);
@@ -239,7 +239,7 @@ export default function EnterPage() {
           <button
             type="button"
             className="btn-gold btn-enter w-full mt-8"
-            onClick={() => router.replace(toRite ? "/rite" : "/")}
+            onClick={() => router.replace(toRite ? "/join" : "/dash")}
           >
             {toRite ? "Step through" : "Enter the Realm"}
           </button>

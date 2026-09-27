@@ -47,13 +47,13 @@ export default function GuildsPage() {
       </section>
 
       <div className="flex flex-wrap gap-2 justify-center">
-        <Link href="/weave" className="btn-gold text-sm py-2 px-4 !min-h-0 inline-flex">
+        <Link href="/bonds" className="btn-gold text-sm py-2 px-4 !min-h-0 inline-flex">
           Open Weave
         </Link>
-        <Link href="/self" className="btn-ghost text-sm py-2 px-3 !min-h-0">
+        <Link href="/profile" className="btn-ghost text-sm py-2 px-3 !min-h-0">
           Self
         </Link>
-        <Link href="/" className="btn-ghost text-sm py-2 px-3 !min-h-0">
+        <Link href="/dash" className="btn-ghost text-sm py-2 px-3 !min-h-0">
           Realm
         </Link>
       </div>

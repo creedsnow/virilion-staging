@@ -12,10 +12,12 @@ export interface MapRegion {
   peopleId?: string;
   culture?: string;
   note: string;
-  /** SVG polygon points in viewBox 0 0 360 260 */
+  /** SVG polygon points in viewBox 0 0 360 260 (colour-outline fallback) */
   points: string;
   cx: number;
   cy: number;
+  /** Approx hotspot on painted atlas as % of width/height (portrait map). */
+  atlasPct: { x: number; y: number };
 }
 
 /**
@@ -35,6 +37,7 @@ export const MAP_REGIONS: MapRegion[] = [
     points: "18,28 78,18 98,52 72,78 22,68",
     cx: 56,
     cy: 48,
+    atlasPct: { x: 28, y: 12 },
   },
   {
     id: "stormspire",
@@ -48,6 +51,7 @@ export const MAP_REGIONS: MapRegion[] = [
     points: "108,16 168,12 188,48 152,72 102,58",
     cx: 144,
     cy: 42,
+    atlasPct: { x: 48, y: 10 },
   },
   {
     id: "wastes",
@@ -59,6 +63,7 @@ export const MAP_REGIONS: MapRegion[] = [
     points: "198,20 268,14 292,54 248,78 188,62",
     cx: 238,
     cy: 46,
+    atlasPct: { x: 78, y: 14 },
   },
   {
     id: "velkrath",
@@ -72,6 +77,7 @@ export const MAP_REGIONS: MapRegion[] = [
     points: "12,88 68,78 88,118 58,148 18,128",
     cx: 48,
     cy: 112,
+    atlasPct: { x: 22, y: 28 },
   },
   {
     id: "high-mountains",
@@ -85,6 +91,7 @@ export const MAP_REGIONS: MapRegion[] = [
     points: "98,82 158,74 178,114 138,142 92,122",
     cx: 132,
     cy: 108,
+    atlasPct: { x: 42, y: 26 },
   },
   {
     id: "trahg",
@@ -98,6 +105,7 @@ export const MAP_REGIONS: MapRegion[] = [
     points: "188,78 252,70 278,112 238,142 182,120",
     cx: 228,
     cy: 106,
+    atlasPct: { x: 72, y: 30 },
   },
   {
     id: "virelios",
@@ -109,6 +117,7 @@ export const MAP_REGIONS: MapRegion[] = [
     points: "118,128 178,118 208,158 168,188 112,168",
     cx: 156,
     cy: 152,
+    atlasPct: { x: 48, y: 42 },
   },
   {
     id: "grove",
@@ -122,6 +131,7 @@ export const MAP_REGIONS: MapRegion[] = [
     points: "18,158 72,148 92,188 58,218 22,198",
     cx: 52,
     cy: 182,
+    atlasPct: { x: 24, y: 52 },
   },
   {
     id: "war-colleges",
@@ -135,6 +145,7 @@ export const MAP_REGIONS: MapRegion[] = [
     points: "98,178 158,168 178,208 138,232 92,212",
     cx: 132,
     cy: 198,
+    atlasPct: { x: 55, y: 50 },
   },
   {
     id: "cassanova",
@@ -148,6 +159,7 @@ export const MAP_REGIONS: MapRegion[] = [
     points: "188,168 252,158 278,198 238,228 182,208",
     cx: 228,
     cy: 190,
+    atlasPct: { x: 70, y: 48 },
   },
   {
     id: "treetops",
@@ -161,6 +173,7 @@ export const MAP_REGIONS: MapRegion[] = [
     points: "18,218 78,208 98,248 52,258 12,242",
     cx: 52,
     cy: 234,
+    atlasPct: { x: 20, y: 64 },
   },
   {
     id: "stone-halls",
@@ -174,6 +187,7 @@ export const MAP_REGIONS: MapRegion[] = [
     points: "108,228 168,218 192,252 148,262 98,250",
     cx: 142,
     cy: 242,
+    atlasPct: { x: 48, y: 62 },
   },
   {
     id: "southern-isles",
@@ -187,6 +201,7 @@ export const MAP_REGIONS: MapRegion[] = [
     points: "208,228 268,218 292,252 248,262 198,250",
     cx: 242,
     cy: 244,
+    atlasPct: { x: 52, y: 88 },
   },
   {
     id: "lush-plains",
@@ -200,6 +215,7 @@ export const MAP_REGIONS: MapRegion[] = [
     points: "288,88 348,78 358,128 318,148 278,122",
     cx: 318,
     cy: 112,
+    atlasPct: { x: 82, y: 36 },
   },
   {
     id: "verdant",
@@ -213,6 +229,7 @@ export const MAP_REGIONS: MapRegion[] = [
     points: "288,148 348,138 358,188 318,208 278,182",
     cx: 318,
     cy: 172,
+    atlasPct: { x: 78, y: 58 },
   },
   {
     id: "suncoil",
@@ -226,6 +243,7 @@ export const MAP_REGIONS: MapRegion[] = [
     points: "288,198 348,188 358,238 318,252 278,228",
     cx: 318,
     cy: 218,
+    atlasPct: { x: 80, y: 74 },
   },
 ];
 

@@ -276,7 +276,7 @@ export default function CodexPage() {
             </span>
           </span>
         </Link>
-        <Link href="/safety" className="care-panel care-panel-link">
+        <Link href="/settings" className="care-panel care-panel-link">
           <div className="care-panel-glow" aria-hidden />
           <span className="relative z-[1] flex items-center gap-3">
             <span className="codex-icon" aria-hidden>

@@ -1,18 +1,37 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import Link from "next/link";
+import { useEffect, useState, type ReactNode } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { AgeGate } from "./AgeGate";
-import { BottomNav } from "./BottomNav";
 import { DemoBadge } from "./DemoBadge";
-import { MemberNav } from "./MemberNav";
+import { SiteNav } from "./SiteNav";
 import { UiAssetIcon } from "./UiAssetIcon";
 import { useTheme } from "./ThemeProvider";
 import { clearSession, getAgeOk, getPlayer, getVessel, subscribeVessel } from "@/lib/storage";
 import { logoutSession } from "@/lib/auth-client";
 
-const PUBLIC = new Set(["/enter", "/rules"]);
+/** Guest-browsable public site routes (signed-out OK). */
+const PUBLIC_PREFIXES = [
+  "/",
+  "/login",
+  "/join",
+  "/codex",
+  "/map",
+  "/chronicle",
+  "/about",
+  "/rules",
+  "/terms",
+  "/privacy",
+];
+
+function isPublicPath(pathname: string) {
+  if (PUBLIC_PREFIXES.includes(pathname)) return true;
+  if (pathname.startsWith("/codex/")) return true;
+  if (pathname.startsWith("/join")) return true;
+  return false;
+}
 
 function IconMoon() {
   return (
@@ -41,14 +60,38 @@ function IconLamp() {
   );
 }
 
-function IconMore() {
+function IconMenu() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-      <circle cx="5" cy="12" r="1.6" />
-      <circle cx="12" cy="12" r="1.6" />
-      <circle cx="19" cy="12" r="1.6" />
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
     </svg>
   );
+}
+
+function subtitleFor(pathname: string) {
+  if (pathname === "/") return "Welcome";
+  if (pathname === "/dash") return "Home";
+  if (pathname.startsWith("/join")) return "Rite of Making";
+  if (pathname.startsWith("/login")) return "Sign in";
+  if (pathname.startsWith("/scenes")) return "Halls & rooms";
+  if (pathname.startsWith("/map")) return "One world";
+  if (pathname.startsWith("/dice")) return "Casting Bowl";
+  if (pathname.startsWith("/profile")) return "Character · Player";
+  if (pathname.startsWith("/bonds")) return "Bonds";
+  if (pathname.startsWith("/codex")) return "The World Codex";
+  if (pathname.startsWith("/whispers")) return "Whispers";
+  if (pathname.startsWith("/settings")) return "Settings & safety";
+  if (pathname.startsWith("/events")) return "Calendar";
+  if (pathname.startsWith("/guilds")) return "Guilds";
+  if (pathname.startsWith("/campaigns")) return "Campaigns";
+  if (pathname.startsWith("/chronicle")) return "Chronicle";
+  if (pathname.startsWith("/about")) return "About";
+  if (pathname.startsWith("/rules")) return "Community rules";
+  if (pathname.startsWith("/terms")) return "Terms";
+  if (pathname.startsWith("/privacy")) return "Privacy";
+  if (pathname.startsWith("/notifs")) return "Notifications";
+  if (pathname.startsWith("/admin")) return "Demo GM";
+  return "Virilion";
 }
 
 export function AppShell({ children }: { children: ReactNode }) {
@@ -59,19 +102,16 @@ export function AppShell({ children }: { children: ReactNode }) {
   const [ageOk, setAgeOkState] = useState(false);
   const [hasPlayer, setHasPlayer] = useState(false);
   const [hasVessel, setHasVessel] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   useEffect(() => {
     setAgeOkState(getAgeOk());
     setHasPlayer(!!getPlayer());
     setHasVessel(!!getVessel());
     setReady(true);
-    setMenuOpen(false);
+    setDrawerOpen(false);
   }, [pathname]);
 
-  // Keep shell auth flags in sync after Log out / GM approve / wipe without
-  // requiring a pathname change (Enter logout stays on /enter).
   useEffect(() => {
     return subscribeVessel(() => {
       setHasPlayer(!!getPlayer());
@@ -81,22 +121,18 @@ export function AppShell({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (!menuOpen) return;
-    function onDoc(e: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setMenuOpen(false);
-      }
-    }
+    if (!drawerOpen) return;
     function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") setMenuOpen(false);
+      if (e.key === "Escape") setDrawerOpen(false);
     }
-    document.addEventListener("mousedown", onDoc);
     document.addEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     return () => {
-      document.removeEventListener("mousedown", onDoc);
       document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
     };
-  }, [menuOpen]);
+  }, [drawerOpen]);
 
   function logout() {
     void (async () => {
@@ -104,27 +140,38 @@ export function AppShell({ children }: { children: ReactNode }) {
       clearSession();
       setHasPlayer(false);
       setHasVessel(false);
-      setMenuOpen(false);
-      router.replace("/enter");
+      setDrawerOpen(false);
+      router.replace("/login");
     })();
   }
 
   useEffect(() => {
     if (!ready) return;
     if (!ageOk) return;
-    const isPublic = PUBLIC.has(pathname) || pathname.startsWith("/rite");
-    if (!hasPlayer && !isPublic && pathname !== "/enter") {
-      router.replace("/enter");
+
+    // Signed-in members never stay on the guest marketing landing.
+    if (hasPlayer && hasVessel && pathname === "/") {
+      router.replace("/dash");
       return;
     }
+
+    const publicOk = isPublicPath(pathname);
+
+    if (!hasPlayer && !publicOk) {
+      router.replace("/login");
+      return;
+    }
+
     if (
       hasPlayer &&
       !hasVessel &&
-      pathname !== "/rite" &&
-      pathname !== "/enter" &&
-      pathname !== "/rules"
+      pathname !== "/join" &&
+      pathname !== "/login" &&
+      pathname !== "/rules" &&
+      pathname !== "/terms" &&
+      pathname !== "/privacy"
     ) {
-      router.replace("/rite");
+      router.replace("/join");
     }
   }, [ready, ageOk, hasPlayer, hasVessel, pathname, router]);
 
@@ -142,101 +189,94 @@ export function AppShell({ children }: { children: ReactNode }) {
     return <AgeGate onConfirm={() => setAgeOkState(true)} />;
   }
 
-  const showNav =
-    hasPlayer && pathname !== "/enter" && !pathname.startsWith("/rite");
-  const isEnter = pathname === "/enter";
-  const subtitle =
-    pathname === "/"
-      ? "The Realm"
-      : pathname.startsWith("/rite")
-        ? "Rite of Making"
-        : pathname.startsWith("/scenes")
-          ? "Halls & rooms"
-          : pathname.startsWith("/map")
-            ? "One world"
-            : pathname.startsWith("/dice")
-              ? "Casting Bowl"
-              : pathname.startsWith("/self")
-                ? "Character · Player"
-                : pathname.startsWith("/weave")
-                  ? "Bonds · Constellation"
-                  : pathname.startsWith("/codex")
-                    ? "The World Codex"
-                    : pathname.startsWith("/inbox")
-                      ? "Whispers"
-                      : pathname.startsWith("/safety")
-                        ? "Safety"
-                        : pathname.startsWith("/calendar")
-                          ? "Coming up"
-                          : pathname.startsWith("/guilds")
-                            ? "Guilds"
-                            : pathname.startsWith("/campaigns")
-                              ? "Campaigns"
-                              : pathname.startsWith("/rules")
-                              ? "Community rules"
-                              : pathname.startsWith("/admin")
-                                ? "Demo GM"
-                                : "Staging demo";
+  const isLogin = pathname === "/login";
+  const isGuestLanding = pathname === "/" && !hasPlayer;
+  const isJoin = pathname.startsWith("/join");
+  const showMemberChrome =
+    hasPlayer && hasVessel && !isLogin && !isJoin;
+  const wideMain =
+    isGuestLanding ||
+    pathname.startsWith("/map") ||
+    pathname.startsWith("/codex") ||
+    pathname === "/dash" ||
+    pathname.startsWith("/chronicle") ||
+    pathname.startsWith("/about");
 
   return (
-    <div className={`min-h-dvh flex flex-col text-fg ${isEnter ? "" : "app-canvas"}`}>
-      {!isEnter ? (
+    <div
+      className={`min-h-dvh flex flex-col text-fg ${
+        isLogin || isGuestLanding ? "" : "app-canvas"
+      }`}
+    >
+      {!isLogin ? (
         <header className="shell-header sticky top-0 z-30 border-b border-border/70 bg-bg/88 backdrop-blur-md">
-          <div className="mx-auto max-w-lg flex items-center justify-between gap-3 px-4 py-2.5">
+          <div className="site-header-inner">
             <div className="flex items-center gap-2.5 min-w-0">
-              <Image
-                src="/virilion-logo.png"
-                alt=""
-                width={32}
-                height={32}
-                className="rounded-[0.55rem] shrink-0 shadow-[0_0_16px_rgba(123,94,167,0.35)]"
-              />
-              <div className="min-w-0">
-                <p className="font-display text-[0.95rem] tracking-[0.2em] uppercase text-gold-soft leading-none">
-                  Virilion
-                </p>
-                <p className="text-[9px] tracking-[0.16em] uppercase text-fg-muted mt-1 truncate">
-                  {subtitle}
-                </p>
-              </div>
+              {showMemberChrome ? (
+                <button
+                  type="button"
+                  className="header-icon-btn site-nav-burger lg:hidden"
+                  aria-label="Open menu"
+                  aria-expanded={drawerOpen}
+                  onClick={() => setDrawerOpen(true)}
+                >
+                  <IconMenu />
+                </button>
+              ) : null}
+              <Link href={showMemberChrome ? "/dash" : "/"} className="flex items-center gap-2.5 min-w-0">
+                <Image
+                  src="/virilion-logo.png"
+                  alt=""
+                  width={32}
+                  height={32}
+                  className="rounded-[0.55rem] shrink-0 shadow-[0_0_16px_rgba(123,94,167,0.35)]"
+                />
+                <div className="min-w-0">
+                  <p className="font-display text-[0.95rem] tracking-[0.2em] uppercase text-gold-soft leading-none">
+                    Virilion
+                  </p>
+                  <p className="text-[9px] tracking-[0.16em] uppercase text-fg-muted mt-1 truncate">
+                    {subtitleFor(pathname)}
+                  </p>
+                </div>
+              </Link>
               <DemoBadge className="inline-flex shrink-0" />
             </div>
             <div className="flex items-center gap-1.5 shrink-0">
-              {showNav ? (
-                <a
+              {!hasPlayer ? (
+                <>
+                  <Link
+                    href="/codex"
+                    className="text-[10px] tracking-[0.12em] uppercase text-fg-muted hover:text-gold-soft px-1.5 hidden sm:inline"
+                  >
+                    Codex
+                  </Link>
+                  <Link
+                    href="/join"
+                    className="text-[10px] tracking-[0.12em] uppercase text-gold-soft hover:text-gold px-1.5 hidden sm:inline"
+                  >
+                    Join
+                  </Link>
+                  <Link href="/login" className="btn-ghost text-xs py-1.5 px-2.5 !min-h-0">
+                    Sign in
+                  </Link>
+                </>
+              ) : (
+                <Link
                   href="/rules"
                   className="text-[10px] tracking-[0.12em] uppercase text-fg-muted hover:text-gold-soft px-1.5 hidden sm:inline"
                   title="Community rules"
                 >
                   Rules
-                </a>
-              ) : null}
-              {hasPlayer ? (
-                <div className="relative" ref={menuRef}>
-                  <button
-                    type="button"
-                    className="header-icon-btn"
-                    aria-label="Menu"
-                    aria-expanded={menuOpen}
-                    aria-haspopup="menu"
-                    title="Menu"
-                    onClick={() => setMenuOpen((o) => !o)}
-                  >
-                    <UiAssetIcon name="more" size={16} fallback={<IconMore />} />
-                  </button>
-                  {menuOpen ? (
-                    <MemberNav
-                      onNavigate={() => setMenuOpen(false)}
-                      onLogout={logout}
-                    />
-                  ) : null}
-                </div>
-              ) : null}
+                </Link>
+              )}
               <button
                 type="button"
                 className="header-icon-btn"
                 onClick={toggle}
-                aria-label={theme === "dark" ? "Switch to parchment light" : "Switch to moonlight dark"}
+                aria-label={
+                  theme === "dark" ? "Switch to parchment light" : "Switch to moonlight dark"
+                }
                 title={theme === "dark" ? "Parchment" : "Moonlight"}
               >
                 {theme === "dark" ? (
@@ -249,14 +289,44 @@ export function AppShell({ children }: { children: ReactNode }) {
           </div>
         </header>
       ) : null}
-      <main
-        className={`flex-1 w-full max-w-lg mx-auto px-4 py-4 ${
-          showNav ? "pb-[7.25rem]" : isEnter ? "pb-0 pt-0 px-0 max-w-none" : "pb-8"
-        }`}
-      >
-        {children}
-      </main>
-      {showNav ? <BottomNav /> : null}
+
+      <div className={`site-body ${showMemberChrome ? "site-body-member" : ""}`}>
+        {showMemberChrome ? (
+          <aside className="site-aside hidden lg:block" aria-label="Site navigation">
+            <SiteNav mode="side" onLogout={logout} />
+          </aside>
+        ) : null}
+
+        <main
+          className={`site-main flex-1 w-full px-4 py-4 ${
+            wideMain ? "site-main-wide" : "site-main-narrow"
+          } ${isLogin ? "pb-0 pt-0 px-0 max-w-none" : "pb-10"}`}
+        >
+          {children}
+        </main>
+      </div>
+
+      {showMemberChrome ? (
+        <SiteNav
+          mode="drawer"
+          open={drawerOpen}
+          onClose={() => setDrawerOpen(false)}
+          onLogout={logout}
+        />
+      ) : null}
+
+      {!isLogin && !showMemberChrome ? (
+        <footer className="site-footer">
+          <div className="site-footer-inner">
+            <Link href="/about">About</Link>
+            <Link href="/rules">Rules</Link>
+            <Link href="/terms">Terms</Link>
+            <Link href="/privacy">Privacy</Link>
+            <Link href="/codex">Codex</Link>
+            <Link href="/map">Map</Link>
+          </div>
+        </footer>
+      ) : null}
     </div>
   );
 }

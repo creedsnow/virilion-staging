@@ -29,7 +29,7 @@ export default function CampaignsPage() {
             The table is empty · no campaigns yet
           </p>
           <p className="text-sm text-fg-muted leading-relaxed max-w-md mx-auto sm:mx-0">
-            Play Scenes and Calendar for live rooms tonight. Campaign casting
+            Play Scenes and Events for live rooms tonight. Campaign casting
             waits on GM tools — honest empty board until then.
           </p>
           <ul className="text-xs text-fg-muted/90 leading-relaxed space-y-1.5 max-w-sm mx-auto sm:mx-0 list-none pl-0">
@@ -50,10 +50,10 @@ export default function CampaignsPage() {
         <Link href="/scenes" className="btn-gold text-sm py-2 px-4 !min-h-0 inline-flex">
           Open Scenes
         </Link>
-        <Link href="/calendar" className="btn-ghost text-sm py-2 px-3 !min-h-0">
+        <Link href="/events" className="btn-ghost text-sm py-2 px-3 !min-h-0">
           Calendar
         </Link>
-        <Link href="/" className="btn-ghost text-sm py-2 px-3 !min-h-0">
+        <Link href="/dash" className="btn-ghost text-sm py-2 px-3 !min-h-0">
           Realm
         </Link>
       </div>

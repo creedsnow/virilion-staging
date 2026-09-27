@@ -5930,3 +5930,396 @@ button.scene-call-hint:hover {
     width: 4.5rem;
   }
 }
+
+
+/* —— Phase A site shell (side panel · wide layout · landing) —— */
+.site-header-inner {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 72rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.65rem 1rem;
+}
+.site-body {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+}
+.site-body-member {
+  margin-inline: auto;
+  max-width: 72rem;
+  width: 100%;
+}
+.site-aside {
+  width: 15.5rem;
+  flex-shrink: 0;
+  border-right: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
+  background: color-mix(in srgb, var(--bg-card) 55%, transparent);
+  position: sticky;
+  top: 3.25rem;
+  align-self: flex-start;
+  max-height: calc(100dvh - 3.25rem);
+  overflow-y: auto;
+}
+.site-main-narrow {
+  max-width: 36rem;
+  margin-inline: auto;
+}
+.site-main-wide {
+  max-width: 56rem;
+  margin-inline: auto;
+}
+.site-body-member .site-main-wide,
+.site-body-member .site-main-narrow {
+  margin-inline: 0;
+  max-width: none;
+  flex: 1;
+}
+.site-body-member .site-main-narrow {
+  max-width: 40rem;
+}
+
+.site-nav-side,
+.site-nav-drawer-panel {
+  padding: 0.85rem 0.75rem 1.25rem;
+}
+.site-nav-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+.site-nav-home {
+  display: block;
+  padding: 0.55rem 0.65rem;
+  border-radius: 0.7rem;
+  border: 1px solid transparent;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.site-nav-home:hover,
+.site-nav-home.is-active {
+  background: color-mix(in srgb, var(--gold) 10%, transparent);
+  border-color: color-mix(in srgb, var(--gold) 28%, transparent);
+}
+.site-nav-home-kicker {
+  display: block;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+.site-nav-home-title {
+  display: block;
+  font-family: var(--font-display), serif;
+  font-size: 1.05rem;
+  color: var(--fg);
+  margin-top: 0.15rem;
+}
+.site-nav-close {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.55rem;
+  border: 1px solid var(--border);
+  color: var(--fg-muted);
+  background: transparent;
+}
+.site-nav-group {
+  margin-top: 0.85rem;
+}
+.site-nav-group-label {
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--fg-muted) 88%, var(--gold) 12%);
+  padding: 0 0.65rem 0.35rem;
+}
+.site-nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.15rem;
+}
+.site-nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.5rem 0.65rem;
+  border-radius: 0.6rem;
+  font-size: 0.9rem;
+  color: var(--fg-muted);
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.site-nav-item:hover {
+  color: var(--fg);
+  background: color-mix(in srgb, var(--aura) 10%, transparent);
+}
+.site-nav-item.is-active {
+  color: var(--gold-soft);
+  background: color-mix(in srgb, var(--gold) 12%, transparent);
+}
+.site-nav-hint {
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  opacity: 0.85;
+}
+.site-nav-foot {
+  margin-top: 1.25rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid color-mix(in srgb, var(--border) 75%, transparent);
+}
+.site-nav-logout {
+  width: 100%;
+  text-align: left;
+  padding: 0.5rem 0.65rem;
+  border-radius: 0.6rem;
+  font-size: 0.9rem;
+  color: var(--fg-muted);
+  background: transparent;
+}
+.site-nav-logout:hover {
+  color: var(--fg);
+  background: color-mix(in srgb, var(--aura) 10%, transparent);
+}
+
+.site-nav-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+.site-nav-drawer.is-open {
+  pointer-events: auto;
+  opacity: 1;
+}
+.site-nav-backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(4, 2, 10, 0.62);
+  backdrop-filter: blur(2px);
+}
+.site-nav-drawer-panel {
+  position: absolute;
+  inset: 0;
+  width: min(100vw, 22rem);
+  max-width: 100%;
+  background: var(--bg);
+  border-right: 1px solid var(--border);
+  transform: translateX(-104%);
+  transition: transform 0.22s ease;
+  overflow-y: auto;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.45);
+}
+.site-nav-drawer.is-open .site-nav-drawer-panel {
+  transform: translateX(0);
+}
+
+.site-footer {
+  border-top: 1px solid color-mix(in srgb, var(--border) 75%, transparent);
+  padding: 1rem 1rem 1.5rem;
+}
+.site-footer-inner {
+  margin-inline: auto;
+  max-width: 56rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  justify-content: center;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.site-footer-inner a {
+  color: var(--fg-muted);
+}
+.site-footer-inner a:hover {
+  color: var(--gold-soft);
+}
+
+/* Guest landing */
+.landing-hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.15rem;
+  border: 1px solid color-mix(in srgb, var(--border) 50%, var(--gold) 28%);
+  padding: 1.75rem 1.25rem 1.85rem;
+  background:
+    radial-gradient(ellipse 80% 70% at 12% 0%, color-mix(in srgb, var(--aura) 28%, transparent), transparent 55%),
+    radial-gradient(ellipse 60% 50% at 88% 20%, color-mix(in srgb, var(--gold) 14%, transparent), transparent 50%),
+    var(--bg-card);
+  box-shadow: var(--shadow-card);
+}
+.landing-hero-sheen {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent 40%, color-mix(in srgb, var(--gold) 6%, transparent));
+  pointer-events: none;
+}
+.landing-title {
+  font-size: clamp(1.85rem, 4.5vw, 2.75rem);
+  line-height: 1.15;
+}
+.landing-people-rail {
+  gap: 0.75rem;
+  padding-bottom: 0.25rem;
+}
+.landing-people-card {
+  flex: 0 0 auto;
+  width: 7.5rem;
+  text-decoration: none;
+}
+.landing-people-art {
+  border-radius: 0.75rem;
+  overflow: hidden;
+  aspect-ratio: 4 / 5;
+  border: 1px solid color-mix(in srgb, var(--border) 55%, var(--gold) 22%);
+  background: #0c0a14;
+}
+.landing-people-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.landing-people-name {
+  font-family: var(--font-display), serif;
+  font-size: 0.95rem;
+  color: var(--fg);
+  margin-top: 0.45rem;
+  line-height: 1.2;
+}
+.landing-people-meta {
+  font-size: 0.65rem;
+  color: var(--fg-muted);
+  margin-top: 0.15rem;
+}
+.landing-map-teaser {
+  display: grid;
+}
+@media (min-width: 768px) {
+  .landing-map-teaser {
+    grid-template-columns: 1.1fr 1fr;
+    align-items: stretch;
+  }
+}
+.landing-map-frame {
+  position: relative;
+  max-height: 18rem;
+  overflow: hidden;
+  background: #08060f;
+}
+@media (min-width: 768px) {
+  .landing-map-frame {
+    max-height: none;
+    min-height: 16rem;
+  }
+}
+.landing-map-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 28%;
+}
+.landing-map-veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 45%, rgba(8, 6, 15, 0.72));
+  pointer-events: none;
+}
+.landing-map-body {
+  padding: 1.15rem 1.15rem 1.35rem;
+}
+
+/* Atlas hotspots */
+.map-atlas-primary .map-world-paint-scroll {
+  max-height: min(72vh, 40rem);
+}
+@media (min-width: 900px) {
+  .map-atlas-primary .map-world-paint-scroll {
+    max-height: min(78vh, 48rem);
+  }
+}
+.map-atlas-surface {
+  position: relative;
+  display: block;
+}
+.map-atlas-hotspot {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.15rem;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  z-index: 2;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  justify-content: center;
+}
+.map-atlas-hotspot-dot {
+  width: 0.85rem;
+  height: 0.85rem;
+  border-radius: 999px;
+  border: 1.5px solid rgba(245, 239, 228, 0.85);
+  box-shadow:
+    0 0 0 2px rgba(8, 6, 15, 0.55),
+    0 0 12px color-mix(in srgb, var(--gold) 35%, transparent);
+}
+.map-atlas-hotspot.is-hub .map-atlas-hotspot-dot {
+  width: 1.05rem;
+  height: 1.05rem;
+  box-shadow:
+    0 0 0 2px rgba(8, 6, 15, 0.55),
+    0 0 16px color-mix(in srgb, var(--gold) 55%, transparent);
+}
+.map-atlas-hotspot-label {
+  font-size: 0.52rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #f5efe4;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85), 0 0 8px rgba(0, 0, 0, 0.6);
+  background: rgba(8, 6, 15, 0.45);
+  padding: 0.12rem 0.35rem;
+  border-radius: 0.35rem;
+  max-width: 5.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.map-atlas-hotspot.is-active .map-atlas-hotspot-dot {
+  outline: 2px solid #e8d28a;
+  outline-offset: 2px;
+}
+.map-atlas-hotspot:hover .map-atlas-hotspot-label,
+.map-atlas-hotspot.is-active .map-atlas-hotspot-label {
+  color: #e8d28a;
+}
+.map-stage-fallback {
+  opacity: 0.92;
+}
+.map-fallback-label {
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  padding: 0.45rem 0.75rem 0;
+}
+.map-svg-fallback {
+  max-height: 14rem;
+}

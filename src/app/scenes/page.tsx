@@ -90,7 +90,7 @@ function ScenesInner() {
         title="No character yet"
         body="Complete the Rite of Making to step into places and halls as your Character."
         action={
-          <Link href="/rite" className="btn-gold inline-flex">
+          <Link href="/join" className="btn-gold inline-flex">
             Begin the Rite
           </Link>
         }

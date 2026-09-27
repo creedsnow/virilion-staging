@@ -107,7 +107,7 @@ const ITEMS = [
   { href: "/map", label: "Map", icon: "map", size: 22, Fallback: IconMapFallback },
   { href: "/dice", label: "d20", icon: "d20", size: 28, Fallback: IconD20Fallback, center: true },
   { href: "/scenes", label: "Scenes", icon: "scenes", size: 22, Fallback: IconDoorFallback },
-  { href: "/self", label: "Self", icon: "self", size: 22, Fallback: IconSelfFallback },
+  { href: "/profile", label: "Self", icon: "self", size: 22, Fallback: IconSelfFallback },
 ] as const;
 
 export function BottomNav() {

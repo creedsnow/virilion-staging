@@ -69,10 +69,10 @@ export default function SafetyPage() {
       </Link>
 
       <div className="flex flex-wrap gap-2">
-        <Link href="/self" className="btn-ghost text-sm py-2 px-3 !min-h-0">
+        <Link href="/profile" className="btn-ghost text-sm py-2 px-3 !min-h-0">
           Self
         </Link>
-        <Link href="/inbox" className="btn-ghost text-sm py-2 px-3 !min-h-0">
+        <Link href="/whispers" className="btn-ghost text-sm py-2 px-3 !min-h-0">
           Whispers
         </Link>
         <Link href="/" className="btn-ghost text-sm py-2 px-3 !min-h-0">
